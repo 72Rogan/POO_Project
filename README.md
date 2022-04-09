@@ -1,7 +1,7 @@
 # POO_Project
-Repository for Object Oriented Programming project 
+Repository for Object Oriented Programming project. 
 
 By:
-Daniel Du;
-Pedro Sousa;
+Daniel Du,
+Pedro Sousa and 
 João Gonçalves;
