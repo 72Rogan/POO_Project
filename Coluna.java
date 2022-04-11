@@ -174,26 +174,13 @@ public class Coluna{
     	this.modo=Modo.OFF;
     }
 
-    public String saberRadio(Coluna c){
-    	println("Radio que está ligado: "c.getRadio);
+    public int mudarVolume(int vol){
+    	this.volume=vol;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    public String mudarEstacao(String estacao){
+    	this.radio=estacao;
+    }
 
 
 
