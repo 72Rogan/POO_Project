@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public abstract class SmartDevice {
-    private int codigo;
+    private String id;
     private double custoInstalacao;
     private Modo modo;
     private LocalDate lastChange;
@@ -14,15 +14,24 @@ public abstract class SmartDevice {
         ON, OFF;
     }
 
-    public SmartDevice(int codigo, double custoInstalacao) {
-        this.codigo = codigo;
+    public SmartDevice() {
+        this.id = "";
+        this.Modo = OFF;
+        this.custoInstalacao = 0;
+        this.lastChange = LocalDate.now();
+        this.diasSemPagar = = 0;
+
+    }
+
+    public SmartDevice(String id, double custoInstalacao) {
+        this.id = id;
         this.custoInstalacao = custoInstalacao;
         this.modo = Modo.OFF;
         this.lastChange = LocalDate.now();
     }
 
-    public SmartDevice(int codigo, double custoInstalacao, Modo modo) {
-        this.codigo = codigo;
+    public SmartDevice(String id, double custoInstalacao, Modo modo) {
+        this.id = id;
         this.custoInstalacao = custoInstalacao;
         this.modo = modo;
         this.lastChange = LocalDate.now();
@@ -53,12 +62,12 @@ public abstract class SmartDevice {
         }
     }
 
-    public int getCodigo() {
-        return codigo;
+    public int getID() {
+        return id;
     }
 
-    public void setCodigo(int codigo) {
-        this.codigo = codigo;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
     public double getCustoInstalacao() {
