@@ -1,8 +1,19 @@
 package src;
 
 public class SmartCamera extends SmartDevice{
-    public SmartCamera(int codigo, double custoInstalacao) {
-        super(codigo, custoInstalacao);
+    // private int res;
+    private int[2] res; // resolução é em pixeis ou em por exemplo 1280x720 ?
+    private double espaco;
+
+    public SmartCamera(){
+        super();
+        //this.res = 0;
+        this.res = [0,0];
+        this.espaco = 0;
+    }
+
+    public SmartCamera(int id, double custoInstalacao) {
+        super(id, custoInstalacao);
     }
 
     @Override
