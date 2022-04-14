@@ -34,6 +34,7 @@ public class CasaInteligente {
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
 // exceto para a funçao turnAllOn acho que o forEach é bom nessa
 public class CasaInteligente {
+    private Comercializador comercializador;
     private String nome;
     private int nif;
     private Map<String, SmartDevice> devices;
@@ -45,14 +46,16 @@ public class CasaInteligente {
         this.nif = -1;
         this.devices = new HashMap();
         this.locations = new HashMap();
+        this.comercializador = null;
     }
 
-    public CasaInteligente(String nome, int nif) {
+    public CasaInteligente(String nome, int nif, Comercializador comercializador) {
         // initialise instance variables
         this.nome = nome;
         this.nif = nif;
         this.devices = new HashMap();
         this.locations = new HashMap();
+        this.comercializador = comercializador;
     }
 
 
@@ -120,6 +123,14 @@ public class CasaInteligente {
             return devices.contains(s2);
         }
         return false;
+    }
+
+    public double precoPorDia() {
+        double ret = 0;
+        for (SmartDevice smartDevice: devices.values()) {
+            ret += comercializador.precoDiaPorDispositivo(smartDevice);
+        }
+        return ret;
     }
 
     public String getNome() {
