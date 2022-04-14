@@ -6,6 +6,7 @@ public class SmartBulb extends SmartDevice {
     public static final int COLD = 0;
 
     private int tone;
+    private double tamanho;
 
     /**
      * Constructor for objects of class SmartBulb
@@ -16,13 +17,20 @@ public class SmartBulb extends SmartDevice {
     }
 
     public SmartBulb(String id, int tone) {
-        super(id);
+        super(id, -1);
         this.tone = tone;
     }
 
-    public SmartBulb(String id) {
-        super(id);
-        this.tone = NEUTRAL;
+    public SmartBulb(String id, double custo, int tone, double tamanho) {
+        super(id, custo);
+        this.tone = tone;
+        this.tamanho = tamanho;
+    }
+
+    public SmartBulb(SmartBulb s) {
+        super(s);
+        this.tone = s.tone;
+        this.tamanho = s.tamanho;
     }
 
     public void setTone(int t) {
@@ -35,10 +43,21 @@ public class SmartBulb extends SmartDevice {
         return this.tone;
     }
 
-}
+    public double getTamanho() {
+        return tamanho;
+    }
 
-    public void toString(){
-        return super().toString + "Tone: " this.getTone();
+    public void setTamanho(double tamanho) {
+        this.tamanho = tamanho;
+    }
+
+    public String toString(){
+        return super.toString() + " Tone: " + this.getTone();
+    }
+
+    @Override
+    public SmartDevice clone() {
+        return new SmartBulb(this);
     }
 
 

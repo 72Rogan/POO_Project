@@ -12,7 +12,7 @@ public class SmartSpeaker extends SmartDevice {
 	private String radio;
 
 	public SmartSpeaker(){
-		super(-1, 0);
+		super("", 0);
 		//this.horaDeLigado = 0;
 		this.volume = 0; //volume max = 100
 		this.marca = "N/A";
@@ -27,7 +27,7 @@ public class SmartSpeaker extends SmartDevice {
 	}
 
 	public SmartSpeaker(SmartSpeaker c){
-		super(c.getID(), c.getCustoInstalacao(), c.getModo());
+		super(c);
 		this.volume=c.getVolume();
 		this.marca=c.getMarca();
 		this.radio=c.getRadio();
