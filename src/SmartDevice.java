@@ -7,8 +7,7 @@ public abstract class SmartDevice {
     private String id;
     private double custoInstalacao;
     private Modo modo;
-    private LocalDate lastChange;
-    private long diasSemPagar;
+    private LocalDate lastChange; //data do ultimo periodo de faturaçao
 
     public enum Modo{
         ON, OFF;
@@ -19,7 +18,6 @@ public abstract class SmartDevice {
         this.modo = Modo.OFF;
         this.custoInstalacao = 0;
         this.lastChange = LocalDate.now();
-        this.diasSemPagar = 0;
 
     }
 
@@ -42,16 +40,28 @@ public abstract class SmartDevice {
         this.custoInstalacao = smartDevice.custoInstalacao;
         this.modo = smartDevice.modo;
         this.lastChange = smartDevice.lastChange;
-        this.diasSemPagar = smartDevice.diasSemPagar;
+    }
+
+    public double consumoAte(LocalDate date) {
+        if (modo == Modo.ON) {
+            int diasPassados = this.lastChange.until(date).getDays();
+            return diasPassados * this.consumoDiario();
+        } else return 0;
+    }
+
+    public double custoAte(Comercializador comercializador, LocalDate date) {
+        if (this.modo == Modo.ON) {
+            int diasPassados = this.lastChange.until(date).getDays();
+            return comercializador.precoDiaPorDispositivo(this) * diasPassados;
+        } else return 0;
+    }
+
+    public void atualizarData(LocalDate data) {
+        this.lastChange = data;
+        //atualizar os pedidos pendentes
     }
 
     public abstract double consumoDiario();
-
-    public double facturar() {
-        double res = this.diasSemPagar * consumoDiario();
-        this.diasSemPagar = 0;
-        return res;
-    }
 
     public void turnOn() {
         if (this.lastChange.until(LocalDate.now(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
@@ -65,7 +75,6 @@ public abstract class SmartDevice {
         if (this.lastChange.until(LocalDate.now(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
             //so pode modificar se ja passou um dia desde a ultima mudança
             this.modo = Modo.OFF;
-            diasSemPagar += this.lastChange.until(LocalDate.now(), ChronoUnit.DAYS);
             this.lastChange = LocalDate.now();
         }
     }
@@ -107,14 +116,6 @@ public abstract class SmartDevice {
         this.lastChange = lastChange;
     }
 
-    public long getDiasSemPagar() {
-        return diasSemPagar;
-    }
-
-    public void setDiasSemPagar(long diasSemPagar) {
-        this.diasSemPagar = diasSemPagar;
-    }
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getClass().toString());
@@ -133,8 +134,7 @@ public abstract class SmartDevice {
         return this.id == smartDevice.getID() &&
                 this.custoInstalacao == smartDevice.getCustoInstalacao() &&
                 this.modo.equals(smartDevice.getModo()) &&
-                this.lastChange.equals(smartDevice.lastChange) &&
-                this.diasSemPagar == smartDevice.diasSemPagar;
+                this.lastChange.equals(smartDevice.lastChange);
     }
 
     public abstract SmartDevice clone();

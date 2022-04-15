@@ -11,10 +11,8 @@ package src;
 /** conhecimentos de POO.                                                        */
 /*********************************************************************************/
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
+import java.time.LocalDate;
+import java.util.*;
 
 
 /**
@@ -39,6 +37,7 @@ public class CasaInteligente {
     private int nif;
     private Map<String, SmartDevice> devices;
     private Map<String, List<String>> locations;
+    private List<Fatura> faturas;
 
     public CasaInteligente() {
         // initialise instance variables
@@ -47,6 +46,7 @@ public class CasaInteligente {
         this.devices = new HashMap();
         this.locations = new HashMap();
         this.comercializador = null;
+        this.faturas = new ArrayList<>();
     }
 
     public CasaInteligente(String nome, int nif, Comercializador comercializador) {
@@ -56,6 +56,7 @@ public class CasaInteligente {
         this.devices = new HashMap();
         this.locations = new HashMap();
         this.comercializador = comercializador;
+        this.faturas = new ArrayList<>();
     }
 
 
@@ -132,6 +133,36 @@ public class CasaInteligente {
         }
         return ret;
     }
+
+    public void saltarParaData(LocalDate data) {
+        double consumo = 0;
+        double custo = 0;
+
+        LocalDate inicio = this.devices.values().stream()
+                .map(smartDevice -> smartDevice.getLastChange())
+                .max(new Comparator<LocalDate>() {
+                    @Override
+                    public int compare(LocalDate o1, LocalDate o2) {
+                        return o1.isBefore(o2) ? 1 : -1; //nao importa se as datas forem iguais
+                    } //ordena as datas por ordem decrescente, e devolve a menor data
+                })
+                .orElse(null); //devolve a data mais antiga, ou devolve null se nao existirem datas
+        if (inicio == null) {
+            System.out.println("Data inicial nula");
+            return;
+        }
+        LocalDate fim = data;
+
+        for (SmartDevice smartDevice: this.devices.values()) {
+            consumo += smartDevice.consumoAte(fim);
+            custo += smartDevice.custoAte(this.comercializador, fim);
+            smartDevice.atualizarData(fim);
+        }
+
+        Fatura fatura = new Fatura(inicio,fim,consumo,custo);
+        this.faturas.add(fatura.clone());
+    }
+
 
     public String getNome() {
         return nome;

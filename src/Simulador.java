@@ -19,7 +19,14 @@ public class Simulador {
         this.data = date;
     }
 
-    public static void main(String[] args) {
+    public void startInterface() {
+        //while (true) {
 
+        //}
+    }
+
+    public static void main(String[] args) {
+        Simulador simulador = new Simulador();
+        simulador.startInterface();
     }
 }
