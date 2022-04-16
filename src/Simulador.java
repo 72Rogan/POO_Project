@@ -4,18 +4,21 @@ import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 
+
 public class Simulador implements Serializable{
+    public static LocalDate data = LocalDate.now();
     private List<CasaInteligente> casasInteligentes;
-    private LocalDate data;
+    private List<Comercializador> comercializadores;
 
     public Simulador() {
         this.casasInteligentes = new ArrayList<>();
-        this.data = LocalDate.now();
+        this.comercializadores = new ArrayList<>();
     }
 
     public Simulador(LocalDate date) {
         this.casasInteligentes = new ArrayList<>();
-        this.data = date;
+        this.comercializadores = new ArrayList<>();
+        data = date;
     }
 
     public static Simulador construirSimulador(String caminhoFicheiro) {
@@ -44,23 +47,25 @@ public class Simulador implements Serializable{
     }
 
     public void saltarDias(int daysToSkip) {
-        this.data = this.data.plusDays(daysToSkip);
+        data = data.plusDays(daysToSkip);
         for (CasaInteligente casaInteligente: this.casasInteligentes) {
-            casaInteligente.saltarParaData(this.data);
+            casaInteligente.saltarParaData(data);
         }
     }
 
     public static void startInterface() {
         Simulador simulador = construirSimulador("presets/simulador1.txt"); //recebe o caminho para um ficheiro onde esta escrito uma entidade da classe Simulador
-        LocalDate data = simulador.data;
-        System.out.println("Data atual: " + data.toString());
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Quantos dias queres saltar?");
-        int diasParaSaltar = scanner.nextInt();
-        simulador.saltarDias(diasParaSaltar);
-        System.out.println("Data atual: " + data.toString());
-        System.out.println("A emitir faturas");
-        simulador.printFaturas();
+        while (true) {
+            System.out.println("Data atual: " + Simulador.data.toString());
+            System.out.println("Quantos dias queres saltar?");
+            int diasParaSaltar = scanner.nextInt();
+            simulador.saltarDias(diasParaSaltar);
+            System.out.println("Data atual: " + Simulador.data.toString());
+            System.out.println("A emitir faturas");
+            simulador.printFaturas();
+        }
+
     }
 
     public static void main(String[] args) {
@@ -69,6 +74,10 @@ public class Simulador implements Serializable{
 
     public void addCasa(CasaInteligente casaInteligente) {
         this.casasInteligentes.add(casaInteligente.clone());
+    }
+
+    public void addComercializador(Comercializador comercializador) {
+        this.comercializadores.add(comercializador);
     }
 
     public void printFaturas() {

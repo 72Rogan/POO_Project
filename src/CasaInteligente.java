@@ -32,7 +32,7 @@ public class CasaInteligente {
 
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
 // exceto para a funçao turnAllOn acho que o forEach é bom nessa
-public class CasaInteligente implements Serializable {
+public class CasaInteligente extends Change<CasaInteligente> implements Serializable{
     private Comercializador comercializador;
     private String nome;
     private int nif;
@@ -42,6 +42,7 @@ public class CasaInteligente implements Serializable {
 
     public CasaInteligente() {
         // initialise instance variables
+        super();
         this.nome = "N/A";
         this.nif = -1;
         this.devices = new HashMap();
@@ -52,6 +53,7 @@ public class CasaInteligente implements Serializable {
 
     public CasaInteligente(String nome, int nif, Comercializador comercializador) {
         // initialise instance variables
+        super();
         this.nome = nome;
         this.nif = nif;
         this.devices = new HashMap();
@@ -61,6 +63,7 @@ public class CasaInteligente implements Serializable {
     }
 
     public CasaInteligente(CasaInteligente casaInteligente) {
+        super.toChange = casaInteligente.toChange;
         this.nome = casaInteligente.nome;
         this.nif = casaInteligente.nif;
         this.devices = casaInteligente.devices;
@@ -165,11 +168,12 @@ public class CasaInteligente implements Serializable {
         for (SmartDevice smartDevice: this.devices.values()) {
             consumo += smartDevice.consumoAte(fim);
             custo += smartDevice.custoAte(this.comercializador, fim);
-            smartDevice.atualizarData(fim);
         }
 
         Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
-        this.faturas.add(fatura.clone());
+        this.faturas.add(fatura);
+        //depois de geradas as faturas, executam-se as mudanças pendentes necessarias
+        this.change();
     }
 
 
@@ -178,7 +182,10 @@ public class CasaInteligente implements Serializable {
     }
 
     public void setNome(String nome) {
-        this.nome = nome;
+        //this.nome = nome;
+        //Coloca o nome nas mudanças pendentes
+        if (super.toChange == null) createToChange();
+        this.toChange.nome = nome;
     }
 
     public int getNif() {
@@ -186,7 +193,10 @@ public class CasaInteligente implements Serializable {
     }
 
     public void setNif(int nif) {
-        this.nif = nif;
+        //this.nif = nif;
+        //Coloca o nif nas mudanças pendentes
+        if (super.toChange == null) createToChange();
+        this.toChange.nif = nif;
     }
 
     public Map<String, SmartDevice> getDevices() {
@@ -210,7 +220,11 @@ public class CasaInteligente implements Serializable {
     }
 
     public void setComercializador(Comercializador comercializador) {
-        this.comercializador = comercializador;
+        //this.comercializador = comercializador;
+
+        //coloca o novo comercializador nas mudanças pendentes
+        if (super.toChange == null) createToChange();
+        super.toChange.comercializador = comercializador;
     }
 
     public List<Fatura> getFaturas() {
@@ -223,5 +237,25 @@ public class CasaInteligente implements Serializable {
 
     public CasaInteligente clone() {
         return new CasaInteligente(this);
+    }
+
+    @Override
+    public void createToChange() {
+        CasaInteligente casaInteligente = new CasaInteligente();
+        super.setToChange(casaInteligente);
+    }
+
+    @Override
+    public void change() {
+        CasaInteligente casaInteligente = getToChange();
+        if (casaInteligente != null) { //existem mudanças pendentes
+            if (casaInteligente.nome != "N/A") this.nome = casaInteligente.nome;
+            if (casaInteligente.nif != -1) this.nif = casaInteligente.nif;
+            if (casaInteligente.comercializador != null) this.comercializador = casaInteligente.comercializador;
+            super.toChange = null; //resetar as mudanças pendentes
+        }
+        for (SmartDevice sD: this.devices.values()) {
+            sD.change();
+        }
     }
 }

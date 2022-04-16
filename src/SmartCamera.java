@@ -71,4 +71,5 @@ public class SmartCamera extends SmartDevice{
     public void setTamanhoFicheiro(double tamanhoFicheiro) {
         this.tamanhoFicheiro = tamanhoFicheiro;
     }
+
 }

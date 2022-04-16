@@ -15,6 +15,7 @@ public class Ficheiros {
         SmartBulb smartBulb1 = new SmartBulb("7",150,SmartBulb.NEUTRAL, 10);
         SmartSpeaker smartSpeaker1 = new SmartSpeaker(SmartDevice.Modo.ON, 300, "8",10, "Adidas", "MTV");
         Comercializador comercializador1 = new Comercializador(10, 3);
+        Comercializador comercializador2 = new Comercializador(5, 2);
         CasaInteligente casaInteligente1 = new CasaInteligente("Pedro", 55555, comercializador1);
         CasaInteligente casaInteligente2 = new CasaInteligente("Josefino Paraquedistas", 11111, comercializador1);
         casaInteligente1.addDevice(camera1);
@@ -25,6 +26,9 @@ public class Ficheiros {
         Simulador simulador = new Simulador(LocalDate.now());
         simulador.addCasa(casaInteligente1);
         simulador.addCasa(casaInteligente2);
+
+        simulador.addComercializador(comercializador1);
+        simulador.addComercializador(comercializador2);
 
         //simulador.saltarDias(20);
 

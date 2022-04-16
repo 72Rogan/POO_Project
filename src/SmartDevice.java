@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public abstract class SmartDevice implements Serializable {
+public abstract class SmartDevice extends Change<SmartDevice> implements Serializable {
     private String id;
     private double custoInstalacao;
     private Modo modo;
@@ -15,7 +15,8 @@ public abstract class SmartDevice implements Serializable {
     }
 
     public SmartDevice() {
-        this.id = "";
+        super();
+        this.id = "N/A";
         this.modo = Modo.OFF;
         this.custoInstalacao = 0;
         this.lastChange = LocalDate.now();
@@ -23,6 +24,7 @@ public abstract class SmartDevice implements Serializable {
     }
 
     public SmartDevice(String id, double custoInstalacao) {
+        super();
         this.id = id;
         this.custoInstalacao = custoInstalacao;
         this.modo = Modo.OFF;
@@ -30,6 +32,7 @@ public abstract class SmartDevice implements Serializable {
     }
 
     public SmartDevice(String id, double custoInstalacao, Modo modo) {
+        super();
         this.id = id;
         this.custoInstalacao = custoInstalacao;
         this.modo = modo;
@@ -37,6 +40,7 @@ public abstract class SmartDevice implements Serializable {
     }
 
     public SmartDevice(SmartDevice smartDevice) {
+        super.toChange = smartDevice.toChange;
         this.id = smartDevice.getID();
         this.custoInstalacao = smartDevice.custoInstalacao;
         this.modo = smartDevice.modo;
@@ -57,25 +61,23 @@ public abstract class SmartDevice implements Serializable {
         } else return 0;
     }
 
-    public void atualizarData(LocalDate data) {
-        this.lastChange = data;
-        //atualizar os pedidos pendentes
-    }
-
     public abstract double consumoDiario();
 
     public void turnOn() {
-        if (this.lastChange.until(LocalDate.now(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
+        if (this.lastChange.until(Simulador.data, ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
             //so pode modificar se ja passou um dia desde a ultima mudança
-            this.modo = Modo.ON;
+            if (this.toChange == null) createToChange();
+            this.toChange.modo = Modo.ON; //coloca a mudança de maneira a ser executada no fim do periodo de simulaçao
             this.lastChange = LocalDate.now();
         } //se o modo for ON, nao e preciso redefini-lo como ON nem mudar a lastChange
     }
 
     public void turnOff() {
-        if (this.lastChange.until(LocalDate.now(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
+        if (this.lastChange.until(Simulador.data, ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
             //so pode modificar se ja passou um dia desde a ultima mudança
-            this.modo = Modo.OFF;
+            System.out.println("A colocar off");
+            if (this.toChange == null) createToChange();
+            this.toChange.modo = Modo.OFF; //coloca a mudança de maneira a ser executada no fim do periodo de simulaçao
             this.lastChange = LocalDate.now();
         }
     }
@@ -103,10 +105,6 @@ public abstract class SmartDevice implements Serializable {
 
     public Modo getModo() {
         return modo;
-    }
-
-    public void setModo(Modo modo) {
-        this.modo = modo;
     }
 
     public LocalDate getLastChange() {
@@ -139,4 +137,19 @@ public abstract class SmartDevice implements Serializable {
     }
 
     public abstract SmartDevice clone();
+
+    @Override
+    public void createToChange() {
+        SmartDevice smartDevice = new SmartSpeaker(); //nao importa ser smartSpeaker, dado que so importa o modo
+        super.setToChange(smartDevice);
+    }
+
+    @Override
+    public void change() {
+        SmartDevice smartDevice = getToChange();
+        if (smartDevice != null) {
+            if (smartDevice.modo != null) this.modo = smartDevice.modo;
+            super.toChange = null;
+        }
+    }
 }

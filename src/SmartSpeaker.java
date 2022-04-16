@@ -12,8 +12,7 @@ public class SmartSpeaker extends SmartDevice {
 	private String radio;
 
 	public SmartSpeaker(){
-		super("", 0);
-		//this.horaDeLigado = 0;
+		super();
 		this.volume = 0; //volume max = 100
 		this.marca = "N/A";
 		this.radio = "N/A";
