@@ -1,6 +1,8 @@
 package src;
 
-public class Comercializador {
+import java.io.Serializable;
+
+public class Comercializador implements Serializable {
     private double custoDiarioKwh;
     private double fatorImpostos;
 

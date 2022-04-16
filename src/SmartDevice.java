@@ -1,9 +1,10 @@
 package src;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-public abstract class SmartDevice {
+public abstract class SmartDevice implements Serializable {
     private String id;
     private double custoInstalacao;
     private Modo modo;

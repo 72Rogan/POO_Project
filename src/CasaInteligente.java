@@ -11,6 +11,7 @@ package src;
 /** conhecimentos de POO.                                                        */
 /*********************************************************************************/
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -31,7 +32,7 @@ public class CasaInteligente {
 
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
 // exceto para a funçao turnAllOn acho que o forEach é bom nessa
-public class CasaInteligente {
+public class CasaInteligente implements Serializable {
     private Comercializador comercializador;
     private String nome;
     private int nif;
@@ -59,6 +60,14 @@ public class CasaInteligente {
         this.faturas = new ArrayList<>();
     }
 
+    public CasaInteligente(CasaInteligente casaInteligente) {
+        this.nome = casaInteligente.nome;
+        this.nif = casaInteligente.nif;
+        this.devices = casaInteligente.devices;
+        this.locations = casaInteligente.locations;
+        this.comercializador = casaInteligente.comercializador;
+        this.faturas = casaInteligente.faturas;
+    }
 
     public void setDeviceOn(String devCode) {
         this.devices.get(devCode).turnOn();
@@ -144,7 +153,7 @@ public class CasaInteligente {
                     @Override
                     public int compare(LocalDate o1, LocalDate o2) {
                         return o1.isBefore(o2) ? 1 : -1; //nao importa se as datas forem iguais
-                    } //ordena as datas por ordem decrescente, e devolve a menor data
+                    } //ordena as datas por ordem decrescente, e devolve a data mais antiga
                 })
                 .orElse(null); //devolve a data mais antiga, ou devolve null se nao existirem datas
         if (inicio == null) {
@@ -159,7 +168,7 @@ public class CasaInteligente {
             smartDevice.atualizarData(fim);
         }
 
-        Fatura fatura = new Fatura(inicio,fim,consumo,custo);
+        Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
         this.faturas.add(fatura.clone());
     }
 
@@ -194,5 +203,25 @@ public class CasaInteligente {
 
     public void setLocations(Map<String, List<String>> locations) {
         this.locations = locations;
+    }
+
+    public Comercializador getComercializador() {
+        return comercializador;
+    }
+
+    public void setComercializador(Comercializador comercializador) {
+        this.comercializador = comercializador;
+    }
+
+    public List<Fatura> getFaturas() {
+        return faturas;
+    }
+
+    public void setFaturas(List<Fatura> faturas) {
+        this.faturas = faturas;
+    }
+
+    public CasaInteligente clone() {
+        return new CasaInteligente(this);
     }
 }
