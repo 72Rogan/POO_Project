@@ -33,6 +33,7 @@ public class CasaInteligente {
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
 // exceto para a funçao turnAllOn acho que o forEach é bom nessa
 public class CasaInteligente extends Change<CasaInteligente> implements Serializable{
+    private Simulador simulador;
     private Comercializador comercializador;
     private String nome;
     private int nif;
@@ -43,6 +44,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     public CasaInteligente() {
         // initialise instance variables
         super();
+        this.simulador = null;
         this.nome = "N/A";
         this.nif = -1;
         this.devices = new HashMap();
@@ -51,19 +53,23 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         this.faturas = new ArrayList<>();
     }
 
-    public CasaInteligente(String nome, int nif, Comercializador comercializador) {
+    public CasaInteligente(Simulador simulador,String nome, int nif, Comercializador comercializador) {
         // initialise instance variables
         super();
+        this.simulador = simulador;
         this.nome = nome;
         this.nif = nif;
         this.devices = new HashMap();
         this.locations = new HashMap();
         this.comercializador = comercializador;
         this.faturas = new ArrayList<>();
+
+        this.simulador.addCasa(this);
     }
 
     public CasaInteligente(CasaInteligente casaInteligente) {
         super.toChange = casaInteligente.toChange;
+        this.simulador = casaInteligente.simulador;
         this.nome = casaInteligente.nome;
         this.nif = casaInteligente.nif;
         this.devices = casaInteligente.devices;
@@ -168,14 +174,28 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         for (SmartDevice smartDevice: this.devices.values()) {
             consumo += smartDevice.consumoAte(fim);
             custo += smartDevice.custoAte(this.comercializador, fim);
+            smartDevice.setLastChange(simulador.getData());
         }
-
-        Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
-        this.faturas.add(fatura);
+        faturar(inicio,fim,consumo,custo);
         //depois de geradas as faturas, executam-se as mudanças pendentes necessarias
         this.change();
     }
 
+    public void faturar(LocalDate inicio, LocalDate fim, double consumo, double custo) {
+        Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
+        this.faturas.add(fatura);
+        this.comercializador.addFatura(fatura);
+    }
+
+    public Fatura getFatura(Periodo periodo) {
+        for (Fatura fatura: this.faturas) {
+            if (fatura.getPeriodo().equals(periodo)) {
+                return fatura;
+            }
+        }
+        System.out.println("Nao encontrou fatura neste periodo");
+        return null;
+    }
 
     public String getNome() {
         return nome;
@@ -257,5 +277,16 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         for (SmartDevice sD: this.devices.values()) {
             sD.change();
         }
+    }
+
+    public String toString() {
+        return "Casa de " + this.nome;
+    }
+
+    public boolean equals(Object o) {
+        if (this==o) return true;
+        if (o==null || this.getClass() != o.getClass()) return false;
+        CasaInteligente casaInteligente = (CasaInteligente) o;
+        return this.nome.equals(casaInteligente.nome) && this.nif == casaInteligente.nif;
     }
 }

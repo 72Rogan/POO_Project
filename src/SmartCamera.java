@@ -1,5 +1,7 @@
 package src;
 
+import java.util.Scanner;
+
 public class SmartCamera extends SmartDevice{
     // private int res;
     private int width;
@@ -14,16 +16,16 @@ public class SmartCamera extends SmartDevice{
         this.tamanhoFicheiro = 0;
     }
 
-    public SmartCamera(String id, double custoInstalacao) {
-        super(id, custoInstalacao);
+    public SmartCamera(Simulador simulador, String id, double custoInstalacao) {
+        super(simulador, id, custoInstalacao);
         this.width = 0;
         this.height = 0;
         this.tamanhoFicheiro = 0;
     }
 
-    public SmartCamera(String id, double custoInstalacao, Modo modo,
+    public SmartCamera(Simulador simulador, String id, double custoInstalacao, Modo modo,
                        int width, int height, double tamanhoFicheiro) {
-        super(id,custoInstalacao,modo);
+        super(simulador, id,custoInstalacao,modo);
         this.width = width;
         this.height = height;
         this.tamanhoFicheiro = tamanhoFicheiro;
@@ -41,6 +43,33 @@ public class SmartCamera extends SmartDevice{
         //Consumo em funçao do tamanho do ficheiro que geram * a resoluçao da imagem
         int fator = this.width * this.height / 1000; // /1000 para tornar o numero mais pequeno
         return fator * tamanhoFicheiro;
+    }
+
+    public static SmartCamera criarSmartCamera(Simulador simulador, Scanner scanner) {
+        System.out.println("Escreve no formato ID-Custo-Modo-Largura-Altura-TamanhoFicheiro / Exemplo: Cam1-700-ON-1920-1080-50");
+        String input = scanner.next();
+        String[] idCustoModoLarguraAlturaTamanho = input.split("-", 6);
+        String id = idCustoModoLarguraAlturaTamanho[0];
+        int custo = Integer.valueOf(idCustoModoLarguraAlturaTamanho[1]);
+        Modo modo = idCustoModoLarguraAlturaTamanho[2].equals("OFF") ? Modo.OFF : idCustoModoLarguraAlturaTamanho[2].equals("ON") ? Modo.ON : null;
+        int largura = Integer.valueOf(idCustoModoLarguraAlturaTamanho[3]);
+        int altura = Integer.valueOf(idCustoModoLarguraAlturaTamanho[4]);
+        double tamanho = Double.valueOf(idCustoModoLarguraAlturaTamanho[5]);
+        SmartCamera ret = new SmartCamera(simulador, id, custo, modo, largura, altura, tamanho);
+        return ret;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Camera, id: ")
+                .append(this.getID())
+                .append(", ")
+                .append(this.getModo())
+                .append(", ")
+                .append(this.width)
+                .append("x")
+                .append(this.height);
+        return sb.toString();
     }
 
     @Override

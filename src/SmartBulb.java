@@ -1,5 +1,7 @@
 package src;
 
+import java.util.Scanner;
+
 public class SmartBulb extends SmartDevice {
     public static final int WARM = 2;
     public static final int NEUTRAL = 1;
@@ -16,13 +18,13 @@ public class SmartBulb extends SmartDevice {
         this.tone = NEUTRAL;
     }
 
-    public SmartBulb(String id, int tone) {
-        super(id, -1);
+    public SmartBulb(Simulador simulador, String id, int tone) {
+        super(simulador,id, -1);
         this.tone = tone;
     }
 
-    public SmartBulb(String id, double custo, int tone, double tamanho) {
-        super(id, custo);
+    public SmartBulb(Simulador simulador,String id, double custo, Modo modo, int tone, double tamanho) {
+        super(simulador, id, custo, modo);
         this.tone = tone;
         this.tamanho = tamanho;
     }
@@ -51,8 +53,21 @@ public class SmartBulb extends SmartDevice {
         this.tamanho = tamanho;
     }
 
+    public static SmartBulb criarSmartBulb(Simulador simulador, Scanner scanner) {
+        System.out.println("Escreve no formato ID-Custo-Modo-Tone-Tamanho / Exemplo: Lamp1-550-OFF-WARM-6.3");
+        String input = scanner.next();
+        String[] idCustoModoTone = input.split("-", 5);
+        String id = idCustoModoTone[0];
+        int custo = Integer.valueOf(idCustoModoTone[1]);
+        Modo modo = idCustoModoTone[2].equals("OFF") ? Modo.OFF : idCustoModoTone[2].equals("ON") ? Modo.ON : null;
+        int tone = idCustoModoTone[3].equals("WARM") ? 2 : idCustoModoTone[3].equals("NEUTRAL") ? 1 : idCustoModoTone[3].equals("COLD") ? 0 : -1;
+        double tamanho = Double.valueOf(idCustoModoTone[4]);
+        SmartBulb ret = new SmartBulb(simulador, id, custo, modo, tone, tamanho);
+        return ret;
+    }
+
     public String toString(){
-        return super.toString() + " Tone: " + this.getTone();
+        return "Lampada, id: " + this.getID() + ", " + this.getModo() + ", Tone: " + this.getTone();
     }
 
     @Override

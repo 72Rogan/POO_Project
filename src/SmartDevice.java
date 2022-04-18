@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
 public abstract class SmartDevice extends Change<SmartDevice> implements Serializable {
+    private Simulador simulador;
     private String id;
     private double custoInstalacao;
     private Modo modo;
@@ -16,6 +17,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
 
     public SmartDevice() {
         super();
+        this.simulador = null;
         this.id = "N/A";
         this.modo = Modo.OFF;
         this.custoInstalacao = 0;
@@ -23,24 +25,31 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
 
     }
 
-    public SmartDevice(String id, double custoInstalacao) {
+    public SmartDevice(Simulador simulador, String id, double custoInstalacao) {
         super();
+        this.simulador = simulador;
         this.id = id;
         this.custoInstalacao = custoInstalacao;
         this.modo = Modo.OFF;
         this.lastChange = LocalDate.now();
+
+        simulador.addDispositivo(this);
     }
 
-    public SmartDevice(String id, double custoInstalacao, Modo modo) {
+    public SmartDevice(Simulador simulador, String id, double custoInstalacao, Modo modo) {
         super();
+        this.simulador = simulador;
         this.id = id;
         this.custoInstalacao = custoInstalacao;
         this.modo = modo;
         this.lastChange = LocalDate.now();
+
+        simulador.addDispositivo(this);
     }
 
     public SmartDevice(SmartDevice smartDevice) {
         super.toChange = smartDevice.toChange;
+        this.simulador = smartDevice.simulador;
         this.id = smartDevice.getID();
         this.custoInstalacao = smartDevice.custoInstalacao;
         this.modo = smartDevice.modo;
@@ -64,7 +73,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     public abstract double consumoDiario();
 
     public void turnOn() {
-        if (this.lastChange.until(Simulador.data, ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
+        if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
             //so pode modificar se ja passou um dia desde a ultima mudança
             if (this.toChange == null) createToChange();
             this.toChange.modo = Modo.ON; //coloca a mudança de maneira a ser executada no fim do periodo de simulaçao
@@ -73,7 +82,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     }
 
     public void turnOff() {
-        if (this.lastChange.until(Simulador.data, ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
+        if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
             //so pode modificar se ja passou um dia desde a ultima mudança
             System.out.println("A colocar off");
             if (this.toChange == null) createToChange();
@@ -118,9 +127,9 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(this.getClass().toString());
-        sb.append(": Custo Instalaçao - ");
-        sb.append(this.custoInstalacao);
-        sb.append(", modo - ");
+        sb.append(", ");
+        sb.append(this.id);
+        sb.append(", ");
         sb.append(this.modo);
         return sb.toString();
     }

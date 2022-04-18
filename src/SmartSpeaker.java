@@ -3,9 +3,10 @@ package src;
 import src.SmartDevice;
 
 import java.time.LocalDateTime;
+import java.util.Scanner;
 
 public class SmartSpeaker extends SmartDevice {
-
+	private Simulador simulador;
 	private int volume;
 	public static final int MAX = 100;
 	private String marca;
@@ -18,8 +19,8 @@ public class SmartSpeaker extends SmartDevice {
 		this.radio = "N/A";
 	}
 
-	public SmartSpeaker(Modo x, double instalacao,String id, int vol, String marca, String radio){
-		super(id,instalacao,x);
+	public SmartSpeaker(Simulador simulador, String id, double instalacao, Modo x, int vol, String marca, String radio){
+		super(simulador, id,instalacao,x);
 		this.volume=vol;
 		this.marca=marca;
 		this.radio=radio;
@@ -75,6 +76,20 @@ public class SmartSpeaker extends SmartDevice {
 		this.radio=radio;
 	}
 
+	public static SmartSpeaker criarSmartSpeaker(Simulador simulador, Scanner scanner) {
+		System.out.println("Escreve no formato ID-Custo-Modo-Volume-Marca-Radio / Exemplo: Coluna1-300-ON-73-JBL-MEGAHITS");
+		String input = scanner.next();
+		String[] idCustoModoVolumeMarcaRadio = input.split("-", 6);
+		String id = idCustoModoVolumeMarcaRadio[0];
+		int custo = Integer.valueOf(idCustoModoVolumeMarcaRadio[1]);
+		Modo modo = idCustoModoVolumeMarcaRadio[2].equals("OFF") ? Modo.OFF : idCustoModoVolumeMarcaRadio[2].equals("ON") ? Modo.ON : null;
+		int volume = Integer.valueOf(idCustoModoVolumeMarcaRadio[3]);
+		String marca = idCustoModoVolumeMarcaRadio[4];
+		String radio = idCustoModoVolumeMarcaRadio[5];
+		SmartSpeaker ret = new SmartSpeaker(simulador, id, custo, modo, volume,marca,radio);
+		return ret;
+	}
+
     public boolean equals(Object o) {
         if (this==o) return true; 
         if ((o == null) || (this.getClass() != o.getClass())) return false; 
@@ -94,11 +109,10 @@ public class SmartSpeaker extends SmartDevice {
     
     public String toString() {
          StringBuilder sb = new StringBuilder(); 
-         sb.append("Coluna: ").append(this.getModo())
-          .append("\nID: ").append(this.getID())
-          .append("\nVolume: ").append(this.volume)
-          .append("\nMarca: ").append(this.marca)
-          .append("\nRadio: ").append(this.radio); 
+         sb.append("Coluna, id: ")
+				 .append(this.getID())
+				 .append(", ")
+				 .append(this.getModo());
          return sb.toString();
     }
 
