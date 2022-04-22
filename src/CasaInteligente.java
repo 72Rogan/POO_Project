@@ -1,13 +1,13 @@
 package src;
 
 /*********************************************************************************/
-/** DISCLAIMER: Este código foi criado e alterado durante as aulas práticas      */
-/** de POO. Representa uma solução em construção, com base na matéria leccionada */ 
-/** até ao momento da sua elaboração, e resulta da discussão e experimentação    */
-/** durante as aulas. Como tal, não deverá ser visto como uma solução canónica,  */
-/** ou mesmo acabada. É disponibilizado para auxiliar o processo de estudo.      */
-/** Os alunos são encorajados a testar adequadamente o código fornecido e a      */
-/** procurar soluções alternativas, à medida que forem adquirindo mais           */
+/** DISCLAIMER: Este codigo foi criado e alterado durante as aulas praticas      */
+/** de POO. Representa uma solucao em construcao, com base na materia leccionada */
+/** ate ao momento da sua elaboracao, e resulta da discussao e experimentacao    */
+/** durante as aulas. Como tal, nao devera ser visto como uma solucao canonica,  */
+/** ou mesmo acabada. e disponibilizado para auxiliar o processo de estudo.      */
+/** Os alunos sao encorajados a testar adequadamente o codigo fornecido e a      */
+/** procurar solucoes alternativas, a medida que forem adquirindo mais           */
 /** conhecimentos de POO.                                                        */
 /*********************************************************************************/
 
@@ -17,21 +17,21 @@ import java.util.*;
 
 
 /**
- * A CasaInteligente faz a gestão dos SmartDevices que existem e dos 
- * espaços (as salas) que existem na casa.
+ * A CasaInteligente faz a gestao dos SmartDevices que existem e dos
+ * espacos (as salas) que existem na casa.
 
 public class CasaInteligente {
    
     private String morada;
     private Map<String, SmartDevice> devices; // identificador -> SmartDevice
-    private Map<String, List<String>> locations; // Espaço -> Lista codigo dos devices
+    private Map<String, List<String>> locations; // Espaco -> Lista codigo dos devices
 
     /**
      * Constructor for objects of class CasaInteligente
      */
 
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
-// exceto para a funçao turnAllOn acho que o forEach é bom nessa
+// exceto para a funcao turnAllOn acho que o forEach e bom nessa
 public class CasaInteligente extends Change<CasaInteligente> implements Serializable{
     private Simulador simulador;
     private Comercializador comercializador;
@@ -177,7 +177,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
             smartDevice.setLastChange(simulador.getData());
         }
         faturar(inicio,fim,consumo,custo);
-        //depois de geradas as faturas, executam-se as mudanças pendentes necessarias
+        //depois de geradas as faturas, executam-se as mudancas pendentes necessarias
         this.change();
     }
 
@@ -185,6 +185,15 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
         this.faturas.add(fatura);
         this.comercializador.addFatura(fatura);
+    }
+
+    public static CasaInteligente escolherCasa(List<CasaInteligente> listaCasas, Scanner scanner) {
+        System.out.println("Escolhe uma casa");
+        for (int i=0; i<listaCasas.size(); i++) {
+            System.out.println(i + " - " + listaCasas.get(i).toString());
+        }
+        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
+        return listaCasas.get(escolha);
     }
 
     public Fatura getFatura(Periodo periodo) {
@@ -203,7 +212,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
 
     public void setNome(String nome) {
         //this.nome = nome;
-        //Coloca o nome nas mudanças pendentes
+        //Coloca o nome nas mudancas pendentes
         if (super.toChange == null) createToChange();
         this.toChange.nome = nome;
     }
@@ -214,7 +223,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
 
     public void setNif(int nif) {
         //this.nif = nif;
-        //Coloca o nif nas mudanças pendentes
+        //Coloca o nif nas mudancas pendentes
         if (super.toChange == null) createToChange();
         this.toChange.nif = nif;
     }
@@ -242,7 +251,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     public void setComercializador(Comercializador comercializador) {
         //this.comercializador = comercializador;
 
-        //coloca o novo comercializador nas mudanças pendentes
+        //coloca o novo comercializador nas mudancas pendentes
         if (super.toChange == null) createToChange();
         super.toChange.comercializador = comercializador;
     }
@@ -268,11 +277,11 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     @Override
     public void change() {
         CasaInteligente casaInteligente = getToChange();
-        if (casaInteligente != null) { //existem mudanças pendentes
+        if (casaInteligente != null) { //existem mudancas pendentes
             if (casaInteligente.nome != "N/A") this.nome = casaInteligente.nome;
             if (casaInteligente.nif != -1) this.nif = casaInteligente.nif;
             if (casaInteligente.comercializador != null) this.comercializador = casaInteligente.comercializador;
-            super.toChange = null; //resetar as mudanças pendentes
+            super.toChange = null; //resetar as mudancas pendentes
         }
         for (SmartDevice sD: this.devices.values()) {
             sD.change();

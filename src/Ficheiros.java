@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 /*
 Esta classe serve para criar presets, ou seja, ficheiros de objetos que ja tem
-uma configuraçao de casas inteligentes, dispositivos e comercializadores de energia.
+uma configuracao de casas inteligentes, dispositivos e comercializadores de energia.
  */
 public class Ficheiros {
     public static void main(String[] args) {

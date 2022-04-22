@@ -48,7 +48,7 @@ public class Estatisticas implements Serializable {
                     } else return 0;
                 })
                 .orElse(null);
-        System.out.println("O comercializador com maior volume de faturaçao e " + ret.toString());
+        System.out.println("O comercializador com maior volume de faturacao e " + ret.toString());
     }
 
     public void estatistica3(Scanner scanner) {
@@ -58,7 +58,7 @@ public class Estatisticas implements Serializable {
 
     public void estatistica4(Scanner scanner) {
         //ou e um periodo ja existente, ou e um periodo metido pelo utilizador, e que pode englobar varios periodos
-        //nesta implementaçao, tem que se escolher um dos periodos ja existentes
+        //nesta implementacao, tem que se escolher um dos periodos ja existentes
         Periodo periodo = Periodo.escolherPeriodo(this.periodos, scanner);
         List<CasaInteligente> ret = this.casasInteligentes.stream()
                 .sorted((casa1, casa2) -> {
@@ -81,9 +81,9 @@ public class Estatisticas implements Serializable {
     public void escolherEstatistica(Scanner scanner) {
         System.out.println("Estatisticas:");
         System.out.println("1. Qual e a casa que mais gastou no ultimo periodo");
-        System.out.println("2. Qual o comercializador com maior volume de faturaçao");
+        System.out.println("2. Qual o comercializador com maior volume de faturacao");
         System.out.println("3. Listar as faturas emitidas por um comercializador");
-        System.out.println("4. Ordenaçao dos maior consumidores de energia num periodo");
+        System.out.println("4. Ordenacao dos maior consumidores de energia num periodo");
         int escolha = scanner.nextInt();
         if (escolha == 1) {
             estatistica1();

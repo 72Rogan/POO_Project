@@ -40,7 +40,7 @@ public class SmartCamera extends SmartDevice{
 
     @Override
     public double consumoDiario() {
-        //Consumo em funçao do tamanho do ficheiro que geram * a resoluçao da imagem
+        //Consumo em funcao do tamanho do ficheiro que geram * a resolucao da imagem
         int fator = this.width * this.height / 1000; // /1000 para tornar o numero mais pequeno
         return fator * tamanhoFicheiro;
     }

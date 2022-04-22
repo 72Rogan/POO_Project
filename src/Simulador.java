@@ -79,8 +79,8 @@ public class Simulador implements Serializable{
         Scanner scanner = new Scanner(System.in);
         while (true) {
             System.out.println("Data atual: " + this.data.toString());
-            System.out.println("Escolhe uma opçao");
-            System.out.println("1. Avançar no tempo");
+            System.out.println("Escolhe uma opcao");
+            System.out.println("1. Avancar no tempo");
             System.out.println("2. Gerir entidades");
             System.out.println("3. Estatisticas");
             int escolha = scanner.nextInt();
@@ -95,13 +95,13 @@ public class Simulador implements Serializable{
     }
 
     public void avancarTempo(Scanner scanner) {
-        System.out.println("1. Avançar X dias");
-        System.out.println("2. Avançar para a data X");
+        System.out.println("1. Avancar X dias");
+        System.out.println("2. Avancar para a data X");
         int escolha = scanner.nextInt();
         if (escolha == 1) {
-            System.out.println("Quantos dias queres avançar?");
-            int diasAvançados = scanner.nextInt();
-            this.saltarDias(diasAvançados);
+            System.out.println("Quantos dias queres avancar?");
+            int diasAvancados = scanner.nextInt();
+            this.saltarDias(diasAvancados);
         } else if (escolha == 2) {
             System.out.println("Data atual: " + data);
             System.out.println("Escreve a nova data no formato AA-MM-DD (ano-mes-dia)");
@@ -127,9 +127,70 @@ public class Simulador implements Serializable{
         if (escolha == 1) {
             gerirDispositivos(scanner);
         } else if (escolha == 2) {
-            //gerirCasas(scanner);
+            gerirCasas(scanner);
         } else if (escolha == 3) {
-            //gerirComercializadores(scanner);
+            gerirComercializadores(scanner);
+        }
+    }
+
+    public void gerirComercializadores(Scanner scanner) {
+        System.out.println("1. Listar comercializadores");
+        System.out.println("2. Criar comercializador");
+        System.out.println("3. Mudar valores de um comercializador");
+        int escolha = scanner.nextInt();
+        if (escolha == 1) {
+            for (Comercializador com: this.comercializadores) {
+                System.out.println(com.toString());
+            }
+        } else if (escolha == 2) {
+            System.out.println("Escreve o novo comercializador no formato Nome-CustoDiarioKwh-FatorImpostos");
+            String input = scanner.next();
+            String[] nomeNif = input.split("-", 3);
+            String nome = nomeNif[0];
+            double custoDiarioKwh = Double.valueOf(nomeNif[1]);
+            double fatorImpostos = Double.valueOf(nomeNif[2]);
+            System.out.println("Escreva a formula para calcular o custo diario, sendo o custoDiarioKwh a variavel x, e o fatorImpostos a variavel y");
+            String formula = scanner.next();
+            Comercializador comercializador = new Comercializador(this,nome,custoDiarioKwh,fatorImpostos);
+            this.addComercializador(comercializador);
+        } else if (escolha == 3) {
+            Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores,scanner);
+            System.out.println("Digite os novos valores do comercializador no formato Nome-CustoDiarioKwh-FatorImpostos");
+            System.out.println("Se quiser manter algum parametro, escreva -1 no parametro respetivo");
+            String input = scanner.next();
+            String[] nomeNif = input.split("-", 3);
+            String nome = nomeNif[0];
+            double custoDiarioKwh = Double.valueOf(nomeNif[1]);
+            double fatorImpostos = Double.valueOf(nomeNif[2]);
+            if (!nome.equals("-1")) comercializador.setNome(nome);
+            if (custoDiarioKwh != -1) comercializador.setCustoDiarioKwh(custoDiarioKwh);
+            if (fatorImpostos != -1) comercializador.setFatorImpostos(fatorImpostos);
+        }
+    }
+
+
+    public void gerirCasas(Scanner scanner) {
+        System.out.println("1. Listar casas");
+        System.out.println("2. Mudar comercializador de uma casa");
+        System.out.println("3. Criar casas");
+        int escolha = scanner.nextInt();
+        if (escolha == 1) {
+            for (CasaInteligente casa: this.casasInteligentes) {
+                System.out.println(casa.toString());
+            }
+        } else if (escolha == 2) {
+            CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
+            Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
+            casa.setComercializador(comercializador);
+        } else if (escolha == 3) {
+            System.out.println("Escreve a nova casa no formato Nome-Nif");
+            String input = scanner.next();
+            String[] nomeNif = input.split("-", 2);
+            String nome = nomeNif[0];
+            int nif = Integer.valueOf(nomeNif[1]);
+            Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
+            CasaInteligente casa = new CasaInteligente(this, nome, nif, comercializador);
+            this.addCasa(casa);
         }
     }
 

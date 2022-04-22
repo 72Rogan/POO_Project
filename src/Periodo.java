@@ -19,7 +19,7 @@ public class Periodo implements Serializable {
         for (int i=0; i<listaPeriodo.size(); i++) {
             System.out.println(i + " - " + listaPeriodo.get(i).toString());
         }
-        int escolha = scanner.nextInt(); //assume-se que escolheu uma opçao valida
+        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
         return listaPeriodo.get(escolha);
     }
 

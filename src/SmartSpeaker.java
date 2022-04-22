@@ -118,7 +118,7 @@ public class SmartSpeaker extends SmartDevice {
 
 	@Override
 	public double consumoDiario() {
-		//consumo em funçao da marca + factor em funçao do volume
+		//consumo em funcao da marca + factor em funcao do volume
 		return -1;
 	}
 }

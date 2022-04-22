@@ -78,7 +78,7 @@ public class SmartBulb extends SmartDevice {
 
     @Override
     public double consumoDiario() {
-        //Consumo em funçao de um valor fixo + factor em funçao do tipo de luz que esta a ser emitida
+        //Consumo em funcao de um valor fixo + factor em funcao do tipo de luz que esta a ser emitida
         return -1;
     }
 

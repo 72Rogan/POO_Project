@@ -9,7 +9,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     private String id;
     private double custoInstalacao;
     private Modo modo;
-    private LocalDate lastChange; //data do ultimo periodo de faturaçao
+    private LocalDate lastChange; //data do ultimo periodo de faturacao
 
     public enum Modo{
         ON, OFF;
@@ -74,19 +74,19 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
 
     public void turnOn() {
         if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
-            //so pode modificar se ja passou um dia desde a ultima mudança
+            //so pode modificar se ja passou um dia desde a ultima mudanca
             if (this.toChange == null) createToChange();
-            this.toChange.modo = Modo.ON; //coloca a mudança de maneira a ser executada no fim do periodo de simulaçao
+            this.toChange.modo = Modo.ON; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
             this.lastChange = LocalDate.now();
         } //se o modo for ON, nao e preciso redefini-lo como ON nem mudar a lastChange
     }
 
     public void turnOff() {
         if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
-            //so pode modificar se ja passou um dia desde a ultima mudança
+            //so pode modificar se ja passou um dia desde a ultima mudanca
             System.out.println("A colocar off");
             if (this.toChange == null) createToChange();
-            this.toChange.modo = Modo.OFF; //coloca a mudança de maneira a ser executada no fim do periodo de simulaçao
+            this.toChange.modo = Modo.OFF; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
             this.lastChange = LocalDate.now();
         }
     }

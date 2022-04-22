@@ -63,7 +63,7 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         for (int i=0; i<listaComercializador.size(); i++) {
             System.out.println(i + " - " + listaComercializador.get(i).toString());
         }
-        int escolha = scanner.nextInt(); //assume-se que escolheu uma opçao valida
+        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
         return listaComercializador.get(escolha);
     }
 
@@ -104,5 +104,13 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         if (o==null || this.getClass() != o.getClass()) return false;
         Comercializador comercializador = (Comercializador) o;
         return this.nome == comercializador.nome;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 }
