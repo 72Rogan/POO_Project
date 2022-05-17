@@ -10,14 +10,23 @@ public class Programa {
         Scanner scanner = new Scanner(System.in);
         Simulador simulador = null;
         System.out.println("Escolha uma opcao");
-        System.out.println("1. Carregar Informacao de ficheiro");
-        System.out.println("2. Criar informacao");
+        System.out.println("1. Carregar Informacao de ficheiro de objeto");
+        System.out.println("2. Carregar Informacao de ficheiro de texto");
+        System.out.println("3. Criar informacao");
         int escolha = scanner.nextInt();
         if (escolha == 1) {
             System.out.println("Escreva o caminho do ficheiro a ser carregado");
             String caminho = scanner.next();
             simulador = construirSimulador(caminho); //recebe o caminho para um ficheiro onde esta escrito uma entidade da classe Simulador
         } else if (escolha == 2) {
+            System.out.println("Escreva o caminho do ficheiro a ser carregado");
+            String caminho = scanner.next();
+            Parser parser = new Parser(caminho);
+            try {
+                simulador = parser.parse();
+            } catch(LinhaIncorretaException e) {
+            }
+        }else if (escolha == 3) {
             simulador = new Simulador();
             simulador.faseInicial(scanner);
         } else {

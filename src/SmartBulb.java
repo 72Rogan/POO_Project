@@ -82,4 +82,8 @@ public class SmartBulb extends SmartDevice {
         setConsumoDiario(consumo);
     }
 
+    public static SmartBulb parse(String linha) {
+        return null;
+    }
+
 }

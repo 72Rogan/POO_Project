@@ -46,6 +46,10 @@ public class SmartCamera extends SmartDevice{
         setConsumoDiario(consumo);
     }
 
+    public static SmartCamera parse(String linha) {
+        return null;
+    }
+
     public static SmartCamera criarSmartCamera(Simulador simulador, Scanner scanner) {
         System.out.println("Escreve no formato ID-Custo-Modo-Largura-Altura-TamanhoFicheiro / Exemplo: Cam1-700-ON-1920-1080-50");
         String input = scanner.next();

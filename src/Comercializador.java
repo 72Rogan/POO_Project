@@ -32,6 +32,10 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         simulador.addComercializador(this);
     }
 
+    public static Comercializador parse(String linha) {
+        return null;
+    }
+
     public double precoDiaPorDispositivo(SmartDevice smartDevice) {
         return custoDiarioKwh * smartDevice.getConsumoDiario() * (1+fatorImpostos) * 0.9;
     }
