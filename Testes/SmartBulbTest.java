@@ -5,8 +5,8 @@ import static src.SmartDevice.Modo.OFF;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.AfterAll;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import src.Simulador;
 import src.SmartBulb;
@@ -25,14 +25,14 @@ public class SmartBulbTest{
     public void testeConstrutor(){
         Simulador simulador = new Simulador();
         SmartBulb smartBulb1 = new SmartBulb();
-        assertTrue(smartBulb1!=null, "Erro ao criar a SmartBulb");
+        assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
         smartBulb1 = new SmartBulb(simulador,"SmartBulb1",0);
-        assertTrue(smartBulb1!=null, "Erro ao criar a SmartBulb");
+        assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
         smartBulb1 = new SmartBulb(simulador,"SmartBulb1",OFF,0,8);
-        assertTrue(smartBulb1!=null, "Erro ao criar a SmartBulb");
+        assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
         smartBulb1 = new SmartBulb(smartBulb1);
-        assertTrue(smartBulb1!=null, "Erro ao criar a SmartBulb");
-    }
+        assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
+   }
     /*
     public void testConsumoDiario() {
         SmartBulb SmartBulb1 = new SmartBulb();
@@ -86,8 +86,8 @@ public class SmartBulbTest{
  //       assertEquals(2,SmartBulb1.getTone());
         SmartBulb smartBulb1 = new SmartBulb(simulador,"SmartBulb1",OFF,0,15);
         assertEquals(15,smartBulb1.getTamanho(),  "Valor do tamanho não é o esperado");
-        SmartBulb SmartBulb2 = new SmartBulb(smartBulb1);
-        assertEquals(15,SmartBulb2.getTone(),  "Valor do tamanho não é o esperado");
+        SmartBulb smartBulb2 = new SmartBulb(smartBulb1);
+        assertEquals(15,smartBulb2.getTone(),  "Valor do tamanho não é o esperado");
     }
     
 

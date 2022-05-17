@@ -1,12 +1,15 @@
-//package Trabalho Prático;
-import src.SmartSpeaker;
+//package Testes;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static src.SmartDevice.Modo.OFF;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import src.SmartSpeaker;
+import src.Simulador;
 
 
 public class SmartSpeakerTest{
@@ -18,26 +21,28 @@ public class SmartSpeakerTest{
     public void tearDown(){}
 
 
-	Simulador simulador = new Simulador();
+
 
     @Test
 	public void testeConstrutor(){
+        Simulador simulador = new Simulador();
 		SmartSpeaker smartSpeaker1 = new SmartSpeaker();
-		assertTrue(smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
-		SmartSpeaker smartSpeaker1 = new SmartSpeaker(simulador,"smartSpeaker1",5,OFF,15,"Panasonic","RUM");
-		assertTrue(smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
+		assertNotNull(smartSpeaker1 , "Erro ao criar a SmartSpeaker");
+		smartSpeaker1 = new SmartSpeaker(simulador,"smartSpeaker1",5,OFF,15,"Panasonic","RUM");
+		assertNotNull(smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
 		SmartSpeaker smartSpeaker2 = new SmartSpeaker(smartSpeaker1);
-		assertTrue(smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
+		assertNotNull(  smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
 	}
 
     @Test
 	public void testGetVolume() {
+        Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker();
         assertEquals(0,smartSpeaker1.getVolume(), "Volume da coluna não é o esperado");
         SmartSpeaker smartSpeaker2 = new SmartSpeaker(simulador,"smartSpeaker1",5,OFF,SmartSpeaker.MAX,"Panasonic","RUM");
         assertEquals(100, smartSpeaker2.getVolume(), "Volume da coluna não é o esperado");
         SmartSpeaker smartSpeaker3 = new SmartSpeaker(simulador,"smartSpeaker1",5,OFF,-15,"Panasonic","RUM");
-        assertEquals(0, smartSpeaker1.getVolume(), "Volume da coluna não é o esperado");
+        assertEquals(0, smartSpeaker3.getVolume(), "Volume da coluna não é o esperado");
         SmartSpeaker smartSpeaker4 = new SmartSpeaker(simulador,"smartSpeaker1",5,OFF,110,"Panasonic","RUM");
         assertEquals(100, smartSpeaker4.getVolume(), "Volume da coluna não é o esperado");
         SmartSpeaker smartSpeaker5 = new SmartSpeaker();
@@ -46,6 +51,7 @@ public class SmartSpeakerTest{
 
     @Test
     public void testGetMarca() {
+        Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker();
         assertEquals("N/A", smartSpeaker1.getMarca() , "Não é a marca da coluna esperada");
         SmartSpeaker smartSpeaker2 = new SmartSpeaker(simulador,"smartSpeaker2",5,OFF,15,"Panasonic","RUM");
@@ -56,6 +62,7 @@ public class SmartSpeakerTest{
 
     @Test
     public void testGetRadio() {
+        Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker();
         assertEquals("N/A", smartSpeaker1.getRadio() , "Não é a radio esperada");
         SmartSpeaker smartSpeaker2 = new SmartSpeaker(simulador,"smartSpeaker2",5,OFF,15,"Panasonic","RUM");
@@ -66,6 +73,7 @@ public class SmartSpeakerTest{
 
     @Test
     public void testSetVolume() {
+        Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker(simulador,"smartSpeaker1",5,OFF,13,"Panasonic","RUM");
         smartSpeaker1.volumeUp();
         smartSpeaker1.volumeUp();
