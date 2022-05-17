@@ -18,13 +18,14 @@ public class SmartBulb extends SmartDevice {
         this.tone = NEUTRAL;
     }
 
+
     public SmartBulb(Simulador simulador, String id, int tone) {
-        super(simulador,id, -1);
+        super(simulador,id, 150);
         this.tone = tone;
     }
 
-    public SmartBulb(Simulador simulador,String id, double custo, Modo modo, int tone, double tamanho) {
-        super(simulador, id, custo, modo);
+    public SmartBulb(Simulador simulador,String id, Modo modo, int tone, double tamanho) {
+        super(simulador, id, 150, modo);
         this.tone = tone;
         this.tamanho = tamanho;
     }
@@ -54,15 +55,14 @@ public class SmartBulb extends SmartDevice {
     }
 
     public static SmartBulb criarSmartBulb(Simulador simulador, Scanner scanner) {
-        System.out.println("Escreve no formato ID-Custo-Modo-Tone-Tamanho / Exemplo: Lamp1-550-OFF-WARM-6.3");
+        System.out.println("Escreve no formato ID-Modo-Tone-Tamanho / Exemplo: Lamp1-OFF-WARM-6.3");
         String input = scanner.next();
         String[] idCustoModoTone = input.split("-", 5);
         String id = idCustoModoTone[0];
-        int custo = Integer.valueOf(idCustoModoTone[1]);
-        Modo modo = idCustoModoTone[2].equals("OFF") ? Modo.OFF : idCustoModoTone[2].equals("ON") ? Modo.ON : null;
-        int tone = idCustoModoTone[3].equals("WARM") ? 2 : idCustoModoTone[3].equals("NEUTRAL") ? 1 : idCustoModoTone[3].equals("COLD") ? 0 : -1;
-        double tamanho = Double.valueOf(idCustoModoTone[4]);
-        SmartBulb ret = new SmartBulb(simulador, id, custo, modo, tone, tamanho);
+        Modo modo = idCustoModoTone[1].equals("OFF") ? Modo.OFF : idCustoModoTone[2].equals("ON") ? Modo.ON : null;
+        int tone = idCustoModoTone[2].equals("WARM") ? 2 : idCustoModoTone[3].equals("NEUTRAL") ? 1 : idCustoModoTone[3].equals("COLD") ? 0 : -1;
+        double tamanho = Double.valueOf(idCustoModoTone[3]);
+        SmartBulb ret = new SmartBulb(simulador, id, modo, tone, tamanho);
         return ret;
     }
 
@@ -77,9 +77,9 @@ public class SmartBulb extends SmartDevice {
 
 
     @Override
-    public double consumoDiario() {
-        //Consumo em funcao de um valor fixo + factor em funcao do tipo de luz que esta a ser emitida
-        return -1;
+    public void calcularConsumoDiario() {
+        double consumo = 0.5 + (this.tone * 2.5); //valor varia entre 0.5 e 5.5
+        setConsumoDiario(consumo);
     }
 
 }

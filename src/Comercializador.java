@@ -33,7 +33,7 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     }
 
     public double precoDiaPorDispositivo(SmartDevice smartDevice) {
-        return custoDiarioKwh * smartDevice.consumoDiario() * (1+fatorImpostos) * 0.9;
+        return custoDiarioKwh * smartDevice.getConsumoDiario() * (1+fatorImpostos) * 0.9;
     }
 
     public double getCustoDiarioKwh() {

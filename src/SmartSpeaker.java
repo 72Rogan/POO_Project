@@ -24,6 +24,7 @@ public class SmartSpeaker extends SmartDevice {
 		this.volume=vol;
 		this.marca=marca;
 		this.radio=radio;
+		calcularConsumoDiario();
 	}
 
 	public SmartSpeaker(SmartSpeaker c){
@@ -117,8 +118,10 @@ public class SmartSpeaker extends SmartDevice {
     }
 
 	@Override
-	public double consumoDiario() {
+	public void calcularConsumoDiario() {
 		//consumo em funcao da marca + factor em funcao do volume
-		return -1;
+		double consumoBase = 0.5;
+		double consumoDiario = consumoBase + (this.volume / 20.0); // o consumoDiario tem um valor entre 0.5 e 5.5
+		setConsumoDiario(consumoDiario);
 	}
 }

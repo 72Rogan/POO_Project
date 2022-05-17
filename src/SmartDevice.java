@@ -3,11 +3,15 @@ package src;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
+import java.util.Scanner;
 
 public abstract class SmartDevice extends Change<SmartDevice> implements Serializable {
     private Simulador simulador;
     private String id;
+    private CasaInteligente casa;
     private double custoInstalacao;
+    private double consumoDiario;
     private Modo modo;
     private LocalDate lastChange; //data do ultimo periodo de faturacao
 
@@ -21,7 +25,9 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.id = "N/A";
         this.modo = Modo.OFF;
         this.custoInstalacao = 0;
+        this.consumoDiario = -1;
         this.lastChange = LocalDate.now();
+        this.casa = null;
 
     }
 
@@ -30,8 +36,10 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.simulador = simulador;
         this.id = id;
         this.custoInstalacao = custoInstalacao;
+        this.consumoDiario = -1;
         this.modo = Modo.OFF;
         this.lastChange = LocalDate.now();
+        this.casa = null;
 
         simulador.addDispositivo(this);
     }
@@ -41,8 +49,10 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.simulador = simulador;
         this.id = id;
         this.custoInstalacao = custoInstalacao;
+        this.consumoDiario = -1;
         this.modo = modo;
         this.lastChange = LocalDate.now();
+        this.casa = null;
 
         simulador.addDispositivo(this);
     }
@@ -52,14 +62,16 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.simulador = smartDevice.simulador;
         this.id = smartDevice.getID();
         this.custoInstalacao = smartDevice.custoInstalacao;
+        this.consumoDiario = smartDevice.consumoDiario;
         this.modo = smartDevice.modo;
         this.lastChange = smartDevice.lastChange;
+        this.casa = smartDevice.casa;
     }
 
     public double consumoAte(LocalDate date) {
         if (modo == Modo.ON) {
             int diasPassados = this.lastChange.until(date).getDays();
-            return diasPassados * this.consumoDiario();
+            return diasPassados * this.consumoDiario;
         } else return 0;
     }
 
@@ -69,8 +81,6 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
             return comercializador.precoDiaPorDispositivo(this) * diasPassados;
         } else return 0;
     }
-
-    public abstract double consumoDiario();
 
     public void turnOn() {
         if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
@@ -108,6 +118,8 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         return custoInstalacao;
     }
 
+    public abstract void calcularConsumoDiario();
+
     public void setCustoInstalacao(double custoInstalacao) {
         this.custoInstalacao = custoInstalacao;
     }
@@ -116,12 +128,32 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         return modo;
     }
 
+    public boolean isOn() {
+        return this.modo == Modo.ON;
+    }
+
     public LocalDate getLastChange() {
         return lastChange;
     }
 
     public void setLastChange(LocalDate lastChange) {
         this.lastChange = lastChange;
+    }
+
+    public CasaInteligente getCasa() {
+        return casa;
+    }
+
+    public void setCasa(CasaInteligente casa) {
+        this.casa = casa;
+    }
+
+    public void setConsumoDiario(double consumo) {
+        this.consumoDiario = consumo;
+    }
+
+    public double getConsumoDiario() {
+        return this.consumoDiario;
     }
 
     public String toString() {
@@ -143,6 +175,20 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
                 this.custoInstalacao == smartDevice.getCustoInstalacao() &&
                 this.modo.equals(smartDevice.getModo()) &&
                 this.lastChange.equals(smartDevice.lastChange);
+    }
+
+    public static SmartDevice escolherDispositivo(List<SmartDevice> listaDispositivos, Scanner scanner) {
+        System.out.println("Escolhe um dispositivo");
+        for (int i=0; i<listaDispositivos.size(); i++) {
+            System.out.println(i + " - " + listaDispositivos.get(i).toString());
+        }
+        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
+        if (escolha>=0 && escolha<listaDispositivos.size()) {
+            return listaDispositivos.get(escolha);
+        } else {
+            System.out.println("Escolha invalida");
+            return null;
+        }
     }
 
     public abstract SmartDevice clone();

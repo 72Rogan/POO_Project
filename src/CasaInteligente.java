@@ -87,7 +87,12 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     public void addDevice(SmartDevice s) {
-        this.devices.put(s.getID(), s.clone());
+        if (!simulador.getDispositivos().contains(s)) {
+            //se o simulador nao tem este dispositivo, entao adiciona-se
+            simulador.getDispositivos().add(s);
+        }
+        this.devices.put(s.getID(), s);
+        s.setCasa(this);
     }
 
     public SmartDevice getDevice(String s) {
