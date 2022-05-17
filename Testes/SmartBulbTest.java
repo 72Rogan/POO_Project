@@ -1,3 +1,5 @@
+package Testes;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static src.SmartDevice.Modo.OFF;
 
