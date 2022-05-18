@@ -201,6 +201,10 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         return listaCasas.get(escolha);
     }
 
+    public static CasaInteligente parse(String linha) {
+        return null;
+    }
+
     public Fatura getFatura(Periodo periodo) {
         for (Fatura fatura: this.faturas) {
             if (fatura.getPeriodo().equals(periodo)) {

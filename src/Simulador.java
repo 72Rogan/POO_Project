@@ -18,7 +18,6 @@ public class Simulador implements Serializable{
     private List<CasaInteligente> casasInteligentes;
     private List<Comercializador> comercializadores;
     private List<Periodo> periodos;
-    private Estatisticas estatisticas;
 
     public Simulador() {
         this.data = LocalDate.now();
@@ -27,7 +26,15 @@ public class Simulador implements Serializable{
         this.casasInteligentes = new ArrayList<>();
         this.comercializadores = new ArrayList<>();
         this.periodos = new ArrayList<>();
-        this.estatisticas = new Estatisticas(casasInteligentes, comercializadores, periodos);
+    }
+
+    public Simulador(boolean faseI) {
+        this.data = LocalDate.now();
+        this.faseInicial = faseI;
+        this.dispositivos = new ArrayList<>();
+        this.casasInteligentes = new ArrayList<>();
+        this.comercializadores = new ArrayList<>();
+        this.periodos = new ArrayList<>();
     }
 
     public Simulador(LocalDate date) {
@@ -36,7 +43,6 @@ public class Simulador implements Serializable{
         this.casasInteligentes = new ArrayList<>();
         this.comercializadores = new ArrayList<>();
         this.periodos = new ArrayList<>();
-        this.estatisticas = new Estatisticas(casasInteligentes, comercializadores, periodos);
         this.data = date;
     }
 
@@ -108,7 +114,8 @@ public class Simulador implements Serializable{
             } else if (escolha == 2) {
                 gerirEntidades(scanner);
             } else if (escolha == 3) {
-                this.estatisticas.escolherEstatistica(scanner);
+                Estatisticas estatisticas = new Estatisticas(this.casasInteligentes, this.comercializadores, this.periodos);
+                estatisticas.escolherEstatistica(scanner);
             } else if (escolha == 4) {
                 //sair do programa
                 break;
@@ -389,5 +396,17 @@ public class Simulador implements Serializable{
 
     public List<Comercializador> getComercializadores() {
         return comercializadores;
+    }
+
+    public void setDispositivos(Map<String, SmartDevice> disp) {
+
+    }
+
+    public void setCasasInteligentes(Map<Integer, CasaInteligente> casas) {
+
+    }
+
+    public void setComercializadores(Map<String, Comercializador> comercializadores) {
+
     }
 }

@@ -124,4 +124,8 @@ public class SmartSpeaker extends SmartDevice {
 		double consumoDiario = consumoBase + (this.volume / 20.0); // o consumoDiario tem um valor entre 0.5 e 5.5
 		setConsumoDiario(consumoDiario);
 	}
+
+	public static SmartSpeaker parse(String linha) {
+		return null;
+	}
 }
