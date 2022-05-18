@@ -21,9 +21,9 @@ public class SmartDeviceTest {
     @Test
     public void testeConstrutor(){
         Simulador simulador = new Simulador();
-        SmartDevice smartDevice1 = new SmartDevice();
-        assertNotNull(smartDevice1, "Erro ao criar a SmartBulb");
-        smartDevice1 = new SmartDevice(simulador, "smartDevide1", 5);
+        //SmartDevice smartDevice1 = new SmartDevice();
+        //assertNotNull(smartDevice1, "Erro ao criar a SmartBulb");
+        //smartDevice1 = new SmartDevice(simulador, "smartDevide1", 5);
 
 
     }

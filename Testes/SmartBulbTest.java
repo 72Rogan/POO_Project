@@ -1,4 +1,4 @@
-package Testes;
+//package Testes;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static src.SmartDevice.Modo.OFF;
@@ -76,7 +76,7 @@ public class SmartBulbTest{
         SmartBulb smartBulb2 = new SmartBulb(smartBulb1);
         assertEquals(0,smartBulb2.getTone(), "Valor da tonalidade não é o esperado");
     }
-
+/*
     @Test
     public void testGetTamanho() {
         Simulador simulador = new Simulador();
