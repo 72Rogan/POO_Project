@@ -23,9 +23,9 @@ public class SmartCameraTest{
 	public void testeConstrutor(){
 		SmartCamera smartCamera1 = new SmartCamera();
 		assertNotNull(smartCamera1, "Erro ao criar a SmartCamera");
-		smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5);
+		smartCamera1 = new SmartCamera(simulador);
         assertNotNull(smartCamera1, "Erro ao criar a SmartCamera");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5,OFF,5,15,15);
+        smartCamera1 = new SmartCamera(simulador,OFF,5,15,15);
         assertNotNull(smartCamera1, "Erro ao criar a SmartCamera");
 		SmartCamera SmartCamera2 = new SmartCamera(smartCamera1);
 		assertNotNull(SmartCamera2, "Erro ao criar a SmartCamera");
@@ -35,9 +35,9 @@ public class SmartCameraTest{
 	public void testConsumoDiario() {
         SmartCamera smartCamera1 = new SmartCamera();
         assertEquals(0,smartCamera1.getConsumoDiario(), "Valor do consumo Diario não é o esperado");
-        SmartCamera smartCamera2 = new SmartCamera(simulador,"SmartCamera1",5);
+        SmartCamera smartCamera2 = new SmartCamera(simulador);
         assertEquals(0,smartCamera2.getConsumoDiario(), "Valor do consumo Diario não é o esperado");
-        smartCamera2 = new SmartCamera(simulador,"SmartCamera1",5,OFF,5,15,15);
+        smartCamera2 = new SmartCamera(simulador,OFF,5,15,15);
         assertEquals("1.125", smartCamera2.getConsumoDiario(), "Valor do consumo Diario não é o esperado");
         SmartCamera smartCamera3 = new SmartCamera(smartCamera2);
         assertEquals(1.125, smartCamera3.getConsumoDiario(), "Valor do consumo Diario não é o esperado");
@@ -47,9 +47,9 @@ public class SmartCameraTest{
     public void testGetWidth() {
         SmartCamera smartCamera1 = new SmartCamera();
         assertEquals(0,smartCamera1.getWidth(), "Valor do width não é o esperado");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5);
+        smartCamera1 = new SmartCamera(simulador);
         assertEquals(0,smartCamera1.getWidth(), "Valor do width não é o esperado");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5,OFF,5,15,15);
+        smartCamera1 = new SmartCamera(simulador,OFF,5,15,15);
         assertEquals(5,smartCamera1.getWidth(), "Valor do width não é o esperado");
         SmartCamera smartCamera2 = new SmartCamera(smartCamera1);
         assertEquals(5,smartCamera2.getWidth(), "Valor do width não é o esperado");
@@ -59,9 +59,9 @@ public class SmartCameraTest{
     public void testGetHeight() {
         SmartCamera smartCamera1 = new SmartCamera();
         assertEquals(0,smartCamera1.getHeight(), "Valor do height não é o esperado");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5);
+        smartCamera1 = new SmartCamera(simulador);
         assertEquals(0,smartCamera1.getHeight(), "Valor do height não é o esperado");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5,OFF,5,15,15);
+        smartCamera1 = new SmartCamera(simulador,OFF,5,15,15);
         assertEquals(15,smartCamera1.getHeight(), "Valor do height não é o esperado");
         SmartCamera smartCamera2 = new SmartCamera(smartCamera1);
         assertEquals(15,smartCamera2.getHeight(), "Valor do height não é o esperado");
@@ -71,9 +71,9 @@ public class SmartCameraTest{
     public void testGetTamanhoFicheiro() {
         SmartCamera smartCamera1 = new SmartCamera();
         assertEquals(0,smartCamera1.getTamanhoFicheiro(), "Valor do tamanho do ficheiro não é o esperado");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5);
+        smartCamera1 = new SmartCamera(simulador);
         assertEquals(0,smartCamera1.getTamanhoFicheiro(), "Valor do tamanho do ficheiro não é o esperado");
-        smartCamera1 = new SmartCamera(simulador,"SmartCamera1",5,OFF,5,15,15);
+        smartCamera1 = new SmartCamera(simulador,OFF,5,15,15);
         assertEquals(15,smartCamera1.getTamanhoFicheiro(), "Valor do tamanho do ficheiro não é o esperado");
         SmartCamera smartCamera2 = new SmartCamera(smartCamera1);
         assertEquals(15,smartCamera2.getTamanhoFicheiro(), "Valor do tamanho do ficheiro não é o esperado");

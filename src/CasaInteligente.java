@@ -174,7 +174,6 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
 
         for (SmartDevice smartDevice: this.devices.values()) {
             consumo += smartDevice.consumoAte(fim);
-            System.out.println("consumo - " + consumo);
             custo += smartDevice.custoAte(this.comercializador, fim);
             smartDevice.setLastChange(simulador.getData());
         }
@@ -185,7 +184,6 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
 
     public void faturar(LocalDate inicio, LocalDate fim, double consumo, double custo) {
         Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
-        System.out.println("A faturar, consumo: " + consumo);
         this.faturas.add(fatura);
         this.comercializador.addFatura(fatura);
     }

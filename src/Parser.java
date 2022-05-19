@@ -54,21 +54,21 @@ public class Parser {
                         break;
                     case "SmartBulb":
                         if (ultimaDivisao == null) throw new LinhaIncorretaException();
-                        ultimoDispositivo = SmartBulb.parse(linhaPartida[1]);
+                        ultimoDispositivo = SmartBulb.parse(simulador, linhaPartida[1]);
                         ultimaCasa.addDevice(ultimoDispositivo);
                         ultimaCasa.addToRoom(ultimaDivisao, ultimoDispositivo.getID());
                         dispositivos.put(ultimoDispositivo.getID(), ultimoDispositivo);
                         break;
                     case "SmartCamera":
                         if (ultimaDivisao == null) throw new LinhaIncorretaException();
-                        ultimoDispositivo = SmartCamera.parse(linhaPartida[1]);
+                        ultimoDispositivo = SmartCamera.parse(simulador, linhaPartida[1]);
                         ultimaCasa.addDevice(ultimoDispositivo);
                         ultimaCasa.addToRoom(ultimaDivisao, ultimoDispositivo.getID());
                         dispositivos.put(ultimoDispositivo.getID(), ultimoDispositivo);
                         break;
                     case "SmartSpeaker":
                         if (ultimaDivisao == null) throw new LinhaIncorretaException();
-                        ultimoDispositivo = SmartSpeaker.parse(linhaPartida[1]);
+                        ultimoDispositivo = SmartSpeaker.parse(simulador, linhaPartida[1]);
                         ultimaCasa.addDevice(ultimoDispositivo);
                         ultimaCasa.addToRoom(ultimaDivisao, ultimoDispositivo.getID());
                         dispositivos.put(ultimoDispositivo.getID(), ultimoDispositivo);

@@ -31,10 +31,10 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
 
     }
 
-    public SmartDevice(Simulador simulador, String id, double custoInstalacao) {
+    public SmartDevice(Simulador simulador, double custoInstalacao) {
         super();
         this.simulador = simulador;
-        this.id = id;
+        this.id = simulador.getNextId();
         this.custoInstalacao = custoInstalacao;
         this.consumoDiario = -1;
         this.modo = Modo.OFF;
@@ -44,10 +44,10 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         simulador.addDispositivo(this);
     }
 
-    public SmartDevice(Simulador simulador, String id, double custoInstalacao, Modo modo) {
+    public SmartDevice(Simulador simulador, double custoInstalacao, Modo modo) {
         super();
         this.simulador = simulador;
-        this.id = id;
+        this.id = simulador.getNextId();
         this.custoInstalacao = custoInstalacao;
         this.consumoDiario = -1;
         this.modo = modo;

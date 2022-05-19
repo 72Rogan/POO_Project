@@ -18,6 +18,7 @@ public class Simulador implements Serializable{
     private List<CasaInteligente> casasInteligentes;
     private Map<String, Comercializador> comercializadores;
     private List<Periodo> periodos;
+    private int currentId;
 
     public Simulador() {
         this.data = LocalDate.now();
@@ -26,6 +27,7 @@ public class Simulador implements Serializable{
         this.casasInteligentes = new ArrayList<>();
         this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
+        this.currentId = 0;
     }
 
     public Simulador(boolean faseI) {
@@ -35,6 +37,7 @@ public class Simulador implements Serializable{
         this.casasInteligentes = new ArrayList<>();
         this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
+        this.currentId = 0;
     }
 
     public Simulador(LocalDate date) {
@@ -44,6 +47,7 @@ public class Simulador implements Serializable{
         this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
         this.data = date;
+        this.currentId = 0;
     }
 
     public static Simulador construirSimulador(String caminhoFicheiro) {
@@ -340,6 +344,11 @@ public class Simulador implements Serializable{
                 listarDispositivos();
             }
         }
+    }
+
+    public String getNextId() {
+        this.currentId++;
+        return String.valueOf(this.currentId);
     }
 
     public Comercializador getComercializador(String nome) {

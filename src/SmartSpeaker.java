@@ -19,14 +19,20 @@ public class SmartSpeaker extends SmartDevice {
 		this.radio = "N/A";
 	}
 
-	public SmartSpeaker(Simulador simulador, String id, double instalacao, Modo x, int vol, String marca, String radio){
-		super(simulador, id,instalacao,x);
+	public SmartSpeaker(Simulador simulador, Modo x, int vol, String marca, String radio){
+		super(simulador, 350,x);
 		this.volume=vol;
 		this.marca=marca;
 		this.radio=radio;
 		calcularConsumoDiario();
-		System.out.println("Consumo diario bulb - " + getConsumoDiario());
-		System.out.println("consumo diario - " + super.getConsumoDiario());
+	}
+
+	public SmartSpeaker(Simulador simulador, Modo x, int vol, String marca, String radio, double consumoDiario){
+		super(simulador, 350,x);
+		this.volume=vol;
+		this.marca=marca;
+		this.radio=radio;
+		setConsumoDiario(consumoDiario);
 	}
 
 	public SmartSpeaker(SmartSpeaker c){
@@ -80,16 +86,14 @@ public class SmartSpeaker extends SmartDevice {
 	}
 
 	public static SmartSpeaker criarSmartSpeaker(Simulador simulador, Scanner scanner) {
-		System.out.println("Escreve no formato ID-Custo-Modo-Volume-Marca-Radio / Exemplo: Coluna1-300-ON-73-JBL-MEGAHITS");
+		System.out.println("Escreve no formato Modo-Volume-Marca-Radio / Exemplo: ON-73-JBL-MEGAHITS");
 		String input = scanner.next();
-		String[] idCustoModoVolumeMarcaRadio = input.split("-", 6);
-		String id = idCustoModoVolumeMarcaRadio[0];
-		int custo = Integer.valueOf(idCustoModoVolumeMarcaRadio[1]);
-		Modo modo = idCustoModoVolumeMarcaRadio[2].equals("OFF") ? Modo.OFF : idCustoModoVolumeMarcaRadio[2].equals("ON") ? Modo.ON : null;
-		int volume = Integer.valueOf(idCustoModoVolumeMarcaRadio[3]);
-		String marca = idCustoModoVolumeMarcaRadio[4];
-		String radio = idCustoModoVolumeMarcaRadio[5];
-		SmartSpeaker ret = new SmartSpeaker(simulador, id, custo, modo, volume,marca,radio);
+		String[] idCustoModoVolumeMarcaRadio = input.split("-", 4);
+		Modo modo = idCustoModoVolumeMarcaRadio[0].equals("OFF") ? Modo.OFF : idCustoModoVolumeMarcaRadio[0].equals("ON") ? Modo.ON : null;
+		int volume = Integer.valueOf(idCustoModoVolumeMarcaRadio[1]);
+		String marca = idCustoModoVolumeMarcaRadio[2];
+		String radio = idCustoModoVolumeMarcaRadio[3];
+		SmartSpeaker ret = new SmartSpeaker(simulador, modo, volume,marca,radio);
 		return ret;
 	}
 
@@ -127,7 +131,14 @@ public class SmartSpeaker extends SmartDevice {
 		setConsumoDiario(consumoDiario);
 	}
 
-	public static SmartSpeaker parse(String linha) {
-		return null;
+	public static SmartSpeaker parse(Simulador simulador, String linha) {
+		String[] linhaPartida = linha.split(",", 4); //no maximo 4 parametros
+		int volume = Integer.valueOf(linhaPartida[0]);
+		String radio = linhaPartida[1];
+		String marca = linhaPartida[2];
+		double consumo = Double.valueOf(linhaPartida[3]);
+
+		SmartSpeaker sS = new SmartSpeaker(simulador, Modo.ON, volume, marca, radio, consumo);
+		return sS;
 	}
 }
