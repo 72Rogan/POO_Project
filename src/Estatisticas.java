@@ -54,7 +54,7 @@ public class Estatisticas implements Serializable {
 
     public void estatistica3(Scanner scanner) {
         Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
-        System.out.println(comercializador.getFaturasEmitidas().toString());
+        if (comercializador != null) System.out.println(comercializador.getFaturasEmitidas().toString());
     }
 
     public void estatistica4(Scanner scanner) {
