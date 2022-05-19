@@ -16,18 +16,21 @@ public class SmartBulb extends SmartDevice {
     public SmartBulb() {
         super();
         this.tone = NEUTRAL;
+        calcularConsumoDiario();
     }
 
 
     public SmartBulb(Simulador simulador, String id, int tone) {
         super(simulador,id, 150);
         this.tone = tone;
+        calcularConsumoDiario();
     }
 
     public SmartBulb(Simulador simulador,String id, Modo modo, int tone, double tamanho) {
         super(simulador, id, 150, modo);
         this.tone = tone;
         this.tamanho = tamanho;
+        calcularConsumoDiario();
     }
 
     public SmartBulb(SmartBulb s) {
@@ -79,6 +82,7 @@ public class SmartBulb extends SmartDevice {
     @Override
     public void calcularConsumoDiario() {
         double consumo = 0.5 + (this.tone * 2.5); //valor varia entre 0.5 e 5.5
+        System.out.println("consumo - " + consumo);
         setConsumoDiario(consumo);
     }
 

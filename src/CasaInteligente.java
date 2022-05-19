@@ -158,26 +158,23 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     public void saltarParaData(LocalDate data) {
+
+        if (this.devices.isEmpty()) {
+            //A casa nao tem dispositivos, para esta funçao
+            System.out.println("A casa " + this.toString() + " nao tem dispositivos");
+            return;
+        }
+
         double consumo = 0;
         double custo = 0;
 
-        LocalDate inicio = this.devices.values().stream()
-                .map(smartDevice -> smartDevice.getLastChange())
-                .max(new Comparator<LocalDate>() {
-                    @Override
-                    public int compare(LocalDate o1, LocalDate o2) {
-                        return o1.isBefore(o2) ? 1 : -1; //nao importa se as datas forem iguais
-                    } //ordena as datas por ordem decrescente, e devolve a data mais antiga
-                })
-                .orElse(null); //devolve a data mais antiga, ou devolve null se nao existirem datas
-        if (inicio == null) {
-            System.out.println("Data inicial nula");
-            return;
-        }
+        LocalDate inicio = this.devices.values().stream().findAny().get().getLastChange();
+
         LocalDate fim = data;
 
         for (SmartDevice smartDevice: this.devices.values()) {
             consumo += smartDevice.consumoAte(fim);
+            System.out.println("consumo - " + consumo);
             custo += smartDevice.custoAte(this.comercializador, fim);
             smartDevice.setLastChange(simulador.getData());
         }
@@ -188,6 +185,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
 
     public void faturar(LocalDate inicio, LocalDate fim, double consumo, double custo) {
         Fatura fatura = new Fatura(this.nome,inicio,fim,consumo,custo);
+        System.out.println("A faturar, consumo: " + consumo);
         this.faturas.add(fatura);
         this.comercializador.addFatura(fatura);
     }
@@ -201,8 +199,15 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         return listaCasas.get(escolha);
     }
 
-    public static CasaInteligente parse(String linha) {
-        return null;
+    public static CasaInteligente parse(Simulador simulador, String linha) {
+        String[] linhaPartida = linha.split(",", 3); //no maximo 3 parametros
+        String nome = linhaPartida[0];
+        int nif = Integer.valueOf(linhaPartida[1]);
+        String nomeComercializador = linhaPartida[2];
+        Comercializador c = simulador.getComercializador(nomeComercializador);
+
+        CasaInteligente casa = new CasaInteligente(simulador, nome, nif, c);
+        return casa;
     }
 
     public Fatura getFatura(Periodo periodo) {

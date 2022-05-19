@@ -1,9 +1,8 @@
 package src;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Comercializador extends Change<Comercializador> implements Serializable {
     private Simulador simulador;
@@ -11,6 +10,9 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     private double custoDiarioKwh;
     private double fatorImpostos;
     private List<Fatura> faturasEmitidas;
+    private int formulaNum;
+
+    private static int quantidadeFormulas = 4;
 
     public Comercializador() {
         super();
@@ -19,6 +21,7 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.custoDiarioKwh = -1;
         this.fatorImpostos = -1;
         this.faturasEmitidas = new ArrayList<>();
+        this.formulaNum = 0; //comercializador usa a primeira formula
     }
 
     public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos) {
@@ -28,16 +31,44 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.custoDiarioKwh = custoDiarioKwh;
         this.fatorImpostos = fatorImpostos;
         this.faturasEmitidas = new ArrayList<>();
+        this.formulaNum = 0; //comercializador usa a primeira formula
 
         simulador.addComercializador(this);
     }
 
-    public static Comercializador parse(String linha) {
-        return null;
+    public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos, int formulaNum) {
+        super();
+        this.simulador = simulador;
+        this.nome = nome;
+        this.custoDiarioKwh = custoDiarioKwh;
+        this.fatorImpostos = fatorImpostos;
+        this.faturasEmitidas = new ArrayList<>();
+        this.formulaNum = formulaNum % quantidadeFormulas;
+
+        simulador.addComercializador(this);
+    }
+
+    public static Comercializador parse(Simulador simulador, String nome, Random random) {
+        double custoDiariokwh = 0.05 + random.nextDouble() * 0.10; //da um valor entre 0.05 e 0.15
+        double impostos = random.nextDouble() + 1; //valor entre 1 e 2
+        int numformula = random.nextInt(quantidadeFormulas);
+
+        Comercializador c = new Comercializador(simulador, nome, custoDiariokwh, impostos, numformula);
+        return c;
     }
 
     public double precoDiaPorDispositivo(SmartDevice smartDevice) {
-        return custoDiarioKwh * smartDevice.getConsumoDiario() * (1+fatorImpostos) * 0.9;
+        double custoBase = custoDiarioKwh * smartDevice.getConsumoDiario();
+        if (this.formulaNum == 0) {
+            return custoBase * (1+fatorImpostos) * 0.9;
+        } else if (this.formulaNum == 1) {
+            return custoBase + (fatorImpostos*0.05);
+        } else if (this.formulaNum == 2) {
+            return 1 + custoBase;
+        }
+        else {
+            return fatorImpostos > 5 ? custoBase : custoBase + 0.5;
+        }
     }
 
     public double getCustoDiarioKwh() {
@@ -62,13 +93,14 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.faturasEmitidas.add(fatura);
     }
 
-    public static Comercializador escolherComercializador(List<Comercializador> listaComercializador, Scanner scanner) {
+    public static Comercializador escolherComercializador(Map<String, Comercializador> c, Scanner scanner) {
         System.out.println("Escolhe um comercializador");
-        for (int i=0; i<listaComercializador.size(); i++) {
-            System.out.println(i + " - " + listaComercializador.get(i).toString());
+        List<Comercializador> comercializadorList = c.values().stream().collect(Collectors.toList());
+        for (int i=0; i< comercializadorList.size(); i++) {
+            System.out.println(i + " - " + comercializadorList.get(i));
         }
         int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
-        return listaComercializador.get(escolha);
+        return comercializadorList.get(escolha);
     }
 
     public void printFaturas() {

@@ -16,7 +16,7 @@ public class Simulador implements Serializable{
     private boolean faseInicial;
     private List<SmartDevice> dispositivos;
     private List<CasaInteligente> casasInteligentes;
-    private List<Comercializador> comercializadores;
+    private Map<String, Comercializador> comercializadores;
     private List<Periodo> periodos;
 
     public Simulador() {
@@ -24,7 +24,7 @@ public class Simulador implements Serializable{
         this.faseInicial = true;
         this.dispositivos = new ArrayList<>();
         this.casasInteligentes = new ArrayList<>();
-        this.comercializadores = new ArrayList<>();
+        this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
     }
 
@@ -33,7 +33,7 @@ public class Simulador implements Serializable{
         this.faseInicial = faseI;
         this.dispositivos = new ArrayList<>();
         this.casasInteligentes = new ArrayList<>();
-        this.comercializadores = new ArrayList<>();
+        this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
     }
 
@@ -41,7 +41,7 @@ public class Simulador implements Serializable{
         this.faseInicial = true;
         this.dispositivos = new ArrayList<>();
         this.casasInteligentes = new ArrayList<>();
-        this.comercializadores = new ArrayList<>();
+        this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
         this.data = date;
     }
@@ -73,6 +73,7 @@ public class Simulador implements Serializable{
         }
 
         if (simulador == null) System.out.println("Simulador e null");
+        simulador.faseInicial = false;
         return simulador; //se devolver null, deu problema em cima
     }
 
@@ -188,7 +189,7 @@ public class Simulador implements Serializable{
     }
 
     public void listarComercializadores() {
-        for (Comercializador com: this.comercializadores) {
+        for (Comercializador com: this.comercializadores.values()) {
             System.out.println(com.toString());
         }
     }
@@ -341,6 +342,10 @@ public class Simulador implements Serializable{
         }
     }
 
+    public Comercializador getComercializador(String nome) {
+        return this.comercializadores.get(nome);
+    }
+
     public void addDispositivo(SmartDevice smartDevice) {
         if (!this.dispositivos.contains(smartDevice)) {
             this.dispositivos.add(smartDevice);
@@ -364,10 +369,8 @@ public class Simulador implements Serializable{
         }
     }
 
-    public void addComercializador(Comercializador comercializador) {
-        if (!this.comercializadores.contains(comercializador)) {
-            this.comercializadores.add(comercializador);
-        }
+    public void addComercializador(Comercializador c) {
+        this.comercializadores.put(c.getNome(), c);
     }
 
     public void addPeriodo(Periodo periodo) {
@@ -394,7 +397,7 @@ public class Simulador implements Serializable{
         return casasInteligentes;
     }
 
-    public List<Comercializador> getComercializadores() {
+    public Map<String, Comercializador> getComercializadores() {
         return comercializadores;
     }
 

@@ -22,10 +22,7 @@ public class Programa {
             System.out.println("Escreva o caminho do ficheiro a ser carregado");
             String caminho = scanner.next();
             Parser parser = new Parser(caminho);
-            try {
-                simulador = parser.parse();
-            } catch(LinhaIncorretaException e) {
-            }
+            simulador = parser.parse();
         }else if (escolha == 3) {
             simulador = new Simulador();
             simulador.faseInicial(scanner);

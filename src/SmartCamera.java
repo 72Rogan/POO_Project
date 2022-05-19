@@ -14,6 +14,7 @@ public class SmartCamera extends SmartDevice{
         this.width = 0;
         this.height = 0;
         this.tamanhoFicheiro = 0;
+        calcularConsumoDiario();
     }
 
     public SmartCamera(Simulador simulador, String id, double custoInstalacao) {
@@ -21,6 +22,7 @@ public class SmartCamera extends SmartDevice{
         this.width = 0;
         this.height = 0;
         this.tamanhoFicheiro = 0;
+        calcularConsumoDiario();
     }
 
     public SmartCamera(Simulador simulador, String id, double custoInstalacao, Modo modo,
@@ -29,6 +31,7 @@ public class SmartCamera extends SmartDevice{
         this.width = width;
         this.height = height;
         this.tamanhoFicheiro = tamanhoFicheiro;
+        calcularConsumoDiario();
     }
 
     public SmartCamera(SmartCamera c) {

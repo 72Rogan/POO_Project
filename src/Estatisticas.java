@@ -3,15 +3,16 @@ package src;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Estatisticas implements Serializable {
     private List<CasaInteligente> casasInteligentes;
-    private List<Comercializador> comercializadores;
+    private Map<String, Comercializador> comercializadores;
     private List<Periodo> periodos;
 
-    public Estatisticas(List<CasaInteligente> cIList, List<Comercializador> cList, List<Periodo> pList) {
+    public Estatisticas(List<CasaInteligente> cIList, Map<String, Comercializador> cList, List<Periodo> pList) {
         this.casasInteligentes = cIList;
         this.comercializadores = cList;
         this.periodos = pList;
@@ -36,7 +37,7 @@ public class Estatisticas implements Serializable {
     }
 
     public void estatistica2() {
-        Comercializador ret = this.comercializadores.stream()
+        Comercializador ret = this.comercializadores.values().stream()
                 .max((c1, c2) -> {
                     double volumeC1 = c1.getFaturasEmitidas().stream().map(fatura -> fatura.getCusto()).reduce((double) 0, Double::sum); //soma do custo das faturas do comercializador 1
                     double volumeC2 = c2.getFaturasEmitidas().stream().map(fatura -> fatura.getCusto()).reduce((double) 0, Double::sum); //soma do custo das faturas do comercializador 2

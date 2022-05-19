@@ -25,6 +25,8 @@ public class SmartSpeaker extends SmartDevice {
 		this.marca=marca;
 		this.radio=radio;
 		calcularConsumoDiario();
+		System.out.println("Consumo diario bulb - " + getConsumoDiario());
+		System.out.println("consumo diario - " + super.getConsumoDiario());
 	}
 
 	public SmartSpeaker(SmartSpeaker c){
