@@ -75,7 +75,7 @@ public class SmartCamera extends SmartDevice{
 
     public static SmartCamera criarSmartCamera(Simulador simulador, Scanner scanner) {
         System.out.println("Escreve no formato Modo-Largura-Altura-TamanhoFicheiro / Exemplo: ON-1920-1080-50");
-        String input = scanner.next();
+        String input = scanner.nextLine();
         String[] idCustoModoLarguraAlturaTamanho = input.split("-", 4);
         Modo modo = idCustoModoLarguraAlturaTamanho[0].equals("OFF") ? Modo.OFF : idCustoModoLarguraAlturaTamanho[0].equals("ON") ? Modo.ON : null;
         int largura = Integer.valueOf(idCustoModoLarguraAlturaTamanho[1]);

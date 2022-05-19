@@ -183,7 +183,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
             System.out.println(sD);
         }
         System.out.println("Escolhe o id do dispositivo que queres");
-        String id = scanner.next(); //assume-se que escolheu uma opcao valida
+        String id = scanner.nextLine(); //assume-se que escolheu uma opcao valida
         if (disp.containsKey(id)) {
             return disp.get(id);
         } else {
