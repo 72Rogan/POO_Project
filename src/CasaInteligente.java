@@ -1,16 +1,5 @@
 package src;
 
-/*********************************************************************************/
-/** DISCLAIMER: Este codigo foi criado e alterado durante as aulas praticas      */
-/** de POO. Representa uma solucao em construcao, com base na materia leccionada */
-/** ate ao momento da sua elaboracao, e resulta da discussao e experimentacao    */
-/** durante as aulas. Como tal, nao devera ser visto como uma solucao canonica,  */
-/** ou mesmo acabada. e disponibilizado para auxiliar o processo de estudo.      */
-/** Os alunos sao encorajados a testar adequadamente o codigo fornecido e a      */
-/** procurar solucoes alternativas, a medida que forem adquirindo mais           */
-/** conhecimentos de POO.                                                        */
-/*********************************************************************************/
-
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
