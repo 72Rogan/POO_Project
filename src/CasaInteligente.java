@@ -104,6 +104,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
      */
     public String escolherDivisao(Scanner scanner) {
         Set<String> divisoes = this.locations.keySet();
+        System.out.println("Divisoes disponiveis");
         for (String div: divisoes) {
             System.out.println(div);
         }
@@ -129,6 +130,10 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
                 dev.setOn(b);
             }
         }
+    }
+
+    public boolean existsRooms() {
+        return !this.locations.isEmpty();
     }
 
     public void addRoom(String s) {
@@ -196,6 +201,10 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     public static CasaInteligente escolherCasa(Map<Integer, CasaInteligente> casas, Scanner scanner) {
+        if (casas.isEmpty()) {
+            System.out.println("Nao existem casas");
+            return null;
+        }
         for (Map.Entry<Integer, CasaInteligente> casa: casas.entrySet()) {
             System.out.println(casa.getValue().toString() + ", nif: " + casa.getKey());
         }

@@ -29,6 +29,8 @@ public class Fatura implements Serializable {
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append("\n");
+        sb.append("\n");
         sb.append("Fatura para a casa de ");
         sb.append(this.nome);
         sb.append("\n");
@@ -37,7 +39,6 @@ public class Fatura implements Serializable {
         sb.append(consumo);
         sb.append("Kwh, Custo: ");
         sb.append(custo);
-        sb.append("\n");
         return sb.toString();
     }
 
