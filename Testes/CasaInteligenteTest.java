@@ -1,7 +1,10 @@
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import src.*;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CasaInteligenteTest {
 
@@ -17,16 +20,21 @@ class CasaInteligenteTest {
         assertNotNull(casaInteligente1, "Erro ao criar a casa inteligente");
     }
 
-    /* Não sei como dar fix nisto
+
     @Test
     void testeSetDeviceOn() {
         Simulador simulador = new Simulador();
+        Comercializador comercializador = new Comercializador();
         SmartCamera smartCamera = new SmartCamera();
-        CasaInteligente casaInteligente = new CasaInteligente();
+        CasaInteligente casaInteligente = new CasaInteligente(simulador,"casa1",1,comercializador);
+        simulador.addCasa(casaInteligente);
+        simulador.addDispositivo(smartCamera);
         casaInteligente.addDevice(smartCamera);
         simulador.addDispositivo(smartCamera);
         casaInteligente.setDeviceOn(smartCamera.getID());
-        assertEquals(SmartDevice.Modo.ON, smartCamera.getModo(), "Erro ao ligar o dispositivo");
+        simulador.addCasa(casaInteligente);
+        simulador.addDispositivo(smartCamera);
+        assertTrue(SmartDevice.Modo.ON==smartCamera.getModo(), "Erro ao ligar o dispositivo");
     }
-    */
+
 }
