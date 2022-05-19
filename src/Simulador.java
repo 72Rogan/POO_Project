@@ -14,8 +14,8 @@ import static src.SmartSpeaker.criarSmartSpeaker;
 public class Simulador implements Serializable{
     private LocalDate data;
     private boolean faseInicial;
-    private List<SmartDevice> dispositivos;
-    private List<CasaInteligente> casasInteligentes;
+    private Map<String, SmartDevice> dispositivos;
+    private Map<Integer, CasaInteligente> casasInteligentes;
     private Map<String, Comercializador> comercializadores;
     private List<Periodo> periodos;
     private int currentId;
@@ -23,8 +23,8 @@ public class Simulador implements Serializable{
     public Simulador() {
         this.data = LocalDate.now();
         this.faseInicial = true;
-        this.dispositivos = new ArrayList<>();
-        this.casasInteligentes = new ArrayList<>();
+        this.dispositivos = new HashMap<>();
+        this.casasInteligentes = new HashMap<>();
         this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
         this.currentId = 0;
@@ -33,8 +33,8 @@ public class Simulador implements Serializable{
     public Simulador(boolean faseI) {
         this.data = LocalDate.now();
         this.faseInicial = faseI;
-        this.dispositivos = new ArrayList<>();
-        this.casasInteligentes = new ArrayList<>();
+        this.dispositivos = new HashMap<>();
+        this.casasInteligentes = new HashMap<>();
         this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
         this.currentId = 0;
@@ -42,8 +42,8 @@ public class Simulador implements Serializable{
 
     public Simulador(LocalDate date) {
         this.faseInicial = true;
-        this.dispositivos = new ArrayList<>();
-        this.casasInteligentes = new ArrayList<>();
+        this.dispositivos = new HashMap<>();
+        this.casasInteligentes = new HashMap<>();
         this.comercializadores = new HashMap<>();
         this.periodos = new ArrayList<>();
         this.data = date;
@@ -89,7 +89,7 @@ public class Simulador implements Serializable{
     public void saltarDias(int daysToSkip) {
         LocalDate antes = data;
         data = data.plusDays(daysToSkip);
-        for (CasaInteligente casaInteligente: this.casasInteligentes) {
+        for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
             casaInteligente.saltarParaData(data);
         }
         Periodo periodo = new Periodo(antes, data);
@@ -199,13 +199,13 @@ public class Simulador implements Serializable{
     }
 
     public void listarCasas() {
-        for (CasaInteligente casa: this.casasInteligentes) {
+        for (CasaInteligente casa: this.casasInteligentes.values()) {
             System.out.println(casa.toString());
         }
     }
 
     public void listarDispositivos() {
-        for (SmartDevice smartDevice: this.dispositivos) {
+        for (SmartDevice smartDevice: this.dispositivos.values()) {
             System.out.println(smartDevice.toString());
         }
     }
@@ -270,7 +270,9 @@ public class Simulador implements Serializable{
     }
 
     public void mudarComercializadorDeCasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
+        CasaInteligente casa = CasaInteligente.escolherCasa(
+                this.casasInteligentes.values().stream().collect(Collectors.toList()),
+                scanner);
         Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
         casa.setComercializador(comercializador);
     }
@@ -309,8 +311,10 @@ public class Simulador implements Serializable{
     }
 
     public void ligarDesligarDispositivoDeCasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-        List<SmartDevice> dispositivosDaCasa = this.dispositivos.stream()
+        CasaInteligente casa = CasaInteligente.escolherCasa(
+                this.casasInteligentes.values().stream().collect(Collectors.toList()),
+                scanner);
+        List<SmartDevice> dispositivosDaCasa = this.dispositivos.values().stream()
                 .filter(dispositivo -> casa.existsDevice(dispositivo.getID())).collect(Collectors.toList());
         System.out.println("O modo do dispositivo que escolher sera trocado");
         SmartDevice dispositivo = escolherDispositivo(dispositivosDaCasa, scanner);
@@ -318,8 +322,10 @@ public class Simulador implements Serializable{
     }
 
     public void adicionarDispositivoACasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-        List<SmartDevice> dispositivosForaDaCasa = this.dispositivos.stream()
+        CasaInteligente casa = CasaInteligente.escolherCasa(
+                this.casasInteligentes.values().stream().collect(Collectors.toList()),
+                scanner);
+        List<SmartDevice> dispositivosForaDaCasa = this.dispositivos.values().stream()
                 .filter(dispositivo -> !casa.equals(dispositivo.getCasa()))
                 .collect(Collectors.toList());
         System.out.println("O dispositivo escolhido sera adicionado na casa");
@@ -356,9 +362,7 @@ public class Simulador implements Serializable{
     }
 
     public void addDispositivo(SmartDevice smartDevice) {
-        if (!this.dispositivos.contains(smartDevice)) {
-            this.dispositivos.add(smartDevice);
-        }
+        this.dispositivos.put(smartDevice.getID(), smartDevice);
     }
 
     /*
@@ -372,10 +376,7 @@ public class Simulador implements Serializable{
      */
 
     public void addCasa(CasaInteligente casaInteligente) {
-        if (!this.casasInteligentes.contains(casaInteligente)) {
-            //apenas adiciona a casa se ainda nao estiver na lista
-            this.casasInteligentes.add(casaInteligente);
-        }
+        this.casasInteligentes.put(casaInteligente.getNif(), casaInteligente);
     }
 
     public void addComercializador(Comercializador c) {
@@ -389,7 +390,7 @@ public class Simulador implements Serializable{
     }
 
     public void printFaturas() {
-        for (CasaInteligente casaInteligente: this.casasInteligentes) {
+        for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
             System.out.println(casaInteligente.getFaturas());
         }
     }
@@ -398,11 +399,11 @@ public class Simulador implements Serializable{
         return this.data;
     }
 
-    public List<SmartDevice> getDispositivos() {
+    public Map<String, SmartDevice> getDispositivos() {
         return dispositivos;
     }
 
-    public List<CasaInteligente> getCasasInteligentes() {
+    public Map<Integer, CasaInteligente> getCasasInteligentes() {
         return casasInteligentes;
     }
 

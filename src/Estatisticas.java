@@ -8,11 +8,11 @@ import java.util.Scanner;
 import java.util.stream.Collectors;
 
 public class Estatisticas implements Serializable {
-    private List<CasaInteligente> casasInteligentes;
+    private Map<Integer, CasaInteligente> casasInteligentes;
     private Map<String, Comercializador> comercializadores;
     private List<Periodo> periodos;
 
-    public Estatisticas(List<CasaInteligente> cIList, Map<String, Comercializador> cList, List<Periodo> pList) {
+    public Estatisticas(Map<Integer, CasaInteligente> cIList, Map<String, Comercializador> cList, List<Periodo> pList) {
         this.casasInteligentes = cIList;
         this.comercializadores = cList;
         this.periodos = pList;
@@ -21,7 +21,7 @@ public class Estatisticas implements Serializable {
     public void estatistica1() {
         //1. Qual a casa que mais gastou naquele periodo (assume-se que se refere ao ultimo periodo)
         Periodo periodo = this.periodos.get(this.periodos.size()-1); //pega no ultimo periodo
-        CasaInteligente ret = this.casasInteligentes.stream()
+        CasaInteligente ret = this.casasInteligentes.values().stream()
                 .max((casa1, casa2) -> {
                     double gastoCasa1 = casa1.getFatura(periodo).getCusto();
                     double gastoCasa2 = casa2.getFatura(periodo).getCusto();
@@ -61,7 +61,7 @@ public class Estatisticas implements Serializable {
         //ou e um periodo ja existente, ou e um periodo metido pelo utilizador, e que pode englobar varios periodos
         //nesta implementacao, tem que se escolher um dos periodos ja existentes
         Periodo periodo = Periodo.escolherPeriodo(this.periodos, scanner);
-        List<CasaInteligente> ret = this.casasInteligentes.stream()
+        List<CasaInteligente> ret = this.casasInteligentes.values().stream()
                 .sorted((casa1, casa2) -> {
                     double consumoCasa1 = casa1.getFatura(periodo).getConsumo();
                     double consumoCasa2 = casa2.getFatura(periodo).getConsumo();
