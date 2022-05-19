@@ -83,13 +83,17 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     }
 
     public static Comercializador escolherComercializador(Map<String, Comercializador> c, Scanner scanner) {
-        System.out.println("Escolhe um comercializador");
-        List<Comercializador> comercializadorList = c.values().stream().collect(Collectors.toList());
-        for (int i=0; i< comercializadorList.size(); i++) {
-            System.out.println(i + " - " + comercializadorList.get(i));
+        for (Comercializador comercializador: c.values()) {
+            System.out.println(comercializador.toString());
         }
-        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
-        return comercializadorList.get(escolha);
+        System.out.println("Escreve o nome do comercializador que queres");
+        int nome = Integer.parseInt(scanner.nextLine()); //assume-se que escolheu uma opcao valida
+        if (c.containsKey(nome)) {
+            return c.get(nome);
+        } else {
+            System.out.println("Nome de Comercializador nao existente");
+            return null;
+        }
     }
 
     public void printFaturas() {

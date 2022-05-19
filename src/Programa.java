@@ -13,14 +13,14 @@ public class Programa {
         System.out.println("1. Carregar Informacao de ficheiro de objeto");
         System.out.println("2. Carregar Informacao de ficheiro de texto");
         System.out.println("3. Criar informacao");
-        int escolha = scanner.nextInt();
+        int escolha = Integer.parseInt(scanner.nextLine());
         if (escolha == 1) {
             System.out.println("Escreva o caminho do ficheiro a ser carregado");
-            String caminho = scanner.next();
+            String caminho = scanner.nextLine();
             simulador = construirSimulador(caminho); //recebe o caminho para um ficheiro onde esta escrito uma entidade da classe Simulador
         } else if (escolha == 2) {
             System.out.println("Escreva o caminho do ficheiro a ser carregado");
-            String caminho = scanner.next();
+            String caminho = scanner.nextLine();
             Parser parser = new Parser(caminho);
             simulador = parser.parse();
         }else if (escolha == 3) {

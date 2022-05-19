@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public abstract class SmartDevice extends Change<SmartDevice> implements Serializable {
@@ -177,16 +178,16 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
                 this.lastChange.equals(smartDevice.lastChange);
     }
 
-    public static SmartDevice escolherDispositivo(List<SmartDevice> listaDispositivos, Scanner scanner) {
-        System.out.println("Escolhe um dispositivo");
-        for (int i=0; i<listaDispositivos.size(); i++) {
-            System.out.println(i + " - " + listaDispositivos.get(i).toString());
+    public static SmartDevice escolherDispositivo(Map<String, SmartDevice> disp, Scanner scanner) {
+        for (SmartDevice sD: disp.values()) {
+            System.out.println(sD);
         }
-        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
-        if (escolha>=0 && escolha<listaDispositivos.size()) {
-            return listaDispositivos.get(escolha);
+        System.out.println("Escolhe o id do dispositivo que queres");
+        String id = scanner.next(); //assume-se que escolheu uma opcao valida
+        if (disp.containsKey(id)) {
+            return disp.get(id);
         } else {
-            System.out.println("Escolha invalida");
+            System.out.println("Id nao existente");
             return null;
         }
     }

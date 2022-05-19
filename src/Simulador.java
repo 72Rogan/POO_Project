@@ -113,7 +113,7 @@ public class Simulador implements Serializable{
             System.out.println("2. Gerir entidades");
             System.out.println("3. Estatisticas");
             System.out.println("4. Acabar Programa");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 avancarTempo(scanner);
             } else if (escolha == 2) {
@@ -131,10 +131,10 @@ public class Simulador implements Serializable{
     public void avancarTempo(Scanner scanner) {
         System.out.println("1. Avancar X dias");
         System.out.println("2. Avancar para a data X");
-        int escolha = scanner.nextInt();
+        int escolha = Integer.parseInt(scanner.nextLine());
         if (escolha == 1) {
             System.out.println("Quantos dias queres avancar?");
-            int diasAvancados = scanner.nextInt();
+            int diasAvancados = Integer.parseInt(scanner.nextLine());
             this.saltarDias(diasAvancados);
         } else if (escolha == 2) {
             System.out.println("Data atual: " + data);
@@ -157,7 +157,7 @@ public class Simulador implements Serializable{
         System.out.println("1. Gerir Dispositivos");
         System.out.println("2. Gerir Casas Inteligentes");
         System.out.println("3. Gerir Comercializadores");
-        int escolha = scanner.nextInt();
+        int escolha = Integer.parseInt(scanner.nextLine());
         if (escolha == 1) {
             gerirDispositivos(scanner);
         } else if (escolha == 2) {
@@ -174,7 +174,7 @@ public class Simulador implements Serializable{
         if (this.faseInicial) {
             System.out.println("1. Listar comercializadores");
             System.out.println("2. Criar comercializador");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarComercializadores();
             } else if (escolha == 2) {
@@ -183,7 +183,7 @@ public class Simulador implements Serializable{
         } else {
             System.out.println("1. Listar comercializadores");
             System.out.println("2. Mudar valores de um comercializador");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarComercializadores();
             } else if (escolha == 2) {
@@ -243,7 +243,7 @@ public class Simulador implements Serializable{
         System.out.println("1. Criar SmartBulb");
         System.out.println("2. Criar SmartSpeaker");
         System.out.println("3. Criar SmartCamera");
-        int escolha = scanner.nextInt();
+        int escolha = Integer.parseInt(scanner.nextLine());
         SmartDevice smartDevice = null;
         if (escolha == 1) smartDevice = criarSmartBulb(this, scanner);
         if (escolha == 2) smartDevice = criarSmartSpeaker(this, scanner);
@@ -270,9 +270,7 @@ public class Simulador implements Serializable{
     }
 
     public void mudarComercializadorDeCasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(
-                this.casasInteligentes.values().stream().collect(Collectors.toList()),
-                scanner);
+        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
         Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
         casa.setComercializador(comercializador);
     }
@@ -284,7 +282,7 @@ public class Simulador implements Serializable{
             System.out.println("2. Mudar comercializador de uma casa");
             System.out.println("3. Criar casas");
             System.out.println("4. Adicionar dispositivo a uma casa");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarCasas();
             } else if (escolha == 2) {
@@ -298,7 +296,7 @@ public class Simulador implements Serializable{
             System.out.println("1. Listar casas");
             System.out.println("2. Mudar comercializador de uma casa");
             System.out.println("3. Ligar/Desligar dispositivos de uma casa");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarCasas();
             } else if (escolha == 2) {
@@ -311,25 +309,37 @@ public class Simulador implements Serializable{
     }
 
     public void ligarDesligarDispositivoDeCasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(
-                this.casasInteligentes.values().stream().collect(Collectors.toList()),
-                scanner);
-        List<SmartDevice> dispositivosDaCasa = this.dispositivos.values().stream()
-                .filter(dispositivo -> casa.existsDevice(dispositivo.getID())).collect(Collectors.toList());
-        System.out.println("O modo do dispositivo que escolher sera trocado");
-        SmartDevice dispositivo = escolherDispositivo(dispositivosDaCasa, scanner);
-        dispositivo.setOn(!dispositivo.isOn());
+        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
+        System.out.println("Escolha uma opcao");
+        System.out.println("1. Ligar todos os dispositivos de uma divisao");
+        System.out.println("2. Desligar todos os dispositivos de uma divisao");
+        System.out.println("3. Ligar/Desligar um dispositivo especifico");
+        int escolha = Integer.parseInt(scanner.nextLine());
+        if (escolha == 1 || escolha == 2) {
+            String divisao = casa.escolherDivisao(scanner);
+            if (escolha==1) casa.setAllOn(divisao, true);
+            else if (escolha==2) casa.setAllOn(divisao, false);
+        } else if (escolha == 3) {
+            Map<String, SmartDevice> dispositivosDaCasa = this.dispositivos.entrySet().stream()
+                    .filter(e -> casa.existsDevice(e.getValue().getID()))
+                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+
+            System.out.println("O modo do dispositivo que escolher sera trocado");
+            SmartDevice dispositivo = escolherDispositivo(dispositivosDaCasa, scanner);
+            dispositivo.setOn(!dispositivo.isOn());
+        }
+
+
     }
 
     public void adicionarDispositivoACasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(
-                this.casasInteligentes.values().stream().collect(Collectors.toList()),
-                scanner);
-        List<SmartDevice> dispositivosForaDaCasa = this.dispositivos.values().stream()
-                .filter(dispositivo -> !casa.equals(dispositivo.getCasa()))
-                .collect(Collectors.toList());
-        System.out.println("O dispositivo escolhido sera adicionado na casa");
+        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
+        Map<String, SmartDevice> dispositivosForaDaCasa = this.dispositivos.entrySet()
+                .stream()
+                .filter(e -> !casa.equals(e.getValue().getCasa()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
         SmartDevice dispositivo = escolherDispositivo(dispositivosForaDaCasa, scanner);
+        System.out.println("O dispositivo escolhido sera adicionado na casa");
         casa.addDevice(dispositivo);
     }
 
@@ -337,7 +347,7 @@ public class Simulador implements Serializable{
         if (this.faseInicial) {
             System.out.println("1. Listar Dispositivos");
             System.out.println("2. Criar Dispositivo");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarDispositivos();
             } else if (escolha == 2) {
@@ -345,7 +355,7 @@ public class Simulador implements Serializable{
             }
         } else {
             System.out.println("1. Listar Dispositivos");
-            int escolha = scanner.nextInt();
+            int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarDispositivos();
             }
@@ -420,6 +430,5 @@ public class Simulador implements Serializable{
     }
 
     public void setComercializadores(Map<String, Comercializador> comercializadores) {
-
     }
 }

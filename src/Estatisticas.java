@@ -85,7 +85,7 @@ public class Estatisticas implements Serializable {
         System.out.println("2. Qual o comercializador com maior volume de faturacao");
         System.out.println("3. Listar as faturas emitidas por um comercializador");
         System.out.println("4. Ordenacao dos maior consumidores de energia num periodo");
-        int escolha = scanner.nextInt();
+        int escolha = Integer.parseInt(scanner.nextLine());
         if (escolha == 1) {
             estatistica1();
         } else if (escolha == 2) {

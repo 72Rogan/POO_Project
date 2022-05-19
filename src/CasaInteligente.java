@@ -99,6 +99,28 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         }
     }
 
+    /*
+    Recebe uma lista de divisoes em String e mostra ao utilizador para escolher uma
+     */
+    public String escolherDivisao(Scanner scanner) {
+        Set<String> divisoes = this.locations.keySet();
+        for (String div: divisoes) {
+            System.out.println(div);
+        }
+        System.out.println("Escreva o nome da divisao que quer");
+        String escolha = scanner.nextLine(); //assume-se que escolheu uma opcao valida
+        if (divisoes.contains(escolha)) {
+            return escolha;
+        } else {
+            System.out.println("Essa Divisao nao existe");
+            return "";
+        }
+    }
+
+    /*
+    Recebe uma string que representa a divisao, e um boleano que indica se e pra ligar ou desligar os
+    dispositivos dessa divisao
+     */
     public void setAllOn(String divisao, boolean b) {
         List<String> deviceList = locations.get(divisao);
         for (String str: deviceList) {
@@ -173,13 +195,18 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         this.comercializador.addFatura(fatura);
     }
 
-    public static CasaInteligente escolherCasa(List<CasaInteligente> listaCasas, Scanner scanner) {
-        System.out.println("Escolhe uma casa");
-        for (int i=0; i<listaCasas.size(); i++) {
-            System.out.println(i + " - " + listaCasas.get(i).toString());
+    public static CasaInteligente escolherCasa(Map<Integer, CasaInteligente> casas, Scanner scanner) {
+        for (Map.Entry<Integer, CasaInteligente> casa: casas.entrySet()) {
+            System.out.println(casa.getValue().toString() + ", nif: " + casa.getKey());
         }
-        int escolha = scanner.nextInt(); //assume-se que escolheu uma opcao valida
-        return listaCasas.get(escolha);
+        System.out.println("Escreve o nif da casa que queres");
+        int nif = Integer.parseInt(scanner.nextLine()); //assume-se que escolheu uma opcao valida
+        if (casas.containsKey(nif)) {
+            return casas.get(nif);
+        } else {
+            System.out.println("Nao ha nenhuma casa com este nif");
+            return null;
+        }
     }
 
     public static CasaInteligente parse(Simulador simulador, String linha) {
