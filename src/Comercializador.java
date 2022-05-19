@@ -10,9 +10,8 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     private double custoDiarioKwh;
     private double fatorImpostos;
     private List<Fatura> faturasEmitidas;
-    private int formulaNum;
+    private Formula formula;
 
-    private static int quantidadeFormulas = 4;
 
     public Comercializador() {
         super();
@@ -21,7 +20,7 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.custoDiarioKwh = -1;
         this.fatorImpostos = -1;
         this.faturasEmitidas = new ArrayList<>();
-        this.formulaNum = 0; //comercializador usa a primeira formula
+        this.formula = Formula.formula0();
     }
 
     public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos) {
@@ -31,19 +30,19 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.custoDiarioKwh = custoDiarioKwh;
         this.fatorImpostos = fatorImpostos;
         this.faturasEmitidas = new ArrayList<>();
-        this.formulaNum = 0; //comercializador usa a primeira formula
+        this.formula = Formula.formula0(); //comercializador usa a primeira formula
 
         simulador.addComercializador(this);
     }
 
-    public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos, int formulaNum) {
+    public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos, Random random) {
         super();
         this.simulador = simulador;
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
         this.fatorImpostos = fatorImpostos;
         this.faturasEmitidas = new ArrayList<>();
-        this.formulaNum = formulaNum % quantidadeFormulas;
+        this.formula = Formula.getFormula(random);
 
         simulador.addComercializador(this);
     }
@@ -51,24 +50,14 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     public static Comercializador parse(Simulador simulador, String nome, Random random) {
         double custoDiariokwh = 0.05 + random.nextDouble() * 0.10; //da um valor entre 0.05 e 0.15
         double impostos = random.nextDouble() + 1; //valor entre 1 e 2
-        int numformula = random.nextInt(quantidadeFormulas);
 
-        Comercializador c = new Comercializador(simulador, nome, custoDiariokwh, impostos, numformula);
+        Comercializador c = new Comercializador(simulador, nome, custoDiariokwh, impostos, random);
         return c;
     }
 
     public double precoDiaPorDispositivo(SmartDevice smartDevice) {
-        double custoBase = custoDiarioKwh * smartDevice.getConsumoDiario();
-        if (this.formulaNum == 0) {
-            return custoBase * (1+fatorImpostos) * 0.9;
-        } else if (this.formulaNum == 1) {
-            return custoBase + (fatorImpostos*0.05);
-        } else if (this.formulaNum == 2) {
-            return 1 + custoBase;
-        }
-        else {
-            return fatorImpostos > 5 ? custoBase : custoBase + 0.5;
-        }
+        //chama a formula respetiva do comercializador
+        return this.formula.precoDiario(smartDevice, custoDiarioKwh, fatorImpostos);
     }
 
     public double getCustoDiarioKwh() {
