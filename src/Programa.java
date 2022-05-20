@@ -1,15 +1,14 @@
 package src;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.Scanner;
 
 import static src.Simulador.construirSimulador;
 
 public class Programa {
-    static String caminhoFicheirosObjeto = "presets_obj/";
-    static String caminhoFicheirosTexto = "presets_txt/";
-    static String caminhoEventosAutomaticos = "simular/";
+    private static String caminhoFicheirosObjeto = "presets_obj/";
+    private static String caminhoFicheirosTexto = "presets_txt/";
+    private static String caminhoEventosAutomaticos = "simular/";
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
@@ -35,6 +34,10 @@ public class Programa {
             System.out.println("Nao escolheu uma opcao valida");
             return;
         }
+        if (simulador == null) {
+            System.out.println("Terminando o programa");
+            return;
+        }
         System.out.println("Simular o programa");
         System.out.println("Escolha uma opcao");
         System.out.println("1. Automatizar a simulacao");
@@ -54,7 +57,7 @@ public class Programa {
         System.out.println("Escreva o nome do ficheiro a guardar, senao escreva N/A");
         String ficheiroObjeto = scanner.nextLine();
         if (!ficheiroObjeto.equals("N/A")) {
-            simulador.guardarEstadoAtual(ficheiroObjeto);
+            guardarEstadoAtual(simulador, caminhoFicheirosObjeto + ficheiroObjeto);
         }
     }
 
@@ -70,5 +73,27 @@ public class Programa {
         System.out.println("Escreve o ficheiro que queres abrir");
         String ret = scanner.nextLine();
         return ret;
+    }
+
+    public static void guardarEstadoAtual(Simulador s, String ficheiroObjeto) {
+        try {
+            File ficheiro = new File(ficheiroObjeto);
+
+            FileOutputStream fo = new FileOutputStream(ficheiro);
+            ObjectOutputStream oo = new ObjectOutputStream(fo);
+
+            Simulador simuladorToWrite = s.clone();
+            simuladorToWrite.reset(); //elimina as faturas e periodos mas deixa a informaçao das entidades
+            oo.writeObject(simuladorToWrite);
+
+            fo.close();
+            oo.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro nao encontrado");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Erro a inicializar a stream");
+            e.printStackTrace();
+        }
     }
 }

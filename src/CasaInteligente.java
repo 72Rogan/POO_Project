@@ -3,6 +3,7 @@ package src;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 
 /**
@@ -58,14 +59,28 @@ public class CasaInteligente implements Serializable, PendingChanges{
     }
 
     public CasaInteligente(CasaInteligente casaInteligente) {
-        this.simulador = casaInteligente.simulador;
+        this(casaInteligente, casaInteligente.simulador);
+    }
+
+    public CasaInteligente(CasaInteligente casaInteligente, Simulador s) {
+        this.simulador = s;
         this.nome = casaInteligente.nome;
         this.nif = casaInteligente.nif;
         this.devices = casaInteligente.devices;
-        this.locations = casaInteligente.locations;
-        this.comercializador = casaInteligente.comercializador;
-        this.comercializadorToChange = casaInteligente.comercializadorToChange;
-        this.faturas = casaInteligente.faturas;
+        devices.values().stream()
+                .forEach(disp -> disp.clone(s));
+        this.locations = casaInteligente.locations.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> new ArrayList<>(e.getValue())));
+        this.comercializador = casaInteligente.comercializador.clone(s);
+        if (casaInteligente.comercializadorToChange != null) {
+            this.comercializadorToChange = casaInteligente.comercializadorToChange.clone(s);
+        } else {
+            this.comercializadorToChange = null;
+        }
+
+        this.faturas = casaInteligente.faturas.stream().map(Fatura::clone).collect(Collectors.toList());
+
+        this.simulador.addCasa(this);
     }
 
     public void setDeviceOn(String devCode) {
@@ -308,11 +323,15 @@ public class CasaInteligente implements Serializable, PendingChanges{
     }
 
     public void setFaturas(List<Fatura> faturas) {
-        this.faturas = faturas;
+        this.faturas = new ArrayList<>(faturas);
     }
 
     public CasaInteligente clone() {
         return new CasaInteligente(this);
+    }
+
+    public CasaInteligente clone(Simulador s) {
+        return new CasaInteligente(this, s);
     }
 
     @Override

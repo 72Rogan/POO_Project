@@ -52,6 +52,24 @@ public class Comercializador implements Serializable, PendingChanges {
         simulador.addComercializador(this);
     }
 
+    public Comercializador(Comercializador c) {
+        this(c, c.simulador);
+    }
+
+    public Comercializador(Comercializador c, Simulador s) {
+        this.simulador = s;
+        this.nome = c.nome;
+        this.custoDiarioKwh = c.custoDiarioKwh;
+        this.custoToChange = c.custoToChange;
+        this.fatorImpostos = c.fatorImpostos;
+        this.fatorToChange = c.fatorToChange;
+        this.faturasEmitidas = c.faturasEmitidas.stream()
+                .map(Fatura::clone).collect(Collectors.toList());
+        this.formula = c.formula;
+
+        this.simulador.addComercializador(this);
+    }
+
     public static Comercializador parse(Simulador simulador, String nome, Random random) {
         double custoDiariokwh = 0.05 + random.nextDouble() * 0.10; //da um valor entre 0.05 e 0.15
         double impostos = random.nextDouble() + 1; //valor entre 1 e 2
@@ -153,5 +171,17 @@ public class Comercializador implements Serializable, PendingChanges {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void setFaturas(List<Fatura> faturas) {
+        this.faturasEmitidas = new ArrayList<>(faturas);
+    }
+
+    public Comercializador clone() {
+        return new Comercializador(this);
+    }
+
+    public Comercializador clone(Simulador s) {
+        return new Comercializador(this, s);
     }
 }

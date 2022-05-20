@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 import java.util.Scanner;
 
 public class SmartSpeaker extends SmartDevice {
-	private Simulador simulador;
 	private int volume;
 	public static final int MAX = 100;
 	private String marca;
@@ -48,7 +47,11 @@ public class SmartSpeaker extends SmartDevice {
 	}
 
 	public SmartSpeaker(SmartSpeaker c){
-		super(c);
+		this(c, c.getSimulador());
+	}
+
+	public SmartSpeaker(SmartSpeaker c, Simulador s){
+		super(c, s);
 		this.volume=c.getVolume();
 		this.marca=c.getMarca();
 		this.radio=c.getRadio();
@@ -121,10 +124,14 @@ public class SmartSpeaker extends SmartDevice {
                c.getMarca().equals(this.marca) &&
                c.getRadio().equals(this.radio); 
     }
-    
-    public SmartSpeaker clone() {
-         return new SmartSpeaker(this);
-    }
+
+	public SmartSpeaker clone() {
+		return new SmartSpeaker(this);
+	}
+
+	public SmartSpeaker clone(Simulador s) {
+		return new SmartSpeaker(this, s);
+	}
     
     public String toString() {
          StringBuilder sb = new StringBuilder(); 

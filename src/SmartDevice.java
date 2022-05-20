@@ -60,8 +60,12 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         simulador.addDispositivo(this);
     }
 
-    public SmartDevice(SmartDevice smartDevice) {
-        this.simulador = smartDevice.simulador;
+    public SmartDevice(SmartDevice s) {
+        this(s, s.simulador);
+    }
+
+    public SmartDevice(SmartDevice smartDevice, Simulador s) {
+        this.simulador = s;
         this.id = smartDevice.getID();
         this.custoInstalacao = smartDevice.custoInstalacao;
         this.consumoDiario = smartDevice.consumoDiario;
@@ -69,6 +73,8 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         this.modoToChange = smartDevice.modoToChange;
         this.lastChange = smartDevice.lastChange;
         this.casa = smartDevice.casa;
+
+        this.simulador.addDispositivo(this);
     }
 
     public double consumoAte(LocalDate date) {
@@ -187,11 +193,17 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
 
     public abstract SmartDevice clone();
 
+    public abstract SmartDevice clone(Simulador simulador);
+
     @Override
     public void change() {
         if (this.modoToChange != null) {
             this.modo = this.modoToChange;
             this.modoToChange = null;
         }
+    }
+
+    public Simulador getSimulador() {
+        return this.simulador;
     }
 }

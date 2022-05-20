@@ -3,7 +3,6 @@ package src;
 import java.util.Scanner;
 
 public class SmartCamera extends SmartDevice{
-    // private int res;
     private int width;
     private int height;
     private double tamanhoFicheiro;
@@ -44,7 +43,11 @@ public class SmartCamera extends SmartDevice{
     }
 
     public SmartCamera(SmartCamera c) {
-        super(c);
+        this(c, c.getSimulador());
+    }
+
+    public SmartCamera(SmartCamera c, Simulador s) {
+        super(c, s);
         this.width = c.width;
         this.height = c.height;
         this.tamanhoFicheiro = c.tamanhoFicheiro;
@@ -102,6 +105,10 @@ public class SmartCamera extends SmartDevice{
     @Override
     public SmartDevice clone() {
         return new SmartCamera(this);
+    }
+
+    public SmartDevice clone(Simulador s) {
+        return new SmartCamera(this, s);
     }
 
     public int getWidth() {

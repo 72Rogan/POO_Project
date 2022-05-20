@@ -20,6 +20,14 @@ public class Estatisticas implements Serializable {
 
     public void estatistica1() {
         //1. Qual a casa que mais gastou (dinheiro) naquele periodo (assume-se que se refere ao ultimo periodo)
+        if (this.periodos.isEmpty()) {
+            System.out.println("Ainda nao ha periodos");
+            return;
+        }
+        if (this.casasInteligentes.isEmpty()) {
+            System.out.println("Ainda nao ha casas");
+            return;
+        }
         Periodo periodo = this.periodos.get(this.periodos.size()-1); //pega no ultimo periodo
         CasaInteligente ret = this.casasInteligentes.values().stream()
                 .max((casa1, casa2) -> {
@@ -37,6 +45,14 @@ public class Estatisticas implements Serializable {
     }
 
     public void estatistica2() {
+        if (this.comercializadores.isEmpty()) {
+            System.out.println("Nao existem comercializadores");
+            return;
+        }
+        if (this.periodos.isEmpty()) {
+            System.out.println("Ainda nao ocorreram faturacoes");
+            return;
+        }
         Comercializador ret = this.comercializadores.values().stream()
                 .max((c1, c2) -> {
                     double volumeC1 = c1.getFaturasEmitidas().stream().map(fatura -> fatura.getCusto()).reduce((double) 0, Double::sum); //soma do custo das faturas do comercializador 1
@@ -61,6 +77,10 @@ public class Estatisticas implements Serializable {
         //ou e um periodo ja existente, ou e um periodo metido pelo utilizador, e que pode englobar varios periodos
         //nesta implementacao, tem que se escolher um dos periodos ja existentes
         Periodo periodo = Periodo.escolherPeriodo(this.periodos, scanner);
+        if (periodo == null) {
+            System.out.println("Periodo Invalido");
+            return;
+        }
         List<CasaInteligente> ret = this.casasInteligentes.values().stream()
                 .sorted((casa1, casa2) -> {
                     double consumoCasa1 = casa1.getFatura(periodo).getConsumo();

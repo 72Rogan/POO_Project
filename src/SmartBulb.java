@@ -41,10 +41,16 @@ public class SmartBulb extends SmartDevice {
     }
 
     public SmartBulb(SmartBulb s) {
-        super(s);
+        this(s, s.getSimulador());
+    }
+
+    public SmartBulb(SmartBulb s, Simulador simulador) {
+        super(s, simulador);
         this.tone = s.tone;
         this.tamanho = s.tamanho;
     }
+
+
 
     public void setTone(int t) {
         if (t>WARM) this.tone = WARM;
@@ -82,6 +88,10 @@ public class SmartBulb extends SmartDevice {
     @Override
     public SmartDevice clone() {
         return new SmartBulb(this);
+    }
+
+    public SmartDevice clone(Simulador s) {
+        return new SmartBulb(this, s);
     }
 
 

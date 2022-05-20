@@ -52,12 +52,18 @@ public class Simulador implements Serializable{
 
     public Simulador(Simulador simulador) {
         this.faseInicial = simulador.faseInicial;
-        this.dispositivos = simulador.dispositivos.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
-        this.casasInteligentes = simulador.casasInteligentes.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
-        this.comercializadores = simulador.comercializadores.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
+        this.dispositivos = new HashMap<>();
+        this.casasInteligentes = new HashMap<>();
+        this.comercializadores = new HashMap<>();
+        /*
+        Os clones ao serem chamado em cada forEach chamam os construtores de cada entidade,
+        que por sua vez adicionam a entidade ao simulador
+        Os dispositivos ja sao adicionados ao simulador dentro dos clones da casa inteligente
+         */
+        simulador.casasInteligentes.values().stream() //
+                .forEach(casa -> casa.clone(this));
+        simulador.comercializadores.values().stream()
+                .forEach(com -> com.clone(this));
         this.periodos = simulador.periodos.stream().map(Periodo::clone).collect(Collectors.toList());
         this.data = simulador.data;
         this.currentId = simulador.currentId;
@@ -77,6 +83,7 @@ public class Simulador implements Serializable{
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             simulador = (Simulador) oi.readObject();
+            simulador.faseInicial = false;
 
             fi.close();
             oi.close();
@@ -90,13 +97,7 @@ public class Simulador implements Serializable{
             e.printStackTrace();
         }
 
-        if (simulador == null) System.out.println("Simulador e null");
-        simulador.faseInicial = false;
         return simulador; //se devolver null, deu problema em cima
-    }
-
-    public void guardarEstadoAtual(String caminho) {
-
     }
 
     public void saltarDias(LocalDate date) {
@@ -474,6 +475,25 @@ public class Simulador implements Serializable{
         for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
             System.out.println(casaInteligente.getFaturas());
         }
+    }
+
+    /*
+    Esta funçao elimina as faturas existentes no simulador inteiro, tambem elimina as instancias de periodo
+     */
+    public void reset() {
+        this.data = LocalDate.now();
+        for (CasaInteligente casa: this.casasInteligentes.values()) {
+            casa.setFaturas(new ArrayList<>()); //elimina as faturas da casa
+        }
+        for (Comercializador c: this.comercializadores.values()) {
+            c.setFaturas(new ArrayList<>()); //elimina as faturas do fornecedor
+        }
+        for (SmartDevice disp: this.dispositivos.values()) {
+            disp.setLastChange(this.data);
+        }
+        this.periodos = new ArrayList<>();
+
+
     }
 
     public LocalDate getData() {
