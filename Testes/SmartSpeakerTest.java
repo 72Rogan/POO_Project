@@ -80,18 +80,19 @@ public class SmartSpeakerTest{
         assertEquals(15, smartSpeaker1.getVolume(), "Não é o volume esperado");
         for (int i=0; i<25; i++) smartSpeaker1.volumeUp();
         assertEquals(40, smartSpeaker1.getVolume(), "Não é o volume esperado");
-
-        for (int i=0; i<10; i++) smartSpeaker1.volumeDown();
+        for (int i=0; i<70; i++) smartSpeaker1.volumeUp();
+        assertEquals(100, smartSpeaker1.getVolume(), "Não é o volume esperado");
+        for (int i=0; i<70; i++) smartSpeaker1.volumeDown();
         assertEquals(30, smartSpeaker1.getVolume(), "Não é o volume esperado");
+        for (int i=0; i<50; i++) smartSpeaker1.volumeDown();
+        assertEquals(0, smartSpeaker1.getVolume(), "Não é o volume esperado");
         smartSpeaker1.setVolume(50);
         assertEquals(50,smartSpeaker1.getVolume(), "Não é o volume esperado");
         smartSpeaker1.setVolume(150);
-        assertEquals(0,smartSpeaker1.getVolume(), "Não é o volume esperado");
+        assertEquals(100,smartSpeaker1.getVolume(), "Não é o volume esperado");
         smartSpeaker1.setVolume(-50);
         assertEquals(0,smartSpeaker1.getVolume(), "Não é o volume esperado");
     }
-
-
 
     /*
     Não sei se é suposto fazer testes para o criarSmartSpeaker.
