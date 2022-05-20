@@ -4,11 +4,13 @@ import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class Comercializador extends Change<Comercializador> implements Serializable {
+public class Comercializador implements Serializable, PendingChanges {
     private Simulador simulador;
     private String nome;
     private double custoDiarioKwh;
+    private double custoToChange;
     private double fatorImpostos;
+    private double fatorToChange;
     private List<Fatura> faturasEmitidas;
     private Formula formula;
 
@@ -18,7 +20,9 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.simulador = null;
         this.nome = "N/A";
         this.custoDiarioKwh = -1;
+        this.custoToChange = -1;
         this.fatorImpostos = -1;
+        this.fatorToChange = -1;
         this.faturasEmitidas = new ArrayList<>();
         this.formula = Formula.formula0();
     }
@@ -28,7 +32,9 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.simulador = simulador;
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
+        this.custoToChange = -1;
         this.fatorImpostos = fatorImpostos;
+        this.fatorToChange = -1;
         this.faturasEmitidas = new ArrayList<>();
         this.formula = Formula.formula0(); //comercializador usa a primeira formula
 
@@ -40,7 +46,9 @@ public class Comercializador extends Change<Comercializador> implements Serializ
         this.simulador = simulador;
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
+        this.custoToChange = -1;
         this.fatorImpostos = fatorImpostos;
+        this.fatorToChange = -1;
         this.faturasEmitidas = new ArrayList<>();
         this.formula = Formula.getFormula(random);
 
@@ -65,8 +73,19 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     }
 
     public void setCustoDiarioKwh(double custoDiarioKwh) {
-        if (this.toChange == null) createToChange();
-        this.toChange.custoDiarioKwh = custoDiarioKwh;
+        this.custoToChange = custoDiarioKwh;
+    }
+
+    public void mudarValores(Scanner scanner) {
+        System.out.println("Digite os novos valores do comercializador no formato CustoDiarioKwh,FatorImpostos");
+        System.out.println("Por exemplo: 0.15,1.3");
+        System.out.println("Se quiser manter algum parametro, escreva -1 no parametro respetivo");
+        String input = scanner.nextLine();
+        String[] nomeNif = input.split(",", 2);
+        double custoDiarioKwh = Double.valueOf(nomeNif[0]);
+        double fatorImpostos = Double.valueOf(nomeNif[1]);
+        if (custoDiarioKwh != -1) setCustoDiarioKwh(custoDiarioKwh);
+        if (fatorImpostos != -1) setFatorImpostos(fatorImpostos);
     }
 
     public double getFatorImpostos() {
@@ -74,8 +93,7 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     }
 
     public void setFatorImpostos(double fatorImpostos) {
-        if (this.toChange == null) createToChange();
-        this.toChange.fatorImpostos = fatorImpostos;
+        this.fatorToChange = fatorImpostos;
     }
 
     public void addFatura(Fatura fatura) {
@@ -102,18 +120,14 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     }
 
     @Override
-    public void createToChange() {
-        Comercializador comercializador = new Comercializador();
-        super.setToChange(comercializador);
-    }
-
-    @Override
     public void change() {
-        Comercializador comToChange = super.getToChange();
-        if (comToChange != null) {
-            if (comToChange.fatorImpostos != -1) this.fatorImpostos = comToChange.fatorImpostos;
-            if (comToChange.custoDiarioKwh != -1) this.custoDiarioKwh = comToChange.custoDiarioKwh;
-            super.toChange = null;
+        if (this.custoToChange != -1) {
+            this.custoDiarioKwh = this.custoToChange;
+            this.custoToChange = -1;
+        }
+        if (this.fatorToChange != -1) {
+            this.fatorImpostos = this.fatorToChange;
+            this.fatorToChange = -1;
         }
     }
 
@@ -126,7 +140,7 @@ public class Comercializador extends Change<Comercializador> implements Serializ
     }
 
     public String toString() {
-        return this.nome;
+        return this.nome + ", CustoKwh: " + this.custoDiarioKwh + ", Fator Impostos: " + this.fatorImpostos;
     }
 
     public boolean equals(Object o) {

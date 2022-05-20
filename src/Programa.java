@@ -29,6 +29,18 @@ public class Programa {
         } else {
             System.out.println("Nao escolheu uma opcao valida");
         }
-        if (simulador != null) simulador.startInterface(scanner);
+        System.out.println("Simular o programa");
+        System.out.println("Escolha uma opcao");
+        System.out.println("1. Automatizar a simulacao");
+        System.out.println("2. Simular manualmente");
+        escolha = Integer.parseInt(scanner.nextLine());
+        if (simulador != null) {
+            if (escolha == 1) {
+
+            } else if (escolha == 2) {
+                simulador.startInterface(scanner);
+            }
+            simulador.createStatusFile("teste.txt");
+        }
     }
 }

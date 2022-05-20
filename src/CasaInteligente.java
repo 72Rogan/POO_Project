@@ -21,9 +21,10 @@ public class CasaInteligente {
 
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
 // exceto para a funcao turnAllOn acho que o forEach e bom nessa
-public class CasaInteligente extends Change<CasaInteligente> implements Serializable{
+public class CasaInteligente implements Serializable, PendingChanges{
     private Simulador simulador;
     private Comercializador comercializador;
+    private Comercializador comercializadorToChange;
     private String nome;
     private int nif;
     private Map<String, SmartDevice> devices;
@@ -39,6 +40,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         this.devices = new HashMap();
         this.locations = new HashMap();
         this.comercializador = null;
+        this.comercializadorToChange = null;
         this.faturas = new ArrayList<>();
     }
 
@@ -51,19 +53,20 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
         this.devices = new HashMap();
         this.locations = new HashMap();
         this.comercializador = comercializador;
+        this.comercializadorToChange = null;
         this.faturas = new ArrayList<>();
 
         this.simulador.addCasa(this);
     }
 
     public CasaInteligente(CasaInteligente casaInteligente) {
-        super.toChange = casaInteligente.toChange;
         this.simulador = casaInteligente.simulador;
         this.nome = casaInteligente.nome;
         this.nif = casaInteligente.nif;
         this.devices = casaInteligente.devices;
         this.locations = casaInteligente.locations;
         this.comercializador = casaInteligente.comercializador;
+        this.comercializadorToChange = casaInteligente.comercializadorToChange;
         this.faturas = casaInteligente.faturas;
     }
 
@@ -123,6 +126,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     dispositivos dessa divisao
      */
     public void setAllOn(String divisao, boolean b) {
+        if (!locations.containsKey(divisao)) return; //nao contem esta divisao
         List<String> deviceList = locations.get(divisao);
         for (String str: deviceList) {
             SmartDevice dev = devices.get(str);
@@ -130,6 +134,33 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
                 dev.setOn(b);
             }
         }
+    }
+
+    public void listarDispositivos() {
+        for (SmartDevice sd: this.devices.values()) {
+            System.out.println(sd);
+        }
+    }
+
+    public String conteudo() {
+        StringBuilder sB = new StringBuilder();
+        for (String divisao: this.locations.keySet()) {
+            List<String> dispIds = this.locations.get(divisao);
+            sB.append("Divisao: ");
+            sB.append(divisao);
+            sB.append("\n");
+            if (!dispIds.isEmpty()) {
+                for (String id: dispIds) {
+                    SmartDevice sd = this.devices.get(id);
+                    if (sd != null) {
+                        //dispositivo existe
+                        sB.append(sd.toString());
+                        sB.append("\n");
+                    }
+                }
+            }
+        }
+        return sB.toString();
     }
 
     public boolean existsRooms() {
@@ -190,8 +221,6 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
             smartDevice.setLastChange(simulador.getData());
         }
         faturar(inicio,fim,consumo,custo);
-        //depois de geradas as faturas, executam-se as mudancas pendentes necessarias
-        this.change();
     }
 
     public void faturar(LocalDate inicio, LocalDate fim, double consumo, double custo) {
@@ -244,10 +273,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     public void setNome(String nome) {
-        //this.nome = nome;
-        //Coloca o nome nas mudancas pendentes
-        if (super.toChange == null) createToChange();
-        this.toChange.nome = nome;
+        this.nome = nome;
     }
 
     public int getNif() {
@@ -255,10 +281,7 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     public void setNif(int nif) {
-        //this.nif = nif;
-        //Coloca o nif nas mudancas pendentes
-        if (super.toChange == null) createToChange();
-        this.toChange.nif = nif;
+        this.nif = nif;
     }
 
     public Map<String, SmartDevice> getDevices() {
@@ -278,15 +301,13 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     public Comercializador getComercializador() {
+        //comercializador antes das mudanças pendentes
         return comercializador;
     }
 
     public void setComercializador(Comercializador comercializador) {
-        //this.comercializador = comercializador;
-
         //coloca o novo comercializador nas mudancas pendentes
-        if (super.toChange == null) createToChange();
-        super.toChange.comercializador = comercializador;
+        this.comercializadorToChange = comercializador;
     }
 
     public List<Fatura> getFaturas() {
@@ -302,22 +323,10 @@ public class CasaInteligente extends Change<CasaInteligente> implements Serializ
     }
 
     @Override
-    public void createToChange() {
-        CasaInteligente casaInteligente = new CasaInteligente();
-        super.setToChange(casaInteligente);
-    }
-
-    @Override
     public void change() {
-        CasaInteligente casaInteligente = getToChange();
-        if (casaInteligente != null) { //existem mudancas pendentes
-            if (casaInteligente.nome != "N/A") this.nome = casaInteligente.nome;
-            if (casaInteligente.nif != -1) this.nif = casaInteligente.nif;
-            if (casaInteligente.comercializador != null) this.comercializador = casaInteligente.comercializador;
-            super.toChange = null; //resetar as mudancas pendentes
-        }
-        for (SmartDevice sD: this.devices.values()) {
-            sD.change();
+        if (this.comercializadorToChange != null) {
+            this.comercializador = this.comercializadorToChange;
+            this.comercializadorToChange = null;
         }
     }
 
