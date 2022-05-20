@@ -2,14 +2,21 @@
 
 import static org.junit.jupiter.api.Assertions.*;
 import static src.SmartDevice.Modo.OFF;
+import static src.SmartSpeaker.criarSmartSpeaker;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import src.SmartCamera;
+import src.SmartDevice;
 import src.SmartSpeaker;
 import src.Simulador;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Scanner;
 
 
 public class SmartSpeakerTest{
@@ -80,31 +87,41 @@ public class SmartSpeakerTest{
         assertEquals(15, smartSpeaker1.getVolume(), "Não é o volume esperado");
         for (int i=0; i<25; i++) smartSpeaker1.volumeUp();
         assertEquals(40, smartSpeaker1.getVolume(), "Não é o volume esperado");
-
-        for (int i=0; i<10; i++) smartSpeaker1.volumeDown();
+        for (int i=0; i<70; i++) smartSpeaker1.volumeUp();
+        assertEquals(100, smartSpeaker1.getVolume(), "Não é o volume esperado");
+        for (int i=0; i<70; i++) smartSpeaker1.volumeDown();
         assertEquals(30, smartSpeaker1.getVolume(), "Não é o volume esperado");
+        for (int i=0; i<50; i++) smartSpeaker1.volumeDown();
+        assertEquals(0, smartSpeaker1.getVolume(), "Não é o volume esperado");
         smartSpeaker1.setVolume(50);
         assertEquals(50,smartSpeaker1.getVolume(), "Não é o volume esperado");
         smartSpeaker1.setVolume(150);
-        assertEquals(0,smartSpeaker1.getVolume(), "Não é o volume esperado");
+        assertEquals(100,smartSpeaker1.getVolume(), "Não é o volume esperado");
         smartSpeaker1.setVolume(-50);
         assertEquals(0,smartSpeaker1.getVolume(), "Não é o volume esperado");
     }
 
+
+    @Test
+    public static void criarSmartSpeakerTest(){
+        InputStream sysInBackup = System.in;
+        Simulador simulador = new Simulador();
+        Scanner scanner = new Scanner(System.in);
+        criarSmartSpeaker(simulador,scanner);
+        String input = "ON,73,JBL,MEGAHITS";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        System.setIn(sysInBackup);
+        assertEquals(SmartDevice.Modo.ON, simulador.getDispositivos().get(1).getModo(),"erro");
+        //assertEquals(73, simulador.getDispositivos().get(1).getVolume(),"erro");
+        //assertEquals("JBL",simulador.getDispositivos().get(1).getMarca(),"erro");
+        //assertEquals("MEGAHITS",simulador.getDispositivos().get(1).getRadio(),"erro");
+    }
+
+    }
 
 
     /*
     Não sei se é suposto fazer testes para o criarSmartSpeaker.
     Se for, o que é que é o scanner?
     */
-
-
-
-
-
-
-
-
-
-
-}

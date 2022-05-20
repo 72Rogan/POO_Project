@@ -21,7 +21,13 @@ public class SmartSpeaker extends SmartDevice {
 
 	public SmartSpeaker(Simulador simulador, Modo x, int vol, String marca, String radio){
 		super(simulador, 350,x);
-		this.volume=vol;
+		if (vol > MAX) {
+			this.volume = MAX;
+		} else if (vol < 0) {
+			this.volume = 0;
+		} else {
+			this.volume=vol;
+		}
 		this.marca=marca;
 		this.radio=radio;
 		calcularConsumoDiario();
@@ -29,7 +35,13 @@ public class SmartSpeaker extends SmartDevice {
 
 	public SmartSpeaker(Simulador simulador, Modo x, int vol, String marca, String radio, double consumoDiario){
 		super(simulador, 350,x);
-		this.volume=vol;
+		if (vol > MAX) {
+			this.volume = MAX;
+		} else if (vol < 0) {
+			this.volume = 0;
+		} else {
+			this.volume=vol;
+		}
 		this.marca=marca;
 		this.radio=radio;
 		setConsumoDiario(consumoDiario);
