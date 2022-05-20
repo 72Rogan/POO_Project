@@ -2,14 +2,21 @@
 
 import static org.junit.jupiter.api.Assertions.*;
 import static src.SmartDevice.Modo.OFF;
+import static src.SmartSpeaker.criarSmartSpeaker;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
+import src.SmartCamera;
+import src.SmartDevice;
 import src.SmartSpeaker;
 import src.Simulador;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.Scanner;
 
 
 public class SmartSpeakerTest{
@@ -94,18 +101,27 @@ public class SmartSpeakerTest{
         assertEquals(0,smartSpeaker1.getVolume(), "Não é o volume esperado");
     }
 
+
+    @Test
+    public static void criarSmartSpeakerTest(){
+        InputStream sysInBackup = System.in;
+        Simulador simulador = new Simulador();
+        Scanner scanner = new Scanner(System.in);
+        criarSmartSpeaker(simulador,scanner);
+        String input = "ON,73,JBL,MEGAHITS";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        System.setIn(sysInBackup);
+        assertEquals(SmartDevice.Modo.ON, simulador.getDispositivos().get(1).getModo(),"erro");
+        //assertEquals(73, simulador.getDispositivos().get(1).getVolume(),"erro");
+        //assertEquals("JBL",simulador.getDispositivos().get(1).getMarca(),"erro");
+        //assertEquals("MEGAHITS",simulador.getDispositivos().get(1).getRadio(),"erro");
+    }
+
+    }
+
+
     /*
     Não sei se é suposto fazer testes para o criarSmartSpeaker.
     Se for, o que é que é o scanner?
     */
-
-
-
-
-
-
-
-
-
-
-}
