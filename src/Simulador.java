@@ -161,13 +161,13 @@ public class Simulador implements Serializable{
     }
 
     public boolean gerirEntidades(Scanner scanner) {
-        System.out.println("1. Gerir Dispositivos");
+        System.out.println("1. Listar Dispositivos");
         System.out.println("2. Gerir Casas Inteligentes");
         System.out.println("3. Gerir Comercializadores");
         System.out.println("4. Sair");
         int escolha = Integer.parseInt(scanner.nextLine());
         if (escolha == 1) {
-            gerirDispositivos(scanner);
+            listarDispositivos();
         } else if (escolha == 2) {
             gerirCasas(scanner);
         } else if (escolha == 3) {
@@ -365,11 +365,6 @@ public class Simulador implements Serializable{
         if (dispositivo != null) dispositivo.setOn(!dispositivo.isOn());
     }
 
-    public void adicionarDispositivoACasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-        adicionarDispositivoACasa(casa, scanner);
-    }
-
     public void adicionarDispositivoACasa(CasaInteligente casa, Scanner scanner) {
         if (!casa.existsRooms()) {
             System.out.println("Casa nao tem divisoes");
@@ -381,11 +376,6 @@ public class Simulador implements Serializable{
         casa.addToRoom(divisao, disp.getID()); //adiciona dispositivo a divisao
     }
 
-    public void adicionarDivisaoACasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-        adicionarDivisaoACasa(casa, scanner);
-    }
-
     public void adicionarDivisaoACasa(CasaInteligente casa, Scanner scanner) {
         System.out.println("Escreva o nome da divisao");
         String div = scanner.nextLine();
@@ -393,11 +383,31 @@ public class Simulador implements Serializable{
         if (casa != null) casa.addRoom(div);
     }
 
-    public void gerirDispositivos(Scanner scanner) {
-        System.out.println("1. Listar Dispositivos");
-        int escolha = Integer.parseInt(scanner.nextLine());
-        if (escolha == 1) {
-            listarDispositivos();
+    /*
+    Recebe uma string que representa o path para o ficheiro que vai conter o estado atual
+    do simulador
+     */
+    public void createStatusFile(String filePath) {
+        try {
+            FileWriter myWriter = new FileWriter(filePath);
+
+            myWriter.write("Fornecedores: \n");
+            for (Comercializador c: this.comercializadores.values()) {
+                myWriter.write(c.toString());
+                myWriter.write("\n");
+            }
+
+            myWriter.write("\n");
+            myWriter.write("Casas Inteligentes: \n");
+            for (CasaInteligente c: this.casasInteligentes.values()) {
+                myWriter.write(c.toString());
+                myWriter.write("\n");
+                myWriter.write(c.conteudo());
+                myWriter.write("\n");
+            }
+            myWriter.close();
+        } catch (IOException e) {
+            System.out.println("Nao conseguiu abrir/escrever ficheiro");
         }
     }
 
@@ -413,16 +423,6 @@ public class Simulador implements Serializable{
     public void addDispositivo(SmartDevice smartDevice) {
         this.dispositivos.put(smartDevice.getID(), smartDevice);
     }
-
-    /*
-    Pros e Contras de meter um apontador pro simulador em todas as classes
-    Pros:
-    a data passaria a ser private, secalhar melhor encapsulamento por isso
-    conseguia adicionar dispositivos diretamente das casas, sem antes ter adicionado ao simulador
-
-    Contras:
-    Secalhar violava alguma regra
-     */
 
     public void addCasa(CasaInteligente casaInteligente) {
         this.casasInteligentes.put(casaInteligente.getNif(), casaInteligente);

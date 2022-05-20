@@ -142,6 +142,27 @@ public class CasaInteligente implements Serializable, PendingChanges{
         }
     }
 
+    public String conteudo() {
+        StringBuilder sB = new StringBuilder();
+        for (String divisao: this.locations.keySet()) {
+            List<String> dispIds = this.locations.get(divisao);
+            sB.append("Divisao: ");
+            sB.append(divisao);
+            sB.append("\n");
+            if (!dispIds.isEmpty()) {
+                for (String id: dispIds) {
+                    SmartDevice sd = this.devices.get(id);
+                    if (sd != null) {
+                        //dispositivo existe
+                        sB.append(sd.toString());
+                        sB.append("\n");
+                    }
+                }
+            }
+        }
+        return sB.toString();
+    }
+
     public boolean existsRooms() {
         return !this.locations.isEmpty();
     }

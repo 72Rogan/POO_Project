@@ -119,7 +119,9 @@ public class SmartSpeaker extends SmartDevice {
          sb.append("Coluna, id: ")
 				 .append(this.getID())
 				 .append(", ")
-				 .append(this.getModo());
+				 .append(this.getModo())
+		 		 .append(", ")
+				 .append(this.getVolume());
          return sb.toString();
     }
 

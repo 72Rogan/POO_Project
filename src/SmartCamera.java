@@ -91,10 +91,11 @@ public class SmartCamera extends SmartDevice{
                 .append(this.getID())
                 .append(", ")
                 .append(this.getModo())
-                .append(", ")
+                .append(", (")
                 .append(this.width)
                 .append("x")
-                .append(this.height);
+                .append(this.height)
+                .append(")");
         return sb.toString();
     }
 
