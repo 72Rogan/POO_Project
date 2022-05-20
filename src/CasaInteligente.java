@@ -200,7 +200,7 @@ public class CasaInteligente implements Serializable, PendingChanges{
         return ret;
     }
 
-    public void saltarParaData(LocalDate data) {
+    public void saltarParaData(LocalDate dataFinal) {
 
         if (this.devices.isEmpty()) {
             //A casa nao tem dispositivos, para esta funçao
@@ -211,16 +211,14 @@ public class CasaInteligente implements Serializable, PendingChanges{
         double consumo = 0;
         double custo = 0;
 
-        LocalDate inicio = this.devices.values().stream().findAny().get().getLastChange();
-
-        LocalDate fim = data;
+        LocalDate inicio = simulador.getData();
 
         for (SmartDevice smartDevice: this.devices.values()) {
-            consumo += smartDevice.consumoAte(fim);
-            custo += smartDevice.custoAte(this.comercializador, fim);
+            consumo += smartDevice.consumoAte(dataFinal);
+            custo += smartDevice.custoAte(this.comercializador, dataFinal);
             smartDevice.setLastChange(simulador.getData());
         }
-        faturar(inicio,fim,consumo,custo);
+        faturar(inicio,dataFinal,consumo,custo);
     }
 
     public void faturar(LocalDate inicio, LocalDate fim, double consumo, double custo) {

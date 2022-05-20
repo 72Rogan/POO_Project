@@ -91,11 +91,12 @@ public class Simulador implements Serializable{
 
         }
         LocalDate antes = data;
-        data = data.plusDays(daysToSkip);
+        LocalDate depois = data.plusDays(daysToSkip);
         for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
-            casaInteligente.saltarParaData(data);
+            casaInteligente.saltarParaData(depois);
             casaInteligente.change(); //aplicar mudanças pendentes
         }
+        data = depois;
         for (SmartDevice sd: this.dispositivos.values()) sd.change(); //aplicar mudanças pendentes
         for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudanças pendentes
 
@@ -411,6 +412,15 @@ public class Simulador implements Serializable{
         }
     }
 
+    public CasaInteligente getCasa(String nome) {
+        try {
+            int nif = Integer.valueOf(nome);
+            return this.casasInteligentes.get(nif);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
     public String getNextId() {
         this.currentId++;
         return String.valueOf(this.currentId);
@@ -418,6 +428,10 @@ public class Simulador implements Serializable{
 
     public Comercializador getComercializador(String nome) {
         return this.comercializadores.get(nome);
+    }
+
+    public SmartDevice getDispositivo(String id) {
+        return this.dispositivos.get(id);
     }
 
     public void addDispositivo(SmartDevice smartDevice) {

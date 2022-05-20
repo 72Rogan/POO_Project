@@ -36,11 +36,14 @@ public class Programa {
         escolha = Integer.parseInt(scanner.nextLine());
         if (simulador != null) {
             if (escolha == 1) {
-
+                System.out.println("Escreva o caminho para o ficheiro com os eventos automaticos");
+                String path = scanner.nextLine();
+                Parser parser = new Parser(path);
+                parser.simular(simulador);
             } else if (escolha == 2) {
                 simulador.startInterface(scanner);
             }
-            simulador.createStatusFile("teste.txt");
+            simulador.createStatusFile("output/final.txt");
         }
     }
 }

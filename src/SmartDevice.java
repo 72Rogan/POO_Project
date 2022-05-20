@@ -90,12 +90,12 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
 
     public void turnOn() {
         this.modoToChange = Modo.ON; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
-        this.lastChange = LocalDate.now();
+        this.lastChange = this.simulador.getData();
     }
 
     public void turnOff() {
         this.modoToChange = Modo.OFF; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
-        this.lastChange = LocalDate.now();
+        this.lastChange = this.simulador.getData();
     }
 
     public void setOn(boolean b) {

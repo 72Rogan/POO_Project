@@ -19,7 +19,7 @@ public class Estatisticas implements Serializable {
     }
 
     public void estatistica1() {
-        //1. Qual a casa que mais gastou naquele periodo (assume-se que se refere ao ultimo periodo)
+        //1. Qual a casa que mais gastou (dinheiro) naquele periodo (assume-se que se refere ao ultimo periodo)
         Periodo periodo = this.periodos.get(this.periodos.size()-1); //pega no ultimo periodo
         CasaInteligente ret = this.casasInteligentes.values().stream()
                 .max((casa1, casa2) -> {
