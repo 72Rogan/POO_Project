@@ -86,9 +86,9 @@ public class SmartSpeaker extends SmartDevice {
 	}
 
 	public static SmartSpeaker criarSmartSpeaker(Simulador simulador, Scanner scanner) {
-		System.out.println("Escreve no formato Modo-Volume-Marca-Radio / Exemplo: ON-73-JBL-MEGAHITS");
+		System.out.println("Escreve no formato Modo,Volume,Marca,Radio / Exemplo: ON,73,JBL,MEGAHITS");
 		String input = scanner.nextLine();
-		String[] idCustoModoVolumeMarcaRadio = input.split("-", 4);
+		String[] idCustoModoVolumeMarcaRadio = input.split(",", 4);
 		Modo modo = idCustoModoVolumeMarcaRadio[0].equals("OFF") ? Modo.OFF : idCustoModoVolumeMarcaRadio[0].equals("ON") ? Modo.ON : null;
 		int volume = Integer.valueOf(idCustoModoVolumeMarcaRadio[1]);
 		String marca = idCustoModoVolumeMarcaRadio[2];

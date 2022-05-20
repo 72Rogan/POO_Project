@@ -87,11 +87,18 @@ public class Simulador implements Serializable{
     }
 
     public void saltarDias(int daysToSkip) {
+        if (daysToSkip > 0) {
+
+        }
         LocalDate antes = data;
         data = data.plusDays(daysToSkip);
         for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
             casaInteligente.saltarParaData(data);
+            casaInteligente.change(); //aplicar mudanças pendentes
         }
+        for (SmartDevice sd: this.dispositivos.values()) sd.change(); //aplicar mudanças pendentes
+        for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudanças pendentes
+
         Periodo periodo = new Periodo(antes, data);
         this.addPeriodo(periodo);
     }
@@ -212,9 +219,9 @@ public class Simulador implements Serializable{
     }
 
     public void criarComercializador(Scanner scanner) {
-        System.out.println("Escreve o novo comercializador no formato Nome-CustoDiarioKwh-FatorImpostos");
+        System.out.println("Escreve o novo comercializador no formato Nome,CustoDiarioKwh,FatorImpostos");
         String input = scanner.nextLine();
-        String[] nomeNif = input.split("-", 3);
+        String[] nomeNif = input.split(",", 3);
         String nome = nomeNif[0];
         double custoDiarioKwh = Double.valueOf(nomeNif[1]);
         double fatorImpostos = Double.valueOf(nomeNif[2]);
@@ -228,9 +235,9 @@ public class Simulador implements Serializable{
             System.out.println("Crie comercializadores para poder criar casa");
             return;
         }
-        System.out.println("Escreve a nova casa no formato Nome-Nif");
+        System.out.println("Escreve a nova casa no formato Nome,Nif");
         String input = scanner.nextLine();
-        String[] nomeNif = input.split("-", 2);
+        String[] nomeNif = input.split(",", 2);
         String nome = nomeNif[0];
         int nif = Integer.valueOf(nomeNif[1]);
         Comercializador comercializador;
@@ -258,21 +265,12 @@ public class Simulador implements Serializable{
 
     public void mudarValoresDeComercializador(Scanner scanner) {
         Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores,scanner);
-        System.out.println("Digite os novos valores do comercializador no formato Nome-CustoDiarioKwh-FatorImpostos");
-        System.out.println("Se quiser manter algum parametro, escreva -1 no parametro respetivo");
-        String input = scanner.nextLine();
-        String[] nomeNif = input.split("-", 3);
-        String nome = nomeNif[0];
-        double custoDiarioKwh = Double.valueOf(nomeNif[1]);
-        double fatorImpostos = Double.valueOf(nomeNif[2]);
-        if (!nome.equals("-1")) comercializador.setNome(nome);
-        if (custoDiarioKwh != -1) comercializador.setCustoDiarioKwh(custoDiarioKwh);
-        if (fatorImpostos != -1) comercializador.setFatorImpostos(fatorImpostos);
+        if(comercializador != null) comercializador.mudarValores(scanner);
     }
 
     public void mudarComercializadorDeCasa(Scanner scanner) {
         CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-        mudarComercializadorDeCasa(casa, scanner);
+        if (casa != null) mudarComercializadorDeCasa(casa, scanner);
     }
 
     public void mudarComercializadorDeCasa(CasaInteligente casa, Scanner scanner) {
@@ -282,22 +280,50 @@ public class Simulador implements Serializable{
 
     public boolean gerirCasa(CasaInteligente casa, Scanner scanner) {
         System.out.println(casa);
-        System.out.println("Escolha uma opcao");
-        System.out.println("1. Mudar comercializador da casa");
-        System.out.println("2. Adicionar dispositivo a casa");
-        System.out.println("3. Adicionar divisao a casa");
-        System.out.println("4. Sair");
-        int escolha = Integer.parseInt(scanner.nextLine());
-        if (escolha == 1) {
-            mudarComercializadorDeCasa(casa, scanner);
-        } else if (escolha == 2) {
-            adicionarDispositivoACasa(casa, scanner);
-        } else if (escolha == 3) {
-            adicionarDivisaoACasa(casa, scanner);
+        if (this.faseInicial) {
+            System.out.println("Escolha uma opcao");
+            System.out.println("1. Mudar comercializador da casa");
+            System.out.println("2. Adicionar dispositivo a casa");
+            System.out.println("3. Adicionar divisao a casa");
+            System.out.println("4. Sair");
+            int escolha = Integer.parseInt(scanner.nextLine());
+            if (escolha == 1) {
+                mudarComercializadorDeCasa(casa, scanner);
+            } else if (escolha == 2) {
+                adicionarDispositivoACasa(casa, scanner);
+            } else if (escolha == 3) {
+                adicionarDivisaoACasa(casa, scanner);
+            } else {
+                return false;
+            }
+            return true;
         } else {
-            return false;
+            System.out.println("Escolha uma opcao");
+            System.out.println("1. Listar dispositivos da casa");
+            System.out.println("2. Mudar comercializador da casa");
+            System.out.println("3. Ligar/Desligar um dispositivo especifico da casa");
+            System.out.println("4. Ligar todos os dispositivos de uma divisao");
+            System.out.println("5. Desligar todos os dispositivos de uma divisao");
+            System.out.println("6. Sair");
+            int escolha = Integer.parseInt(scanner.nextLine());
+            if (escolha == 1) {
+                casa.listarDispositivos();
+            } else if (escolha == 2) {
+                mudarComercializadorDeCasa(casa, scanner);
+            } else if (escolha == 3) {
+                ligarDesligarDispositivoDeCasa(casa,scanner);
+            } else if (escolha == 4) {
+                String divisao = casa.escolherDivisao(scanner);
+                casa.setAllOn(divisao, true);
+            } else if (escolha == 5) {
+                String divisao = casa.escolherDivisao(scanner);
+                casa.setAllOn(divisao, false);
+            } else {
+                return false;
+            }
+            return true;
         }
-        return true;
+
     }
 
 
@@ -305,7 +331,7 @@ public class Simulador implements Serializable{
         if (this.faseInicial) {
             System.out.println("1. Listar casas");
             System.out.println("2. Criar casas");
-            System.out.println("3. Gerir Casa");
+            System.out.println("3. Gerir uma casa");
             int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarCasas();
@@ -317,42 +343,26 @@ public class Simulador implements Serializable{
             }
         } else {
             System.out.println("1. Listar casas");
-            System.out.println("2. Mudar comercializador de uma casa");
-            System.out.println("3. Ligar/Desligar dispositivos de uma casa");
+            System.out.println("2. Gerir uma casa");
             int escolha = Integer.parseInt(scanner.nextLine());
             if (escolha == 1) {
                 listarCasas();
             } else if (escolha == 2) {
-                mudarComercializadorDeCasa(scanner);
-            } else if (escolha == 3) {
-                ligarDesligarDispositivoDeCasa(scanner);
+                CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
+                if (casa != null) gerirCasa(casa, scanner);
             }
         }
 
     }
 
-    public void ligarDesligarDispositivoDeCasa(Scanner scanner) {
-        CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-        System.out.println("Escolha uma opcao");
-        System.out.println("1. Ligar todos os dispositivos de uma divisao");
-        System.out.println("2. Desligar todos os dispositivos de uma divisao");
-        System.out.println("3. Ligar/Desligar um dispositivo especifico");
-        int escolha = Integer.parseInt(scanner.nextLine());
-        if (escolha == 1 || escolha == 2) {
-            String divisao = casa.escolherDivisao(scanner);
-            if (escolha==1) casa.setAllOn(divisao, true);
-            else if (escolha==2) casa.setAllOn(divisao, false);
-        } else if (escolha == 3) {
-            Map<String, SmartDevice> dispositivosDaCasa = this.dispositivos.entrySet().stream()
-                    .filter(e -> casa.existsDevice(e.getValue().getID()))
-                    .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
+    public void ligarDesligarDispositivoDeCasa(CasaInteligente casa, Scanner scanner) {
+        Map<String, SmartDevice> dispositivosDaCasa = this.dispositivos.entrySet().stream()
+                .filter(e -> casa.existsDevice(e.getValue().getID()))
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
 
-            System.out.println("O modo do dispositivo que escolher sera trocado");
-            SmartDevice dispositivo = escolherDispositivo(dispositivosDaCasa, scanner);
-            dispositivo.setOn(!dispositivo.isOn());
-        }
-
-
+        System.out.println("O modo do dispositivo que escolher sera trocado");
+        SmartDevice dispositivo = escolherDispositivo(dispositivosDaCasa, scanner);
+        if (dispositivo != null) dispositivo.setOn(!dispositivo.isOn());
     }
 
     public void adicionarDispositivoACasa(Scanner scanner) {

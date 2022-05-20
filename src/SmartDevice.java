@@ -8,13 +8,14 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.function.Consumer;
 
-public abstract class SmartDevice extends Change<SmartDevice> implements Serializable {
+public abstract class SmartDevice implements Serializable, PendingChanges{
     private Simulador simulador;
     private String id;
     private CasaInteligente casa;
     private double custoInstalacao;
     private double consumoDiario;
     private Modo modo;
+    private Modo modoToChange;
     private LocalDate lastChange; //data do ultimo periodo de faturacao
 
     public enum Modo{
@@ -26,6 +27,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.simulador = null;
         this.id = "N/A";
         this.modo = Modo.OFF;
+        this.modoToChange = null;
         this.custoInstalacao = 0;
         this.consumoDiario = -1;
         this.lastChange = LocalDate.now();
@@ -40,6 +42,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.custoInstalacao = custoInstalacao;
         this.consumoDiario = -1;
         this.modo = Modo.OFF;
+        this.modoToChange = null;
         this.lastChange = LocalDate.now();
         this.casa = null;
 
@@ -53,6 +56,7 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
         this.custoInstalacao = custoInstalacao;
         this.consumoDiario = -1;
         this.modo = modo;
+        this.modoToChange = null;
         this.lastChange = LocalDate.now();
         this.casa = null;
 
@@ -60,12 +64,12 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     }
 
     public SmartDevice(SmartDevice smartDevice) {
-        super.toChange = smartDevice.toChange;
         this.simulador = smartDevice.simulador;
         this.id = smartDevice.getID();
         this.custoInstalacao = smartDevice.custoInstalacao;
         this.consumoDiario = smartDevice.consumoDiario;
         this.modo = smartDevice.modo;
+        this.modoToChange = smartDevice.modoToChange;
         this.lastChange = smartDevice.lastChange;
         this.casa = smartDevice.casa;
     }
@@ -85,22 +89,13 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     }
 
     public void turnOn() {
-        if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.OFF) {
-            //so pode modificar se ja passou um dia desde a ultima mudanca
-            if (this.toChange == null) createToChange();
-            this.toChange.modo = Modo.ON; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
-            this.lastChange = LocalDate.now();
-        } //se o modo for ON, nao e preciso redefini-lo como ON nem mudar a lastChange
+        this.modoToChange = Modo.ON; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
+        this.lastChange = LocalDate.now();
     }
 
     public void turnOff() {
-        if (this.lastChange.until(this.simulador.getData(), ChronoUnit.DAYS) >= 1 && this.modo == Modo.ON) {
-            //so pode modificar se ja passou um dia desde a ultima mudanca
-            System.out.println("A colocar off");
-            if (this.toChange == null) createToChange();
-            this.toChange.modo = Modo.OFF; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
-            this.lastChange = LocalDate.now();
-        }
+        this.modoToChange = Modo.OFF; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
+        this.lastChange = LocalDate.now();
     }
 
     public void setOn(boolean b) {
@@ -196,17 +191,10 @@ public abstract class SmartDevice extends Change<SmartDevice> implements Seriali
     public abstract SmartDevice clone();
 
     @Override
-    public void createToChange() {
-        SmartDevice smartDevice = new SmartSpeaker(); //nao importa ser smartSpeaker, dado que so importa o modo
-        super.setToChange(smartDevice);
-    }
-
-    @Override
     public void change() {
-        SmartDevice smartDevice = getToChange();
-        if (smartDevice != null) {
-            if (smartDevice.modo != null) this.modo = smartDevice.modo;
-            super.toChange = null;
+        if (this.modoToChange != null) {
+            this.modo = this.modoToChange;
+            this.modoToChange = null;
         }
     }
 }
