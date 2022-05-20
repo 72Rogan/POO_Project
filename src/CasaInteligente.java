@@ -33,7 +33,6 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
     public CasaInteligente() {
         // initialise instance variables
-        super();
         this.simulador = null;
         this.nome = "N/A";
         this.nif = -1;
@@ -46,7 +45,6 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
     public CasaInteligente(Simulador simulador,String nome, int nif, Comercializador comercializador) {
         // initialise instance variables
-        super();
         this.simulador = simulador;
         this.nome = nome;
         this.nif = nif;
@@ -82,11 +80,6 @@ public class CasaInteligente implements Serializable, PendingChanges{
         this.devices.put(s.getID(), s);
         s.setCasa(this);
     }
-
-    public SmartDevice getDevice(String s) {
-        return this.devices.get(s).clone();
-    }
-
 
     public void setOn(String s, boolean b) {
         if (this.devices.get(s) != null) {
@@ -142,6 +135,10 @@ public class CasaInteligente implements Serializable, PendingChanges{
         }
     }
 
+    /*
+    Devolve uma string com o conteudo inteiro da casa, ou seja,
+    contendo as divisoes e para cada divisao os dispositivos delas
+     */
     public String conteudo() {
         StringBuilder sB = new StringBuilder();
         for (String divisao: this.locations.keySet()) {
@@ -177,11 +174,9 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
     public void addToRoom (String s1, String s2) {
         if (this.locations.get(s1) == null) {
-            System.out.println("A tentar adicionar a room que nao existe");
-        } else {
-            List<String> codigoDevices = this.locations.get(s1);
-            codigoDevices.add(s2);
+            addRoom(s1);
         }
+        this.locations.get(s1).add(s2);
     }
 
     public boolean roomHasDevice (String s1, String s2) {

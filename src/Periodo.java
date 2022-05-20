@@ -14,6 +14,11 @@ public class Periodo implements Serializable {
         this.fim = fim;
     }
 
+    public Periodo(Periodo periodo) {
+        this.inicio = periodo.inicio;
+        this.fim = periodo.fim;
+    }
+
     public static Periodo escolherPeriodo(List<Periodo> listaPeriodo, Scanner scanner) {
         System.out.println("Escolhe um periodo");
         for (int i=0; i<listaPeriodo.size(); i++) {
@@ -33,5 +38,9 @@ public class Periodo implements Serializable {
 
     public String toString() {
         return "Periodo de " + this.inicio + " a " + this.fim;
+    }
+
+    public Periodo clone() {
+        return new Periodo(this);
     }
 }

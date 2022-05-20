@@ -50,6 +50,20 @@ public class Simulador implements Serializable{
         this.currentId = 0;
     }
 
+    public Simulador(Simulador simulador) {
+        this.faseInicial = simulador.faseInicial;
+        this.dispositivos = simulador.dispositivos.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
+        this.casasInteligentes = simulador.casasInteligentes.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
+        this.comercializadores = simulador.comercializadores.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
+        this.periodos = simulador.periodos.stream().map(Periodo::clone).collect(Collectors.toList());
+        this.data = simulador.data;
+        this.currentId = simulador.currentId;
+
+    }
+
     public static Simulador construirSimulador(String caminhoFicheiro) {
         //Recebe o caminho para um ficheiro com um Simulador ja feito, e constroi-o
         Simulador simulador = null;
@@ -79,6 +93,10 @@ public class Simulador implements Serializable{
         if (simulador == null) System.out.println("Simulador e null");
         simulador.faseInicial = false;
         return simulador; //se devolver null, deu problema em cima
+    }
+
+    public void guardarEstadoAtual(String caminho) {
+
     }
 
     public void saltarDias(LocalDate date) {
@@ -483,5 +501,9 @@ public class Simulador implements Serializable{
     }
 
     public void setComercializadores(Map<String, Comercializador> comercializadores) {
+    }
+
+    public Simulador clone() {
+        return new Simulador(this);
     }
 }

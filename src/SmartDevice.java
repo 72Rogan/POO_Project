@@ -23,7 +23,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
     }
 
     public SmartDevice() {
-        super();
         this.simulador = null;
         this.id = "N/A";
         this.modo = Modo.OFF;
@@ -36,7 +35,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
     }
 
     public SmartDevice(Simulador simulador, double custoInstalacao) {
-        super();
         this.simulador = simulador;
         this.id = simulador.getNextId();
         this.custoInstalacao = custoInstalacao;
@@ -50,7 +48,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
     }
 
     public SmartDevice(Simulador simulador, double custoInstalacao, Modo modo) {
-        super();
         this.simulador = simulador;
         this.id = simulador.getNextId();
         this.custoInstalacao = custoInstalacao;

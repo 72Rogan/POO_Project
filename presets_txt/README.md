@@ -1,0 +1,1 @@
+# Esta diretoria serve para colocar os ficheiros de texto que contem informacao sobre uma simulacao

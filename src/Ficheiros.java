@@ -25,6 +25,11 @@ public class Ficheiros {
         casaInteligente1.addDevice(smartSpeaker1);
         casaInteligente2.addDevice(camera2);
 
+        casaInteligente1.addToRoom("Sala", camera1.getID());
+        casaInteligente1.addToRoom("Sala", smartBulb1.getID());
+        casaInteligente1.addToRoom("Cozinha", smartSpeaker1.getID());
+        casaInteligente2.addToRoom("Garagem", camera2.getID());
+
 
         simulador.addCasa(casaInteligente1);
         simulador.addCasa(casaInteligente2);
@@ -35,7 +40,7 @@ public class Ficheiros {
         //simulador.saltarDias(20);
 
         try {
-            FileOutputStream f = new FileOutputStream(new File("presets/simulador1"));
+            FileOutputStream f = new FileOutputStream(new File("presets_obj/simulador1"));
             ObjectOutputStream o = new ObjectOutputStream(f);
 
             o.writeObject(simulador);
@@ -43,7 +48,7 @@ public class Ficheiros {
             o.close();
             f.close();
 
-            FileInputStream fi = new FileInputStream(new File("presets/simulador1"));
+            FileInputStream fi = new FileInputStream(new File("presets_obj/simulador1"));
             ObjectInputStream oi = new ObjectInputStream(fi);
 
             Simulador simulador1 = (Simulador) oi.readObject();

@@ -16,7 +16,6 @@ public class Comercializador implements Serializable, PendingChanges {
 
 
     public Comercializador() {
-        super();
         this.simulador = null;
         this.nome = "N/A";
         this.custoDiarioKwh = -1;
@@ -28,7 +27,6 @@ public class Comercializador implements Serializable, PendingChanges {
     }
 
     public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos) {
-        super();
         this.simulador = simulador;
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
@@ -42,7 +40,6 @@ public class Comercializador implements Serializable, PendingChanges {
     }
 
     public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos, Random random) {
-        super();
         this.simulador = simulador;
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
