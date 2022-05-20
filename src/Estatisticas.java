@@ -98,6 +98,4 @@ public class Estatisticas implements Serializable {
             System.out.println("Escolha invalida");
         }
     }
-
-
 }

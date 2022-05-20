@@ -157,6 +157,7 @@ public class Simulador implements Serializable{
         System.out.println("1. Gerir Dispositivos");
         System.out.println("2. Gerir Casas Inteligentes");
         System.out.println("3. Gerir Comercializadores");
+        System.out.println("4. Sair");
         int escolha = Integer.parseInt(scanner.nextLine());
         if (escolha == 1) {
             gerirDispositivos(scanner);
@@ -232,7 +233,10 @@ public class Simulador implements Serializable{
         String[] nomeNif = input.split("-", 2);
         String nome = nomeNif[0];
         int nif = Integer.valueOf(nomeNif[1]);
-        Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
+        Comercializador comercializador;
+        while ((comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner)) == null) {
+            System.out.println("Escolha um comercializador valido");
+        }
         CasaInteligente casa = new CasaInteligente(this, nome, nif, comercializador);
         this.addCasa(casa);
     }
@@ -273,7 +277,7 @@ public class Simulador implements Serializable{
 
     public void mudarComercializadorDeCasa(CasaInteligente casa, Scanner scanner) {
         Comercializador comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner);
-        casa.setComercializador(comercializador);
+        if (comercializador != null) casa.setComercializador(comercializador);
     }
 
     public boolean gerirCasa(CasaInteligente casa, Scanner scanner) {

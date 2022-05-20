@@ -6,6 +6,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public abstract class SmartDevice extends Change<SmartDevice> implements Serializable {
     private Simulador simulador;
