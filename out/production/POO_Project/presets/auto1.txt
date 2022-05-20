@@ -1,0 +1,6 @@
+2022.07.10, 223345706, Cozinha, setAllOff
+2022.07.10, 223345706, Cozinha, setAllOn
+2022.07.10, 807931160, dispostivo2, setOff
+2022.07.12, Coopernico, alteraValorCusto, 0.5
+2022.07.11, 365597405, YIce
+2022.07.12, EDA, alteraValorDesconto, 1.3
