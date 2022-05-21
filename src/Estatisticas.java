@@ -21,11 +21,19 @@ public class Estatisticas implements Serializable {
     public void estatistica1() {
         //1. Qual a casa que mais gastou (dinheiro) naquele periodo (assume-se que se refere ao ultimo periodo)
         if (this.periodos.isEmpty()) {
-            System.out.println("Ainda nao ha periodos");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ainda nao ha periodos                         |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return;
         }
         if (this.casasInteligentes.isEmpty()) {
-            System.out.println("Ainda nao ha casas");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ainda nao ha casas                            |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return;
         }
         Periodo periodo = this.periodos.get(this.periodos.size()-1); //pega no ultimo periodo
@@ -41,16 +49,28 @@ public class Estatisticas implements Serializable {
                     } else return 0;
                 })
                 .orElse(null); //se a lista de casas estiver vazia, entao devolve null
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
         System.out.println("A casa que mais gastou neste periodo foi " + ret.toString());
+        System.out.println("+--------------------------------------------------+\n");
+
     }
 
     public void estatistica2() {
         if (this.comercializadores.isEmpty()) {
-            System.out.println("Nao existem comercializadores");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("Nao existem comercializadores                      |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return;
         }
         if (this.periodos.isEmpty()) {
-            System.out.println("Ainda nao ocorreram faturacoes");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("Ainda nao ocorreram faturacoes                     |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return;
         }
         Comercializador ret = this.comercializadores.values().stream()
@@ -100,11 +120,20 @@ public class Estatisticas implements Serializable {
     }
 
     public void escolherEstatistica(Scanner scanner) {
-        System.out.println("Estatisticas:");
-        System.out.println("1. Qual e a casa que mais gastou no ultimo periodo");
-        System.out.println("2. Qual o comercializador com maior volume de faturacao");
-        System.out.println("3. Listar as faturas emitidas por um comercializador");
-        System.out.println("4. Ordenacao dos maior consumidores de energia num periodo");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------------------+");
+        System.out.println("| -> Estatisticas:                                             |");
+        System.out.println("+--------------------------------------------------------------+");
+        System.out.println("| 1. Qual e a casa que mais gastou no ultimo periodo           |");
+        System.out.println("|                                                              |");
+        System.out.println("|2. Qual o comercializador com maior volume de faturacao       |");
+        System.out.println("|                                                              |");
+        System.out.println("|3. Listar as faturas emitidas por um comercializador          |");
+        System.out.println("|                                                              |");
+        System.out.println("|4. Ordenacao dos maior consumidores de energia num periodo    |");
+        System.out.println("+--------------------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
+
         String escolha = scanner.nextLine();
         if (escolha.equals("1")) {
             estatistica1();
@@ -115,7 +144,11 @@ public class Estatisticas implements Serializable {
         } else if (escolha.equals("4")){
             estatistica4(scanner);
         } else {
-            System.out.println("Escolha invalida");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Escolha invalida                              |");
+            System.out.println("+--------------------------------------------------+\n");
+
         }
     }
 }

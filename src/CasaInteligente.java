@@ -91,16 +91,22 @@ public class CasaInteligente implements Serializable, PendingChanges{
      */
     public String escolherDivisao(Scanner scanner) {
         Set<String> divisoes = this.locations.keySet();
-        System.out.println("Divisoes disponiveis");
+        System.out.println("\n+--------------------------------------------------+");
+        System.out.println("| -> Divisoes disponiveis                          |");
         for (String div: divisoes) {
             System.out.println(div);
         }
-        System.out.println("Escreva o nome da divisao que quer");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escreva o nome da divisao que quer            |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String escolha = scanner.nextLine(); //assume-se que escolheu uma opcao valida
         if (divisoes.contains(escolha)) {
             return escolha;
         } else {
-            System.out.println("Essa Divisao nao existe");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Essa Divisao nao existe                       |");
+            System.out.println("+--------------------------------------------------+\n");
             return "";
         }
     }
@@ -189,7 +195,10 @@ public class CasaInteligente implements Serializable, PendingChanges{
     public void saltarParaData(LocalDate inicio, LocalDate dataFinal) {
         if (this.devices.isEmpty()) {
             //A casa nao tem dispositivos, para esta funcao
-            System.out.println("A casa " + this.toString() + " nao tem dispositivos");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println(" -> A casa " + this.toString() + " nao tem dispositivos");
+            System.out.println("+--------------------------------------------------+\n");
             return;
         }
 
@@ -211,18 +220,28 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
     public static CasaInteligente escolherCasa(Map<Integer, CasaInteligente> casas, Scanner scanner) {
         if (casas.isEmpty()) {
-            System.out.println("Nao existem casas");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Nao existem casas                             |");
+            System.out.println("+--------------------------------------------------+\n");
             return null;
         }
         for (CasaInteligente casa: casas.values()) {
             System.out.println(casa.toString());
         }
-        System.out.println("Escreve o nif da casa que queres");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escreve o nif da casa que queres              |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         int nif = Integer.parseInt(scanner.nextLine()); //assume-se que escolheu uma opcao valida
         if (casas.containsKey(nif)) {
             return casas.get(nif);
         } else {
-            System.out.println("Nao ha nenhuma casa com este nif");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Nao ha nenhuma casa com este nif              |");
+            System.out.println("+--------------------------------------------------+\n");
             return null;
         }
     }
@@ -250,7 +269,10 @@ public class CasaInteligente implements Serializable, PendingChanges{
                 return fatura;
             }
         }
-        System.out.println("Nao encontrou fatura neste periodo");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Nao encontrou fatura neste periodo            |");
+        System.out.println("+--------------------------------------------------+\n");
         return null;
     }
 

@@ -19,7 +19,11 @@ public class Parser {
         try {
             linhasFicheiro = lerFicheiro(this.filePath);
         } catch (IOException e) {
-            System.out.println("Ficheiro nao encontrado");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ficheiro nao encontrado                       |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return null;
         }
 
@@ -91,7 +95,10 @@ public class Parser {
         try {
             linhasFicheiro = lerFicheiro(this.filePath);
         } catch (IOException e) {
-            System.out.println("Ficheiro nao encontrado");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ficheiro nao encontrado                       |");
+            System.out.println("+--------------------------------------------------+\n");
             return;
         }
         Comercializador comercializador = null;

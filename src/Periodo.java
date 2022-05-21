@@ -21,10 +21,16 @@ public class Periodo implements Serializable {
 
     public static Periodo escolherPeriodo(List<Periodo> listaPeriodo, Scanner scanner) {
         if (listaPeriodo.isEmpty()) {
-            System.out.println("Ainda nao ha periodos de tempo");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ainda nao ha periodos de tempo                |");
+            System.out.println("+--------------------------------------------------+\n");
             return null;
-        }
-        System.out.println("Escolhe um periodo");
+        }System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escolhe um periodo                            |");
+        System.out.println("+--------------------------------------------------+\n");
+
         for (int i=0; i<listaPeriodo.size(); i++) {
             System.out.println(i + " - " + listaPeriodo.get(i).toString());
         }
@@ -32,7 +38,10 @@ public class Periodo implements Serializable {
         try {
             return listaPeriodo.get(escolha);
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Escolha invalida");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Escolha invalida                              |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return null;
         }
 

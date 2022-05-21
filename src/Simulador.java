@@ -104,10 +104,16 @@ public class Simulador implements Serializable{
             fi.close();
             oi.close();
         } catch (FileNotFoundException e) {
-            System.out.println("Ficheiro nao encontrado");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ficheiro nao encontrado                       |");
+            System.out.println("+--------------------------------------------------+");
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("Erro a inicializar a stream");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Erro a inicializar a stream                   |");
+            System.out.println("+--------------------------------------------------+");
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -215,27 +221,38 @@ public class Simulador implements Serializable{
                 int dia = Integer.valueOf(diaMesAno[2]);
                 LocalDate dataNova = LocalDate.of(ano,mes,dia);
                 if (dataNova.isBefore(data)) {
-                    System.out.println("Inseriu uma data invalida");
+                    System.out.println("+--------------------------------------------------+");
+                    System.out.println("| -> Inseriu uma data invalida                     |");
+                    System.out.println("+--------------------------------------------------+\n");
                 } else {
                     saltarDias(dataNova);
                 }
             } catch (Exception e) {
-                System.out.println("Input invalido");
+                System.out.println("+--------------------------------------------------+");
+                System.out.println("| -> Input invalido                                |");
+                System.out.println("+--------------------------------------------------+\n");
             }
         }
     }
 
     public boolean gerirEntidades(Scanner scanner) {
-        System.out.println("1. Listar Dispositivos");
-        System.out.println("2. Gerir Casas Inteligentes");
-        System.out.println("3. Gerir Comercializadores");
-        System.out.println("4. Sair");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| 1. Gerir Comercializadores                       |");
+        System.out.println("|                                                  |");
+        System.out.println("| 2. Gerir Casas Inteligentes                      |");
+        System.out.println("|                                                  |");
+        System.out.println("| 3. Listar Dispositivos                           |");
+        System.out.println("|                                                  |");
+        System.out.println("| 4. Sair                                          |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String escolha = scanner.nextLine();
-        if (escolha.equals("1")) {
+        if (escolha.equals("3")) {
             listarDispositivos();
         } else if (escolha.equals("2")) {
             gerirCasas(scanner);
-        } else if (escolha.equals("3")) {
+        } else if (escolha.equals("1")) {
             gerirComercializadores(scanner);
         } else if (escolha.equals("4")){
             return false;
@@ -245,8 +262,13 @@ public class Simulador implements Serializable{
 
     public void gerirComercializadores(Scanner scanner) {
         if (this.faseInicial) {
-            System.out.println("1. Listar comercializadores");
-            System.out.println("2. Criar comercializador");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| 1. Listar comercializadores                      |");
+            System.out.println("|                                                  |");
+            System.out.println("| 2. Criar comercializador                         |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 listarComercializadores();
@@ -254,8 +276,12 @@ public class Simulador implements Serializable{
                 criarComercializador(scanner);
             }
         } else {
-            System.out.println("1. Listar comercializadores");
-            System.out.println("2. Mudar valores de um comercializador");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| 1. Listar comercializadores                      |");
+            System.out.println("|                                                  |");
+            System.out.println("| 2. Mudar valores de um comercializador           |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 listarComercializadores();
@@ -284,7 +310,11 @@ public class Simulador implements Serializable{
     }
 
     public void criarComercializador(Scanner scanner) {
-        System.out.println("Escreve o novo comercializador no formato Nome,CustoDiarioKwh,FatorImpostos");
+        System.out.println("\n");
+        System.out.println("+---------------------------------------------------------------------------------------+");
+        System.out.println("| -> Escreve o novo comercializador no formato Nome, CustoDiarioKwh, FatorImpostos      |");
+        System.out.println("+---------------------------------------------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String input = scanner.nextLine();
         String[] nomeNif = input.split(",", 3);
         String nome = nomeNif[0];
@@ -296,34 +326,53 @@ public class Simulador implements Serializable{
 
     public void criarCasa(Scanner scanner) {
         if (this.comercializadores.isEmpty()) {
-            System.out.println("Ainda nao existem comercializadores");
-            System.out.println("Crie comercializadores para poder criar casa");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Ainda nao existem comercializadores           |");
+            System.out.println("| -> Crie comercializadores para poder criar casa  |");
+            System.out.println("+--------------------------------------------------+\n");
             return;
         }
-        System.out.println("Escreve a nova casa no formato Nome,Nif");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escreve a nova casa no formato Nome, Nif      |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String input = scanner.nextLine();
         String[] nomeNif = input.split(",", 2);
         String nome = nomeNif[0];
         int nif = Integer.valueOf(nomeNif[1]);
         Comercializador comercializador;
         while ((comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner)) == null) {
-            System.out.println("Escolha um comercializador valido");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Escolha um comercializador valido             |");
+            System.out.println("+--------------------------------------------------+\n");
         }
         CasaInteligente casa = new CasaInteligente(nome, nif, comercializador);
         this.addCasa(casa);
     }
 
     public SmartDevice criarDispositivo(Scanner scanner) {
-        System.out.println("1. Criar SmartBulb");
-        System.out.println("2. Criar SmartSpeaker");
-        System.out.println("3. Criar SmartCamera");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| 1. Criar SmartBulb                               |");
+        System.out.println("|                                                  |");
+        System.out.println("| 2. Criar SmartSpeaker                            |");
+        System.out.println("|                                                  |");
+        System.out.println("| 3. Criar SmartCamera                             |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String escolha = scanner.nextLine();
         SmartDevice smartDevice = null;
         if (escolha.equals("1")) smartDevice = criarSmartBulb(scanner);
         if (escolha.equals("2")) smartDevice = criarSmartSpeaker(scanner);
         if (escolha.equals("3")) smartDevice = criarSmartCamera(scanner);
         if (smartDevice == null) {
-            System.out.println("Opcao invalida, saindo");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Opcao invalida, saindo                        |");
+            System.out.println("+--------------------------------------------------+\n");
         }
         return smartDevice;
     }
@@ -346,11 +395,20 @@ public class Simulador implements Serializable{
     public boolean gerirCasa(CasaInteligente casa, Scanner scanner) {
         System.out.println(casa);
         if (this.faseInicial) {
-            System.out.println("Escolha uma opcao");
-            System.out.println("1. Mudar comercializador da casa");
-            System.out.println("2. Adicionar dispositivo a casa");
-            System.out.println("3. Adicionar divisao a casa");
-            System.out.println("4. Sair");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Escolha uma opcao                             |");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("|                                                  |");
+            System.out.println("| 1. Mudar comercializador da casa                 |");
+            System.out.println("|                                                  |");
+            System.out.println("| 2. Adicionar dispositivo a casa                  |");
+            System.out.println("|                                                  |");
+            System.out.println("| 3. Adicionar divisao a casa                      |");
+            System.out.println("|                                                  |");
+            System.out.println("| 4. Sair                                          |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 mudarComercializadorDeCasa(casa, scanner);
@@ -363,13 +421,24 @@ public class Simulador implements Serializable{
             }
             return true;
         } else {
-            System.out.println("Escolha uma opcao");
-            System.out.println("1. Listar dispositivos da casa");
-            System.out.println("2. Mudar comercializador da casa");
-            System.out.println("3. Ligar/Desligar um dispositivo especifico da casa");
-            System.out.println("4. Ligar todos os dispositivos de uma divisao");
-            System.out.println("5. Desligar todos os dispositivos de uma divisao");
-            System.out.println("6. Sair");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------------+");
+            System.out.println("| -> Escolha uma opcao                                   |");
+            System.out.println("+--------------------------------------------------------+");
+            System.out.println("|                                                        |");
+            System.out.println("| 1. Listar dispositivos da casa                         |");
+            System.out.println("|                                                        |");
+            System.out.println("| 2. Mudar comercializador da casa                       |");
+            System.out.println("|                                                        |");
+            System.out.println("| 3. Ligar/Desligar um dispositivo especifico da casa    |");
+            System.out.println("|                                                        |");
+            System.out.println("| 4. Ligar todos os dispositivos de uma divisao          |");
+            System.out.println("|                                                        |");
+            System.out.println("| 5. Desligar todos os dispositivos de uma divisao       |");
+            System.out.println("|                                                        |");
+            System.out.println("| 6. Sair                                                |");
+            System.out.println("+--------------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 casa.listarDispositivos();
@@ -394,9 +463,15 @@ public class Simulador implements Serializable{
 
     public void gerirCasas(Scanner scanner) {
         if (this.faseInicial) {
-            System.out.println("1. Listar casas");
-            System.out.println("2. Criar casas");
-            System.out.println("3. Gerir uma casa");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| 1. Listar casas                                  |");
+            System.out.println("|                                                  |");
+            System.out.println("| 2. Criar casas                                   |");
+            System.out.println("|                                                  |");
+            System.out.println("| 3. Gerir uma casa                                |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 listarCasas();
@@ -407,8 +482,14 @@ public class Simulador implements Serializable{
                 if (casa != null) while(gerirCasa(casa, scanner));
             }
         } else {
-            System.out.println("1. Listar casas");
-            System.out.println("2. Gerir uma casa");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| 1. Listar casas                                  |");
+            System.out.println("|                                                  |");
+            System.out.println("| 2. Gerir uma casa                                |");
+            System.out.println("| 3. Gerir uma casa                                |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 listarCasas();
@@ -432,7 +513,10 @@ public class Simulador implements Serializable{
 
     public void adicionarDispositivoACasa(CasaInteligente casa, Scanner scanner) {
         if (!casa.existsRooms()) {
-            System.out.println("Casa nao tem divisoes");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Casa nao tem divisoes                         |");
+            System.out.println("+--------------------------------------------------+\n");
             return;
         }
         String divisao = casa.escolherDivisao(scanner);
@@ -443,9 +527,15 @@ public class Simulador implements Serializable{
     }
 
     public void adicionarDivisaoACasa(CasaInteligente casa, Scanner scanner) {
-        System.out.println("Escreva o nome da divisao");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escreva o nome da divisao        |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String div = scanner.nextLine();
-        System.out.println("Divisao adicionada");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Divisao adicionada                            |");
+        System.out.println("+--------------------------------------------------+\n");
         if (casa != null) casa.addRoom(div);
     }
 
@@ -473,7 +563,10 @@ public class Simulador implements Serializable{
             }
             myWriter.close();
         } catch (IOException e) {
-            System.out.println("Nao conseguiu abrir/escrever ficheiro");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Nao conseguiu abrir/escrever ficheiro         |");
+            System.out.println("+--------------------------------------------------+");
         }
     }
 

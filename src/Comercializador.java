@@ -77,9 +77,14 @@ public class Comercializador implements Serializable, PendingChanges {
     }
 
     public void mudarValores(Scanner scanner) {
-        System.out.println("Digite os novos valores do comercializador no formato CustoDiarioKwh,FatorImpostos");
-        System.out.println("Por exemplo: 0.15,1.3");
-        System.out.println("Se quiser manter algum parametro, escreva -1 no parametro respetivo");
+        System.out.println("\n");
+        System.out.println("+-------------------------------------------------------------------------------------------+");
+        System.out.println("| -> Digite os novos valores do comercializador no formato CustoDiarioKwh, FatorImpostos    |");
+        System.out.println("|   -> Por exemplo: 0.15,1.3                                                                |");
+        System.out.println("|                                                                                           |");
+        System.out.println("| -> Se quiser manter algum parametro, escreva -1 no parametro respetivo                    |");
+        System.out.println("+-------------------------------------------------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String input = scanner.nextLine();
         String[] nomeNif = input.split(",", 2);
         double custoDiarioKwh = Double.valueOf(nomeNif[0]);
@@ -101,16 +106,23 @@ public class Comercializador implements Serializable, PendingChanges {
     }
 
     public static Comercializador escolherComercializador(Map<String, Comercializador> c, Scanner scanner) {
-        System.out.println("Comercializadores existentes:");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Comercializadores existentes:                 |");
         for (Comercializador comercializador: c.values()) {
-            System.out.println(comercializador.toString());
+            System.out.println("-> "+comercializador.toString()+"\n");
         }
-        System.out.println("Escreve o nome do comercializador que queres");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escreve o nome do comercializador que queres  |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String nome = scanner.nextLine(); //assume-se que escolheu uma opcao valida
         if (c.containsKey(nome)) {
             return c.get(nome);
         } else {
-            System.out.println("Nome de Comercializador nao existente");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Nome de Comercializador nao existente         |");
+            System.out.println("+--------------------------------------------------+\n");
             return null;
         }
     }

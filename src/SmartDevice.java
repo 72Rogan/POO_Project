@@ -137,12 +137,20 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         for (SmartDevice sD: disp.values()) {
             System.out.println(sD);
         }
-        System.out.println("Escolhe o id do dispositivo que queres");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escolhe o id do dispositivo que queres        |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta:");
         String id = scanner.nextLine(); //assume-se que escolheu uma opcao valida
         if (disp.containsKey(id)) {
             return disp.get(id);
         } else {
-            System.out.println("Id nao existente");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Id nao existente                              |");
+            System.out.println("+--------------------------------------------------+\n");
+
             return null;
         }
     }

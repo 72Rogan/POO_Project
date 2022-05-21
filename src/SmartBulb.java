@@ -68,7 +68,12 @@ public class SmartBulb extends SmartDevice {
     }
 
     public static SmartBulb criarSmartBulb(Scanner scanner) {
-        System.out.println("Escreve no formato Modo,Tone,Tamanho / Exemplo: OFF,WARM,6.3");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Escreve no formato Modo,Tone,Tamanho          |");
+        System.out.println("| -> Exemplo: OFF,WARM,6.3                         |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua reposta: ");
         String input = scanner.nextLine();
         String[] idCustoModoTone = input.split(",", 3);
         Modo modo = idCustoModoTone[0].equals("OFF") ? Modo.OFF : idCustoModoTone[0].equals("ON") ? Modo.ON : null;
