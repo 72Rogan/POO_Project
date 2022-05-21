@@ -49,8 +49,8 @@ public class CasaInteligente implements Serializable, PendingChanges{
         this.simulador = simulador;
         this.nome = nome;
         this.nif = nif;
-        this.devices = new HashMap();
-        this.locations = new HashMap();
+        this.devices = new HashMap<>();
+        this.locations = new HashMap<>();
         this.comercializador = comercializador;
         this.comercializadorToChange = null;
         this.faturas = new ArrayList<>();
@@ -66,11 +66,18 @@ public class CasaInteligente implements Serializable, PendingChanges{
         this.simulador = s;
         this.nome = casaInteligente.nome;
         this.nif = casaInteligente.nif;
-        this.devices = casaInteligente.devices;
-        devices.values().stream()
-                .forEach(disp -> disp.clone(s));
+        this.devices = casaInteligente.devices.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(s)));
+        System.out.println("ids dispositivos");
+        for(SmartDevice sd: this.devices.values()) {
+            System.out.println("id - " + sd.getID());
+        }
         this.locations = casaInteligente.locations.entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> new ArrayList<>(e.getValue())));
+        System.out.println("Divisoes, ids disp");
+        for (Map.Entry<String, List<String>> e: this.locations.entrySet()) {
+            System.out.println(e.getKey() + e.getValue());
+        }
         this.comercializador = casaInteligente.comercializador.clone(s);
         if (casaInteligente.comercializadorToChange != null) {
             this.comercializadorToChange = casaInteligente.comercializadorToChange.clone(s);
@@ -80,7 +87,7 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
         this.faturas = casaInteligente.faturas.stream().map(Fatura::clone).collect(Collectors.toList());
 
-        this.simulador.addCasa(this);
+        //this.simulador.addCasa(this);
     }
 
     public void setDeviceOn(String devCode) {
@@ -93,7 +100,6 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
     public void addDevice(SmartDevice s) {
         this.devices.put(s.getID(), s);
-        s.setCasa(this);
     }
 
     public void setOn(String s, boolean b) {
@@ -213,7 +219,7 @@ public class CasaInteligente implements Serializable, PendingChanges{
     public void saltarParaData(LocalDate dataFinal) {
 
         if (this.devices.isEmpty()) {
-            //A casa nao tem dispositivos, para esta funçao
+            //A casa nao tem dispositivos, para esta funcao
             System.out.println("A casa " + this.toString() + " nao tem dispositivos");
             return;
         }
@@ -266,6 +272,12 @@ public class CasaInteligente implements Serializable, PendingChanges{
         return casa;
     }
 
+    public void addAllDevices(Map<String, SmartDevice> disps) {
+        for (Map.Entry<String, SmartDevice> sd: this.devices.entrySet()) {
+            disps.put(sd.getKey(), sd.getValue());
+        }
+    }
+
     public Fatura getFatura(Periodo periodo) {
         for (Fatura fatura: this.faturas) {
             if (fatura.getPeriodo().equals(periodo)) {
@@ -309,7 +321,7 @@ public class CasaInteligente implements Serializable, PendingChanges{
     }
 
     public Comercializador getComercializador() {
-        //comercializador antes das mudanças pendentes
+        //comercializador antes das mudancas pendentes
         return comercializador;
     }
 

@@ -11,7 +11,6 @@ import java.util.function.Consumer;
 public abstract class SmartDevice implements Serializable, PendingChanges{
     private Simulador simulador;
     private String id;
-    private CasaInteligente casa;
     private double custoInstalacao;
     private double consumoDiario;
     private Modo modo;
@@ -30,7 +29,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         this.custoInstalacao = 0;
         this.consumoDiario = -1;
         this.lastChange = LocalDate.now();
-        this.casa = null;
 
     }
 
@@ -42,7 +40,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         this.modo = Modo.OFF;
         this.modoToChange = null;
         this.lastChange = LocalDate.now();
-        this.casa = null;
 
         simulador.addDispositivo(this);
     }
@@ -55,7 +52,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         this.modo = modo;
         this.modoToChange = null;
         this.lastChange = LocalDate.now();
-        this.casa = null;
 
         simulador.addDispositivo(this);
     }
@@ -72,9 +68,8 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         this.modo = smartDevice.modo;
         this.modoToChange = smartDevice.modoToChange;
         this.lastChange = smartDevice.lastChange;
-        this.casa = smartDevice.casa;
 
-        this.simulador.addDispositivo(this);
+        //this.simulador.addDispositivo(this);
     }
 
     public double consumoAte(LocalDate date) {
@@ -138,14 +133,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
 
     public void setLastChange(LocalDate lastChange) {
         this.lastChange = lastChange;
-    }
-
-    public CasaInteligente getCasa() {
-        return casa;
-    }
-
-    public void setCasa(CasaInteligente casa) {
-        this.casa = casa;
     }
 
     public void setConsumoDiario(double consumo) {

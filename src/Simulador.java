@@ -52,18 +52,22 @@ public class Simulador implements Serializable{
 
     public Simulador(Simulador simulador) {
         this.faseInicial = simulador.faseInicial;
-        this.dispositivos = new HashMap<>();
-        this.casasInteligentes = new HashMap<>();
-        this.comercializadores = new HashMap<>();
         /*
         Os clones ao serem chamado em cada forEach chamam os construtores de cada entidade,
         que por sua vez adicionam a entidade ao simulador
         Os dispositivos ja sao adicionados ao simulador dentro dos clones da casa inteligente
          */
-        simulador.casasInteligentes.values().stream() //
-                .forEach(casa -> casa.clone(this));
-        simulador.comercializadores.values().stream()
-                .forEach(com -> com.clone(this));
+        this.dispositivos = new HashMap<>();
+        this.casasInteligentes = simulador.casasInteligentes.entrySet().stream()
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(this)));
+        this.comercializadores = simulador.comercializadores.entrySet().stream()
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(this)));
+
+        for (CasaInteligente c: this.casasInteligentes.values()) {
+            //adiciona os dispositivos da casa c ao map dispositivos, sem dar clone
+            c.addAllDevices(dispositivos);
+        }
+
         this.periodos = simulador.periodos.stream().map(Periodo::clone).collect(Collectors.toList());
         this.data = simulador.data;
         this.currentId = simulador.currentId;
@@ -113,11 +117,11 @@ public class Simulador implements Serializable{
         LocalDate depois = data.plusDays(daysToSkip);
         for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
             casaInteligente.saltarParaData(depois);
-            casaInteligente.change(); //aplicar mudanças pendentes
+            casaInteligente.change(); //aplicar mudancas pendentes
         }
         data = depois;
-        for (SmartDevice sd: this.dispositivos.values()) sd.change(); //aplicar mudanças pendentes
-        for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudanças pendentes
+        for (SmartDevice sd: this.dispositivos.values()) sd.change(); //aplicar mudancas pendentes
+        for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudancas pendentes
 
         Periodo periodo = new Periodo(antes, data);
         this.addPeriodo(periodo);
@@ -369,7 +373,7 @@ public class Simulador implements Serializable{
                 listarCasas();
             } else if (escolha == 2) {
                 CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
-                if (casa != null) gerirCasa(casa, scanner);
+                if (casa != null) while(gerirCasa(casa, scanner));
             }
         }
 
@@ -478,7 +482,7 @@ public class Simulador implements Serializable{
     }
 
     /*
-    Esta funçao elimina as faturas existentes no simulador inteiro, tambem elimina as instancias de periodo
+    Esta funcao elimina as faturas existentes no simulador inteiro, tambem elimina as instancias de periodo
      */
     public void reset() {
         this.data = LocalDate.now();

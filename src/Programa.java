@@ -83,7 +83,7 @@ public class Programa {
             ObjectOutputStream oo = new ObjectOutputStream(fo);
 
             Simulador simuladorToWrite = s.clone();
-            simuladorToWrite.reset(); //elimina as faturas e periodos mas deixa a informaçao das entidades
+            simuladorToWrite.reset(); //elimina as faturas e periodos mas deixa a informacao das entidades
             oo.writeObject(simuladorToWrite);
 
             fo.close();

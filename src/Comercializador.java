@@ -67,7 +67,7 @@ public class Comercializador implements Serializable, PendingChanges {
                 .map(Fatura::clone).collect(Collectors.toList());
         this.formula = c.formula;
 
-        this.simulador.addComercializador(this);
+        //this.simulador.addComercializador(this);
     }
 
     public static Comercializador parse(Simulador simulador, String nome, Random random) {

@@ -1,0 +1,29 @@
+Fornecedor:Coopernico
+Fornecedor:Enat
+Fornecedor:YIce
+Fornecedor:MEO Energia
+Casa:Claudia Peixoto Silva,721708239,Enat
+Divisao:Quarto
+SmartBulb:Neutral,8,0.28
+SmartSpeaker:70,Radio Radar,JBL,5.48
+SmartCamera:(1366x768),22,4.02
+Divisao:Cozinha
+SmartBulb:Neutral,6,0.18
+SmartBulb:Cold,19,0.16
+SmartBulb:Warm,11,4.58
+Divisao:Quarto 1
+SmartBulb:Neutral,10,0.15
+SmartCamera:(3840x2160),68,0.96
+SmartBulb:Neutral,12,0.14
+Casa:Joao Paulo Machado Abreu,372713491,YIce
+Divisao:Casa de Banho
+SmartBulb:Warm,10,0.11
+SmartBulb:Neutral,20,0.96
+SmartBulb:Neutral,17,6.53
+Divisao:Garagem
+SmartSpeaker:70,M80 Radio,Marshall,4.14
+SmartCamera:(1024x768),106,0.37
+Divisao:Escritorio
+SmartSpeaker:27,TSF Radio Noticias,Bang&Olufsen,5.06
+SmartBulb:Cold,12,1.70
+SmartBulb:Cold,10,6.82

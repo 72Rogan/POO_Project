@@ -90,7 +90,7 @@ public class Parser {
     }
 
     /*
-    Recebe um simulador com a fase inicial ja realizada, e o caminho para o ficheiro com os passos de simulaçao
+    Recebe um simulador com a fase inicial ja realizada, e o caminho para o ficheiro com os passos de simulacao
     Le o ficheiro, le linha a linha, e executa cada uma das transformacoes ao simulador, criando ficheiros
     intermedios com os estados intermedios do simulador.
      */
@@ -123,7 +123,7 @@ public class Parser {
             simulador.createStatusFile("output/evento" + i);
             i++;
         }
-        //simulador.saltarDias(1); //salta um dia para aplicar as ultimas mudanças
+        //simulador.saltarDias(1); //salta um dia para aplicar as ultimas mudancas
 
     }
 
