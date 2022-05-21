@@ -20,13 +20,13 @@ public class Programa {
         System.out.println("|                                                  |");
         System.out.println("+--------------------------------------------------+");
         System.out.println("|                                                  |");
-        System.out.println("| -> Escolha uma opção:                            |");
+        System.out.println("| -> Escolha uma opcao:                            |");
         System.out.println("|                                                  |");
         System.out.println("| 1. Carregar Informacao de ficheiro de objeto     |");
         System.out.println("|                                                  |");
         System.out.println("| 2. Carregar Informacao de ficheiro de texto      |");
         System.out.println("|                                                  |");
-        System.out.println("| 3. Criar informação                              |");
+        System.out.println("| 3. Criar informacao                              |");
         System.out.println("|                                                  |");
         System.out.println("+--------------------------------------------------+\n");
         System.out.println("Insira aqui a sua resposta: ");
@@ -50,7 +50,7 @@ public class Programa {
             simulador.faseInicial(scanner);
         } else {
             System.out.println("\n+--------------------------------------------------+");
-            System.out.println("| -> Não escolheu uma opção válida!                |");
+            System.out.println("| -> Nao escolheu uma opcao valida!                |");
             System.out.println("+--------------------------------------------------+");
             return;
         }
@@ -68,9 +68,9 @@ public class Programa {
         System.out.println("| -> Simular o programa                            |");
         System.out.println("+--------------------------------------------------+");
         System.out.println("|                                                  |");
-        System.out.println("| -> Escolha uma opção:                            |");
+        System.out.println("| -> Escolha uma opcao:                            |");
         System.out.println("|                                                  |");
-        System.out.println("| 1. Automatizar a simulação                       |");
+        System.out.println("| 1. Automatizar a simulacao                       |");
         System.out.println("|                                                  |");
         System.out.println("| 2. Simular manualmente                           |");
         System.out.println("|                                                  |");
@@ -91,7 +91,7 @@ public class Programa {
         simulador.createStatusFile("output/estado_final.txt");
         System.out.println("\n");
         System.out.println("+--------------------------------------------------------------------------------------+");
-        System.out.println("| -> Foi colocado no ficheiro 'output/estado_final.txt' o estado final da simulação    |");
+        System.out.println("| -> Foi colocado no ficheiro 'output/estado_final.txt' o estado final da simulacao    |");
         System.out.println("+--------------------------------------------------------------------------------------+\n");
     }
 

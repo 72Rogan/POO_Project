@@ -92,7 +92,7 @@ public class Simulador implements Serializable{
             File ficheiro = new File(caminhoFicheiro);
             if (!ficheiro.exists()) {
                 System.out.println("\n+--------------------------------------------------+");
-                System.out.println("| -> Ficheiro não existe                           |");
+                System.out.println("| -> Ficheiro nao existe                           |");
                 return null;
             }
             FileInputStream fi = new FileInputStream(ficheiro);
@@ -123,20 +123,19 @@ public class Simulador implements Serializable{
 
     public void saltarDias(int daysToSkip) {
         if (daysToSkip > 0) {
+            LocalDate antes = data;
+            LocalDate depois = data.plusDays(daysToSkip);
+            for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
+                casaInteligente.saltarParaData(antes, depois);
+                casaInteligente.change(); //aplicar mudancas pendentes
+            }
+            data = depois;
+            for (SmartDevice sd: this.dispositivos.values()) sd.change(); //aplicar mudancas pendentes
+            for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudancas pendentes
 
+            Periodo periodo = new Periodo(antes, data);
+            this.insertPeriodo(periodo);
         }
-        LocalDate antes = data;
-        LocalDate depois = data.plusDays(daysToSkip);
-        for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
-            casaInteligente.saltarParaData(antes, depois);
-            casaInteligente.change(); //aplicar mudancas pendentes
-        }
-        data = depois;
-        for (SmartDevice sd: this.dispositivos.values()) sd.change(); //aplicar mudancas pendentes
-        for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudancas pendentes
-
-        Periodo periodo = new Periodo(antes, data);
-        this.insertPeriodo(periodo);
     }
 
     /*
@@ -154,13 +153,13 @@ public class Simulador implements Serializable{
             System.out.println("| -> Data atual: " + this.data.toString() +"                        |");
             System.out.println("+--------------------------------------------------+");
             System.out.println("|                                                  |");
-            System.out.println("| -> Escolhe uma opção                             |");
+            System.out.println("| -> Escolhe uma opcao                             |");
             System.out.println("|                                                  |");
             System.out.println("| 1. Avancar no tempo                              |");
             System.out.println("|                                                  |");
             System.out.println("| 2. Gerir entidades                               |");
             System.out.println("|                                                  |");
-            System.out.println("| 3. Estatísticas                                  |");
+            System.out.println("| 3. Estatisticas                                  |");
             System.out.println("|                                                  |");
             System.out.println("| 4. Gravar estado atual em ficheiro               |");
             System.out.println("|                                                  |");
@@ -187,16 +186,16 @@ public class Simulador implements Serializable{
     public void avancarTempo(Scanner scanner) {
         System.out.println("\n");
         System.out.println("+--------------------------------------------------+");
-        System.out.println("| 1. Avançar X dias                                |");
+        System.out.println("| 1. Avancar X dias                                |");
         System.out.println("|                                                  |");
-        System.out.println("| 2. Avançar para a data X                         |");
+        System.out.println("| 2. Avancar para a data X                         |");
         System.out.println("+--------------------------------------------------+\n");
         System.out.println("Insere aqui a tua resposta: ");
         String escolha = scanner.nextLine();
         if (escolha.equals("1")) {
             System.out.println("\n");
             System.out.println("+--------------------------------------------------+");
-            System.out.println("| -> Quantos dias queres avançar?                  |");
+            System.out.println("| -> Quantos dias queres avancar?                  |");
             System.out.println("+--------------------------------------------------+\n");
             System.out.println("Insere aqui a tua resposta: ");
             int diasAvancados = Integer.parseInt(scanner.nextLine());
@@ -209,15 +208,19 @@ public class Simulador implements Serializable{
             System.out.println("+--------------------------------------------------+\n");
             System.out.println("Insere aqui a tua resposta: ");
             String dataStr = scanner.nextLine();
-            String[] diaMesAno = dataStr.split("-", 3);
-            int ano = Integer.valueOf(diaMesAno[0]);
-            int mes = Integer.valueOf(diaMesAno[1]);
-            int dia = Integer.valueOf(diaMesAno[2]);
-            LocalDate dataNova = LocalDate.of(ano,mes,dia);
-            if (dataNova.isBefore(data)) {
-                System.out.println("Inseriu uma data invalida");
-            } else {
-                saltarDias(dataNova);
+            try {
+                String[] diaMesAno = dataStr.split("-", 3);
+                int ano = Integer.valueOf(diaMesAno[0]);
+                int mes = Integer.valueOf(diaMesAno[1]);
+                int dia = Integer.valueOf(diaMesAno[2]);
+                LocalDate dataNova = LocalDate.of(ano,mes,dia);
+                if (dataNova.isBefore(data)) {
+                    System.out.println("Inseriu uma data invalida");
+                } else {
+                    saltarDias(dataNova);
+                }
+            } catch (Exception e) {
+                System.out.println("Input invalido");
             }
         }
     }
