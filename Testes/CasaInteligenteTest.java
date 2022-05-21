@@ -14,7 +14,8 @@ class CasaInteligenteTest {
         Comercializador comercializador = new Comercializador();
         CasaInteligente casaInteligente = new CasaInteligente();
         assertNotNull(casaInteligente, "Erro ao criar a casa inteligente");
-        casaInteligente = new CasaInteligente(simulador, "Casa1", 001, comercializador);
+        casaInteligente = new CasaInteligente( "Casa1", 001, comercializador);
+        simulador.addCasa(casaInteligente);
         assertNotNull(casaInteligente, "Erro ao criar a casa inteligente");
         CasaInteligente casaInteligente1 = new CasaInteligente(casaInteligente);
         assertNotNull(casaInteligente1, "Erro ao criar a casa inteligente");
@@ -28,7 +29,7 @@ class CasaInteligenteTest {
         SmartCamera smartCamera = new SmartCamera();
         SmartBulb smartBulb = new SmartBulb();
         SmartSpeaker smartSpeaker = new SmartSpeaker();
-        CasaInteligente casaInteligente = new CasaInteligente(simulador,"casa1",1,comercializador);
+        CasaInteligente casaInteligente = new CasaInteligente("casa1",1,comercializador);
         simulador.addCasa(casaInteligente);
         simulador.addDispositivo(smartCamera);
         simulador.addDispositivo(smartSpeaker);
@@ -55,7 +56,7 @@ class CasaInteligenteTest {
         Simulador simulador = new Simulador();
         Comercializador comercializador = new Comercializador();
         SmartCamera smartCamera = new SmartCamera();
-        CasaInteligente casaInteligente = new CasaInteligente(simulador,"casa1",1,comercializador);
+        CasaInteligente casaInteligente = new CasaInteligente("casa1",1,comercializador);
         simulador.addCasa(casaInteligente);
         simulador.addDispositivo(smartCamera);
         casaInteligente.addDevice(smartCamera);

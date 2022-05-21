@@ -9,21 +9,11 @@ import java.util.stream.Collectors;
 /**
  * A CasaInteligente faz a gestao dos SmartDevices que existem e dos
  * espacos (as salas) que existem na casa.
-
-public class CasaInteligente {
-   
-    private String morada;
-    private Map<String, SmartDevice> devices; // identificador -> SmartDevice
-    private Map<String, List<String>> locations; // Espaco -> Lista codigo dos devices
-
-    /**
-     * Constructor for objects of class CasaInteligente
-     */
+*/
 
 // mudar o metodo de procura pelos maps usei forEach que era o que sabia usar melhor mas existem metodos mais eficientes
 // exceto para a funcao turnAllOn acho que o forEach e bom nessa
 public class CasaInteligente implements Serializable, PendingChanges{
-    private Simulador simulador;
     private Comercializador comercializador;
     private Comercializador comercializadorToChange;
     private String nome;
@@ -34,7 +24,6 @@ public class CasaInteligente implements Serializable, PendingChanges{
 
     public CasaInteligente() {
         // initialise instance variables
-        this.simulador = null;
         this.nome = "N/A";
         this.nif = -1;
         this.devices = new HashMap();
@@ -44,9 +33,8 @@ public class CasaInteligente implements Serializable, PendingChanges{
         this.faturas = new ArrayList<>();
     }
 
-    public CasaInteligente(Simulador simulador,String nome, int nif, Comercializador comercializador) {
+    public CasaInteligente(String nome, int nif, Comercializador comercializador) {
         // initialise instance variables
-        this.simulador = simulador;
         this.nome = nome;
         this.nif = nif;
         this.devices = new HashMap<>();
@@ -54,32 +42,22 @@ public class CasaInteligente implements Serializable, PendingChanges{
         this.comercializador = comercializador;
         this.comercializadorToChange = null;
         this.faturas = new ArrayList<>();
-
-        this.simulador.addCasa(this);
     }
 
     public CasaInteligente(CasaInteligente casaInteligente) {
-        this(casaInteligente, casaInteligente.simulador);
-    }
-
-    public CasaInteligente(CasaInteligente casaInteligente, Simulador s) {
-        this.simulador = s;
         this.nome = casaInteligente.nome;
         this.nif = casaInteligente.nif;
         this.devices = casaInteligente.devices.entrySet().stream()
-                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(s)));
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
         this.locations = casaInteligente.locations.entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> new ArrayList<>(e.getValue())));
-        this.comercializador = casaInteligente.comercializador.clone(s);
+        this.comercializador = casaInteligente.comercializador.clone();
         if (casaInteligente.comercializadorToChange != null) {
-            this.comercializadorToChange = casaInteligente.comercializadorToChange.clone(s);
+            this.comercializadorToChange = casaInteligente.comercializadorToChange.clone();
         } else {
             this.comercializadorToChange = null;
         }
-
         this.faturas = casaInteligente.faturas.stream().map(Fatura::clone).collect(Collectors.toList());
-
-        //this.simulador.addCasa(this);
     }
 
     public void setDeviceOn(String devCode) {
@@ -208,8 +186,7 @@ public class CasaInteligente implements Serializable, PendingChanges{
         return ret;
     }
 
-    public void saltarParaData(LocalDate dataFinal) {
-
+    public void saltarParaData(LocalDate inicio, LocalDate dataFinal) {
         if (this.devices.isEmpty()) {
             //A casa nao tem dispositivos, para esta funcao
             System.out.println("A casa " + this.toString() + " nao tem dispositivos");
@@ -219,12 +196,9 @@ public class CasaInteligente implements Serializable, PendingChanges{
         double consumo = 0;
         double custo = 0;
 
-        LocalDate inicio = simulador.getData();
-
         for (SmartDevice smartDevice: this.devices.values()) {
-            consumo += smartDevice.consumoAte(dataFinal);
-            custo += smartDevice.custoAte(this.comercializador, dataFinal);
-            smartDevice.setLastChange(simulador.getData());
+            consumo += smartDevice.consumoAte(inicio, dataFinal);
+            custo += smartDevice.custoAte(this.comercializador, inicio,  dataFinal);
         }
         faturar(inicio,dataFinal,consumo,custo);
     }
@@ -240,8 +214,8 @@ public class CasaInteligente implements Serializable, PendingChanges{
             System.out.println("Nao existem casas");
             return null;
         }
-        for (Map.Entry<Integer, CasaInteligente> casa: casas.entrySet()) {
-            System.out.println(casa.getValue().toString() + ", nif: " + casa.getKey());
+        for (CasaInteligente casa: casas.values()) {
+            System.out.println(casa.toString());
         }
         System.out.println("Escreve o nif da casa que queres");
         int nif = Integer.parseInt(scanner.nextLine()); //assume-se que escolheu uma opcao valida
@@ -260,7 +234,7 @@ public class CasaInteligente implements Serializable, PendingChanges{
         String nomeComercializador = linhaPartida[2];
         Comercializador c = simulador.getComercializador(nomeComercializador);
 
-        CasaInteligente casa = new CasaInteligente(simulador, nome, nif, c);
+        CasaInteligente casa = new CasaInteligente(nome, nif, c);
         return casa;
     }
 
@@ -334,10 +308,6 @@ public class CasaInteligente implements Serializable, PendingChanges{
         return new CasaInteligente(this);
     }
 
-    public CasaInteligente clone(Simulador s) {
-        return new CasaInteligente(this, s);
-    }
-
     @Override
     public void change() {
         if (this.comercializadorToChange != null) {
@@ -347,7 +317,15 @@ public class CasaInteligente implements Serializable, PendingChanges{
     }
 
     public String toString() {
-        return "Casa de " + this.nome;
+        StringBuilder sb = new StringBuilder();
+        sb.append("Casa de ");
+        sb.append(this.nome);
+        sb.append(" (nif: ");
+        sb.append(this.nif);
+        sb.append(", Fornecedor: ");
+        sb.append(this.comercializador.toString());
+        sb.append(")");
+        return sb.toString();
     }
 
     public boolean equals(Object o) {

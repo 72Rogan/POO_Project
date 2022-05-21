@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class Comercializador implements Serializable, PendingChanges {
-    private Simulador simulador;
     private String nome;
     private double custoDiarioKwh;
     private double custoToChange;
@@ -16,7 +15,6 @@ public class Comercializador implements Serializable, PendingChanges {
 
 
     public Comercializador() {
-        this.simulador = null;
         this.nome = "N/A";
         this.custoDiarioKwh = -1;
         this.custoToChange = -1;
@@ -26,8 +24,7 @@ public class Comercializador implements Serializable, PendingChanges {
         this.formula = Formula.formula0();
     }
 
-    public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos) {
-        this.simulador = simulador;
+    public Comercializador(String nome, double custoDiarioKwh, double fatorImpostos) {
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
         this.custoToChange = -1;
@@ -35,12 +32,9 @@ public class Comercializador implements Serializable, PendingChanges {
         this.fatorToChange = -1;
         this.faturasEmitidas = new ArrayList<>();
         this.formula = Formula.formula0(); //comercializador usa a primeira formula
-
-        simulador.addComercializador(this);
     }
 
-    public Comercializador(Simulador simulador, String nome, double custoDiarioKwh, double fatorImpostos, Random random) {
-        this.simulador = simulador;
+    public Comercializador(String nome, double custoDiarioKwh, double fatorImpostos, Random random) {
         this.nome = nome;
         this.custoDiarioKwh = custoDiarioKwh;
         this.custoToChange = -1;
@@ -48,16 +42,9 @@ public class Comercializador implements Serializable, PendingChanges {
         this.fatorToChange = -1;
         this.faturasEmitidas = new ArrayList<>();
         this.formula = Formula.getFormula(random);
-
-        simulador.addComercializador(this);
     }
 
     public Comercializador(Comercializador c) {
-        this(c, c.simulador);
-    }
-
-    public Comercializador(Comercializador c, Simulador s) {
-        this.simulador = s;
         this.nome = c.nome;
         this.custoDiarioKwh = c.custoDiarioKwh;
         this.custoToChange = c.custoToChange;
@@ -66,15 +53,13 @@ public class Comercializador implements Serializable, PendingChanges {
         this.faturasEmitidas = c.faturasEmitidas.stream()
                 .map(Fatura::clone).collect(Collectors.toList());
         this.formula = c.formula;
-
-        //this.simulador.addComercializador(this);
     }
 
-    public static Comercializador parse(Simulador simulador, String nome, Random random) {
+    public static Comercializador parse(String nome, Random random) {
         double custoDiariokwh = 0.05 + random.nextDouble() * 0.10; //da um valor entre 0.05 e 0.15
         double impostos = random.nextDouble() + 1; //valor entre 1 e 2
 
-        Comercializador c = new Comercializador(simulador, nome, custoDiariokwh, impostos, random);
+        Comercializador c = new Comercializador(nome, custoDiariokwh, impostos, random);
         return c;
     }
 
@@ -155,7 +140,14 @@ public class Comercializador implements Serializable, PendingChanges {
     }
 
     public String toString() {
-        return this.nome + ", CustoKwh: " + this.custoDiarioKwh + ", Fator Impostos: " + this.fatorImpostos;
+        StringBuilder sb = new StringBuilder();
+        sb.append(this.nome);
+        sb.append(" (CustoKwh: ");
+        sb.append(String.format("%.4f", this.custoDiarioKwh));
+        sb.append(", Fator Impostos: ");
+        sb.append(String.format("%.4f", this.fatorImpostos));
+        sb.append(")");
+        return sb.toString();
     }
 
     public boolean equals(Object o) {
@@ -179,9 +171,5 @@ public class Comercializador implements Serializable, PendingChanges {
 
     public Comercializador clone() {
         return new Comercializador(this);
-    }
-
-    public Comercializador clone(Simulador s) {
-        return new Comercializador(this, s);
     }
 }

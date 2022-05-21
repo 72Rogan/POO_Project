@@ -1,5 +1,6 @@
 package src;
 
+import java.util.Random;
 import java.util.Scanner;
 
 public class SmartCamera extends SmartDevice{
@@ -8,7 +9,7 @@ public class SmartCamera extends SmartDevice{
     private double tamanhoFicheiro;
 
     public SmartCamera(){
-        super();
+        super(700);
         //this.res = 0;
         this.width = 0;
         this.height = 0;
@@ -16,26 +17,18 @@ public class SmartCamera extends SmartDevice{
         calcularConsumoDiario();
     }
 
-    public SmartCamera(Simulador simulador) {
-        super(simulador, 700);
-        this.width = 0;
-        this.height = 0;
-        this.tamanhoFicheiro = 0;
-        calcularConsumoDiario();
-    }
-
-    public SmartCamera(Simulador simulador, Modo modo,
+    public SmartCamera(Modo modo,
                        int width, int height, double tamanhoFicheiro) {
-        super(simulador, 700,modo);
+        super(700,modo);
         this.width = width;
         this.height = height;
         this.tamanhoFicheiro = tamanhoFicheiro;
         calcularConsumoDiario();
     }
 
-    public SmartCamera(Simulador simulador, Modo modo,
+    public SmartCamera(Modo modo,
                        int width, int height, double tamanhoFicheiro, double consumoDiario) {
-        super(simulador, 700,modo);
+        super(00,modo);
         this.width = width;
         this.height = height;
         this.tamanhoFicheiro = tamanhoFicheiro;
@@ -43,11 +36,7 @@ public class SmartCamera extends SmartDevice{
     }
 
     public SmartCamera(SmartCamera c) {
-        this(c, c.getSimulador());
-    }
-
-    public SmartCamera(SmartCamera c, Simulador s) {
-        super(c, s);
+        super(c);
         this.width = c.width;
         this.height = c.height;
         this.tamanhoFicheiro = c.tamanhoFicheiro;
@@ -61,7 +50,7 @@ public class SmartCamera extends SmartDevice{
         setConsumoDiario(consumo);
     }
 
-    public static SmartCamera parse(Simulador simulador, String linha) {
+    public static SmartCamera parse(String linha, Random random) {
         String[] linhaPartida = linha.split(",", 3); //no maximo 3 parametros
         String resolucaoStr = linhaPartida[0];
         String resolucao = resolucaoStr.substring(1, resolucaoStr.length()-1);
@@ -72,11 +61,13 @@ public class SmartCamera extends SmartDevice{
         double tamanhoFicheiro = Double.valueOf(linhaPartida[1]);
         double consumo = Double.valueOf(linhaPartida[2]);
 
-        SmartCamera sC = new SmartCamera(simulador, Modo.ON, width, height, tamanhoFicheiro, consumo);
+        Modo modo = random.nextBoolean() ? Modo.ON : Modo.OFF;
+
+        SmartCamera sC = new SmartCamera(modo, width, height, tamanhoFicheiro, consumo);
         return sC;
     }
 
-    public static SmartCamera criarSmartCamera(Simulador simulador, Scanner scanner) {
+    public static SmartCamera criarSmartCamera(Scanner scanner) {
         System.out.println("Escreve no formato Modo,Largura,Altura,TamanhoFicheiro / Exemplo: ON,1920,1080,50");
         String input = scanner.nextLine();
         String[] idCustoModoLarguraAlturaTamanho = input.split(",", 4);
@@ -84,7 +75,7 @@ public class SmartCamera extends SmartDevice{
         int largura = Integer.valueOf(idCustoModoLarguraAlturaTamanho[1]);
         int altura = Integer.valueOf(idCustoModoLarguraAlturaTamanho[2]);
         double tamanho = Double.valueOf(idCustoModoLarguraAlturaTamanho[3]);
-        SmartCamera ret = new SmartCamera(simulador, modo, largura, altura, tamanho);
+        SmartCamera ret = new SmartCamera(modo, largura, altura, tamanho);
         return ret;
     }
 
@@ -105,10 +96,6 @@ public class SmartCamera extends SmartDevice{
     @Override
     public SmartDevice clone() {
         return new SmartCamera(this);
-    }
-
-    public SmartDevice clone(Simulador s) {
-        return new SmartCamera(this, s);
     }
 
     public int getWidth() {

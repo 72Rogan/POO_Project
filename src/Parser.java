@@ -24,9 +24,6 @@ public class Parser {
         }
 
         Simulador simulador = new Simulador(false); //cria um simulador vazio
-        Map<String, Comercializador> comercializadores = new HashMap<>();
-        Map<Integer, CasaInteligente> casas = new HashMap<>();
-        Map<String, SmartDevice> dispositivos = new HashMap<>();
 
         String[] linhaPartida;
         CasaInteligente ultimaCasa = null;
@@ -40,12 +37,12 @@ public class Parser {
                 linhaPartida = linha.split(":", 2);
                 switch(linhaPartida[0]) {
                     case "Fornecedor":
-                        Comercializador c = Comercializador.parse(simulador, linhaPartida[1], rand);
-                        comercializadores.put(c.getNome(), c);
+                        Comercializador c = Comercializador.parse(linhaPartida[1], rand);
+                        simulador.addComercializador(c);
                         break;
                     case "Casa":
                         ultimaCasa = CasaInteligente.parse(simulador, linhaPartida[1]);
-                        casas.put(ultimaCasa.getNif(), ultimaCasa);
+                        simulador.addCasa(ultimaCasa);
                         ultimaDivisao = null;
                         break;
                     case "Divisao":
@@ -55,33 +52,28 @@ public class Parser {
                         break;
                     case "SmartBulb":
                         if (ultimaDivisao == null) throw new LinhaIncorretaException();
-                        ultimoDispositivo = SmartBulb.parse(simulador, linhaPartida[1]);
+                        ultimoDispositivo = SmartBulb.parse(linhaPartida[1], rand);
+                        simulador.addDispositivo(ultimoDispositivo);
                         ultimaCasa.addDevice(ultimoDispositivo);
                         ultimaCasa.addToRoom(ultimaDivisao, ultimoDispositivo.getID());
-                        dispositivos.put(ultimoDispositivo.getID(), ultimoDispositivo);
                         break;
                     case "SmartCamera":
                         if (ultimaDivisao == null) throw new LinhaIncorretaException();
-                        ultimoDispositivo = SmartCamera.parse(simulador, linhaPartida[1]);
+                        ultimoDispositivo = SmartCamera.parse(linhaPartida[1], rand);
+                        simulador.addDispositivo(ultimoDispositivo);
                         ultimaCasa.addDevice(ultimoDispositivo);
                         ultimaCasa.addToRoom(ultimaDivisao, ultimoDispositivo.getID());
-                        dispositivos.put(ultimoDispositivo.getID(), ultimoDispositivo);
                         break;
                     case "SmartSpeaker":
                         if (ultimaDivisao == null) throw new LinhaIncorretaException();
-                        ultimoDispositivo = SmartSpeaker.parse(simulador, linhaPartida[1]);
+                        ultimoDispositivo = SmartSpeaker.parse(linhaPartida[1], rand);
+                        simulador.addDispositivo(ultimoDispositivo);
                         ultimaCasa.addDevice(ultimoDispositivo);
                         ultimaCasa.addToRoom(ultimaDivisao, ultimoDispositivo.getID());
-                        dispositivos.put(ultimoDispositivo.getID(), ultimoDispositivo);
                         break;
                 }
             }
         } catch(LinhaIncorretaException e){}
-
-        simulador.setComercializadores(comercializadores);
-        simulador.setCasasInteligentes(casas);
-        simulador.setDispositivos(dispositivos);
-
         return simulador;
     }
 

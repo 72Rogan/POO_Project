@@ -3,6 +3,7 @@ package src;
 import src.SmartDevice;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.Scanner;
 
 public class SmartSpeaker extends SmartDevice {
@@ -18,8 +19,8 @@ public class SmartSpeaker extends SmartDevice {
 		this.radio = "N/A";
 	}
 
-	public SmartSpeaker(Simulador simulador, Modo x, int vol, String marca, String radio){
-		super(simulador, 350,x);
+	public SmartSpeaker(Modo x, int vol, String marca, String radio){
+		super(350,x);
 		if (vol > MAX) {
 			this.volume = MAX;
 		} else if (vol < 0) {
@@ -32,8 +33,8 @@ public class SmartSpeaker extends SmartDevice {
 		calcularConsumoDiario();
 	}
 
-	public SmartSpeaker(Simulador simulador, Modo x, int vol, String marca, String radio, double consumoDiario){
-		super(simulador, 350,x);
+	public SmartSpeaker(Modo x, int vol, String marca, String radio, double consumoDiario){
+		super(350,x);
 		if (vol > MAX) {
 			this.volume = MAX;
 		} else if (vol < 0) {
@@ -47,11 +48,7 @@ public class SmartSpeaker extends SmartDevice {
 	}
 
 	public SmartSpeaker(SmartSpeaker c){
-		this(c, c.getSimulador());
-	}
-
-	public SmartSpeaker(SmartSpeaker c, Simulador s){
-		super(c, s);
+		super(c);
 		this.volume=c.getVolume();
 		this.marca=c.getMarca();
 		this.radio=c.getRadio();
@@ -100,7 +97,7 @@ public class SmartSpeaker extends SmartDevice {
 		this.radio=radio;
 	}
 
-	public static SmartSpeaker criarSmartSpeaker(Simulador simulador, Scanner scanner) {
+	public static SmartSpeaker criarSmartSpeaker(Scanner scanner) {
 		System.out.println("Escreve no formato Modo,Volume,Marca,Radio / Exemplo: ON,73,JBL,MEGAHITS");
 		String input = scanner.nextLine();
 		String[] idCustoModoVolumeMarcaRadio = input.split(",", 4);
@@ -108,7 +105,7 @@ public class SmartSpeaker extends SmartDevice {
 		int volume = Integer.valueOf(idCustoModoVolumeMarcaRadio[1]);
 		String marca = idCustoModoVolumeMarcaRadio[2];
 		String radio = idCustoModoVolumeMarcaRadio[3];
-		SmartSpeaker ret = new SmartSpeaker(simulador, modo, volume,marca,radio);
+		SmartSpeaker ret = new SmartSpeaker(modo, volume,marca,radio);
 		return ret;
 	}
 
@@ -127,10 +124,6 @@ public class SmartSpeaker extends SmartDevice {
 
 	public SmartSpeaker clone() {
 		return new SmartSpeaker(this);
-	}
-
-	public SmartSpeaker clone(Simulador s) {
-		return new SmartSpeaker(this, s);
 	}
     
     public String toString() {
@@ -152,14 +145,16 @@ public class SmartSpeaker extends SmartDevice {
 		setConsumoDiario(consumoDiario);
 	}
 
-	public static SmartSpeaker parse(Simulador simulador, String linha) {
+	public static SmartSpeaker parse(String linha, Random random) {
 		String[] linhaPartida = linha.split(",", 4); //no maximo 4 parametros
 		int volume = Integer.valueOf(linhaPartida[0]);
 		String radio = linhaPartida[1];
 		String marca = linhaPartida[2];
 		double consumo = Double.valueOf(linhaPartida[3]);
 
-		SmartSpeaker sS = new SmartSpeaker(simulador, Modo.ON, volume, marca, radio, consumo);
+		Modo modo = random.nextBoolean() ? Modo.ON : Modo.OFF;
+
+		SmartSpeaker sS = new SmartSpeaker(modo, volume, marca, radio, consumo);
 		return sS;
 	}
 }

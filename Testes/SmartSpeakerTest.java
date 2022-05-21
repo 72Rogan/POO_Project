@@ -35,7 +35,8 @@ public class SmartSpeakerTest{
         Simulador simulador = new Simulador();
 		SmartSpeaker smartSpeaker1 = new SmartSpeaker();
 		assertNotNull(smartSpeaker1 , "Erro ao criar a SmartSpeaker");
-		smartSpeaker1 = new SmartSpeaker(simulador,OFF,15,"Panasonic","RUM");
+		smartSpeaker1 = new SmartSpeaker(OFF,15,"Panasonic","RUM");
+        simulador.addDispositivo(smartSpeaker1);
 		assertNotNull(smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
 		SmartSpeaker smartSpeaker2 = new SmartSpeaker(smartSpeaker1);
 		assertNotNull(  smartSpeaker1!=null , "Erro ao criar a SmartSpeaker");
@@ -46,11 +47,13 @@ public class SmartSpeakerTest{
         Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker();
         assertEquals(0,smartSpeaker1.getVolume(), "Volume da coluna não é o esperado");
-        SmartSpeaker smartSpeaker2 = new SmartSpeaker(simulador,OFF,SmartSpeaker.MAX,"Panasonic","RUM");
+        SmartSpeaker smartSpeaker2 = new SmartSpeaker(OFF,SmartSpeaker.MAX,"Panasonic","RUM");
+        simulador.addDispositivo(smartSpeaker2);
         assertEquals(100, smartSpeaker2.getVolume(), "Volume da coluna não é o esperado");
-        SmartSpeaker smartSpeaker3 = new SmartSpeaker(simulador,OFF,-15,"Panasonic","RUM");
+        SmartSpeaker smartSpeaker3 = new SmartSpeaker(OFF,-15,"Panasonic","RUM");
+        simulador.addDispositivo(smartSpeaker3);
         assertEquals(0, smartSpeaker3.getVolume(), "Volume da coluna não é o esperado");
-        SmartSpeaker smartSpeaker4 = new SmartSpeaker(simulador,OFF,110,"Panasonic","RUM");
+        SmartSpeaker smartSpeaker4 = new SmartSpeaker(OFF,110,"Panasonic","RUM");
         assertEquals(100, smartSpeaker4.getVolume(), "Volume da coluna não é o esperado");
         SmartSpeaker smartSpeaker5 = new SmartSpeaker();
         assertEquals(0, smartSpeaker5.getVolume(), "Volume da coluna não é o esperado");
@@ -61,7 +64,8 @@ public class SmartSpeakerTest{
         Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker();
         assertEquals("N/A", smartSpeaker1.getMarca() , "Não é a marca da coluna esperada");
-        SmartSpeaker smartSpeaker2 = new SmartSpeaker(simulador,OFF,15,"Panasonic","RUM");
+        SmartSpeaker smartSpeaker2 = new SmartSpeaker(OFF,15,"Panasonic","RUM");
+        simulador.addDispositivo(smartSpeaker2);
         assertEquals("Panasonic", smartSpeaker2.getMarca(), "Não é a marca da coluna esperada");
         SmartSpeaker smartSpeaker3 = new SmartSpeaker(smartSpeaker2);
         assertEquals("Panasonic", smartSpeaker3.getMarca(), "Não é a marca da coluna esperada");
@@ -72,7 +76,8 @@ public class SmartSpeakerTest{
         Simulador simulador = new Simulador();
         SmartSpeaker smartSpeaker1 = new SmartSpeaker();
         assertEquals("N/A", smartSpeaker1.getRadio() , "Não é a radio esperada");
-        SmartSpeaker smartSpeaker2 = new SmartSpeaker(simulador,OFF,15,"Panasonic","RUM");
+        SmartSpeaker smartSpeaker2 = new SmartSpeaker(OFF,15,"Panasonic","RUM");
+        simulador.addDispositivo(smartSpeaker2);
         assertEquals("RUM", smartSpeaker2.getRadio(), "Não é a radio esperada");
         SmartSpeaker smartSpeaker3 = new SmartSpeaker(smartSpeaker2);
         assertEquals("RUM", smartSpeaker3.getRadio(), "Não é a radio esperada");
@@ -81,7 +86,8 @@ public class SmartSpeakerTest{
     @Test
     public void testSetVolume() {
         Simulador simulador = new Simulador();
-        SmartSpeaker smartSpeaker1 = new SmartSpeaker(simulador,OFF,13,"Panasonic","RUM");
+        SmartSpeaker smartSpeaker1 = new SmartSpeaker(OFF,13,"Panasonic","RUM");
+        simulador.addDispositivo(smartSpeaker1);
         smartSpeaker1.volumeUp();
         smartSpeaker1.volumeUp();
         assertEquals(15, smartSpeaker1.getVolume(), "Não é o volume esperado");
@@ -107,7 +113,7 @@ public class SmartSpeakerTest{
         InputStream sysInBackup = System.in;
         Simulador simulador = new Simulador();
         Scanner scanner = new Scanner(System.in);
-        criarSmartSpeaker(simulador,scanner);
+        SmartSpeaker ss = criarSmartSpeaker(scanner);
         String input = "ON,73,JBL,MEGAHITS";
         InputStream in = new ByteArrayInputStream(input.getBytes());
         System.setIn(in);

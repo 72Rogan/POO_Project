@@ -23,12 +23,11 @@ public class SmartBulbTest{
 
     @Test
     public void testeConstrutor(){
-        Simulador simulador = new Simulador();
         SmartBulb smartBulb1 = new SmartBulb();
         assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
-        smartBulb1 = new SmartBulb(simulador,0);
+        smartBulb1 = new SmartBulb(0);
         assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
-        smartBulb1 = new SmartBulb(simulador,OFF,0,8);
+        smartBulb1 = new SmartBulb(OFF,0,8);
         assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
         smartBulb1 = new SmartBulb(smartBulb1);
         assertNotNull(smartBulb1, "Erro ao criar a SmartBulb");
@@ -66,12 +65,11 @@ public class SmartBulbTest{
 
     @Test
     public void testGetTone() {
-        Simulador simulador = new Simulador();
         SmartBulb smartBulb1 = new SmartBulb();
         assertEquals(1,smartBulb1.getTone(), "Valor da tonalidade não é o esperado");
-        smartBulb1 = new SmartBulb(simulador,2);
+        smartBulb1 = new SmartBulb(2);
         assertEquals(2,smartBulb1.getTone(), "Valor da tonalidade não é o esperado");
-        smartBulb1 = new SmartBulb(simulador,OFF,0,15);
+        smartBulb1 = new SmartBulb(OFF,0,15);
         assertEquals(0,smartBulb1.getTone(), "Valor da tonalidade não é o esperado");
         SmartBulb smartBulb2 = new SmartBulb(smartBulb1);
         assertEquals(0,smartBulb2.getTone(), "Valor da tonalidade não é o esperado");

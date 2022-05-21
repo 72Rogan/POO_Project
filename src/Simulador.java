@@ -66,13 +66,17 @@ public class Simulador implements Serializable{
          */
         this.dispositivos = new HashMap<>();
         this.casasInteligentes = simulador.casasInteligentes.entrySet().stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(this)));
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
         this.comercializadores = simulador.comercializadores.entrySet().stream()
-                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(this)));
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone()));
 
         for (CasaInteligente c: this.casasInteligentes.values()) {
             //adiciona os dispositivos da casa c ao map dispositivos, sem dar clone
             c.addAllDevices(dispositivos);
+            Comercializador com = c.getComercializador();
+            if (this.comercializadores.containsKey(com.getNome())) {
+                c.setComercializador(this.comercializadores.get(com.getNome()));
+            }
         }
 
         this.periodos = simulador.periodos.stream().map(Periodo::clone).collect(Collectors.toList());
@@ -145,7 +149,7 @@ public class Simulador implements Serializable{
         LocalDate antes = data;
         LocalDate depois = data.plusDays(daysToSkip);
         for (CasaInteligente casaInteligente: this.casasInteligentes.values()) {
-            casaInteligente.saltarParaData(depois);
+            casaInteligente.saltarParaData(antes, depois);
             casaInteligente.change(); //aplicar mudancas pendentes
         }
         data = depois;
@@ -278,7 +282,7 @@ public class Simulador implements Serializable{
         String nome = nomeNif[0];
         double custoDiarioKwh = Double.valueOf(nomeNif[1]);
         double fatorImpostos = Double.valueOf(nomeNif[2]);
-        Comercializador comercializador = new Comercializador(this,nome,custoDiarioKwh,fatorImpostos);
+        Comercializador comercializador = new Comercializador(nome,custoDiarioKwh,fatorImpostos);
         this.addComercializador(comercializador);
     }
 
@@ -297,7 +301,7 @@ public class Simulador implements Serializable{
         while ((comercializador = Comercializador.escolherComercializador(this.comercializadores, scanner)) == null) {
             System.out.println("Escolha um comercializador valido");
         }
-        CasaInteligente casa = new CasaInteligente(this, nome, nif, comercializador);
+        CasaInteligente casa = new CasaInteligente(nome, nif, comercializador);
         this.addCasa(casa);
     }
 
@@ -307,9 +311,9 @@ public class Simulador implements Serializable{
         System.out.println("3. Criar SmartCamera");
         int escolha = Integer.parseInt(scanner.nextLine());
         SmartDevice smartDevice = null;
-        if (escolha == 1) smartDevice = criarSmartBulb(this, scanner);
-        if (escolha == 2) smartDevice = criarSmartSpeaker(this, scanner);
-        if (escolha == 3) smartDevice = criarSmartCamera(this, scanner);
+        if (escolha == 1) smartDevice = criarSmartBulb(scanner);
+        if (escolha == 2) smartDevice = criarSmartSpeaker(scanner);
+        if (escolha == 3) smartDevice = criarSmartCamera(scanner);
         if (smartDevice == null) {
             System.out.println("Opcao invalida, saindo");
         }
@@ -346,7 +350,7 @@ public class Simulador implements Serializable{
                 adicionarDispositivoACasa(casa, scanner);
             } else if (escolha == 3) {
                 adicionarDivisaoACasa(casa, scanner);
-            } else {
+            } else if (escolha == 6){
                 return false;
             }
             return true;
@@ -371,7 +375,7 @@ public class Simulador implements Serializable{
             } else if (escolha == 5) {
                 String divisao = casa.escolherDivisao(scanner);
                 casa.setAllOn(divisao, false);
-            } else {
+            } else if (escolha == 6){
                 return false;
             }
             return true;
@@ -425,6 +429,7 @@ public class Simulador implements Serializable{
         }
         String divisao = casa.escolherDivisao(scanner);
         SmartDevice disp = criarDispositivo(scanner);
+        this.addDispositivo(disp);
         casa.addDevice(disp); //adiciona dispositivo a casa
         casa.addToRoom(divisao, disp.getID()); //adiciona dispositivo a divisao
     }
@@ -487,6 +492,7 @@ public class Simulador implements Serializable{
     }
 
     public void addDispositivo(SmartDevice smartDevice) {
+        smartDevice.setID(this.getNextId()); //atribui id ao smartdevice
         this.dispositivos.put(smartDevice.getID(), smartDevice);
     }
 
@@ -521,9 +527,6 @@ public class Simulador implements Serializable{
         for (Comercializador c: this.comercializadores.values()) {
             c.setFaturas(new ArrayList<>()); //elimina as faturas do fornecedor
         }
-        for (SmartDevice disp: this.dispositivos.values()) {
-            disp.setLastChange(this.data);
-        }
         this.periodos = new ArrayList<>();
 
 
@@ -546,14 +549,18 @@ public class Simulador implements Serializable{
     }
 
     public void setDispositivos(Map<String, SmartDevice> disp) {
-
+        this.dispositivos = disp.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
     }
 
     public void setCasasInteligentes(Map<Integer, CasaInteligente> casas) {
-
+        this.casasInteligentes = casas.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
     }
 
     public void setComercializadores(Map<String, Comercializador> comercializadores) {
+        this.comercializadores = comercializadores.entrySet().stream()
+                .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()));
     }
 
     public Simulador clone() {

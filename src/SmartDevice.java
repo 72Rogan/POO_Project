@@ -9,91 +9,69 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 
 public abstract class SmartDevice implements Serializable, PendingChanges{
-    private Simulador simulador;
     private String id;
     private double custoInstalacao;
     private double consumoDiario;
     private Modo modo;
     private Modo modoToChange;
-    private LocalDate lastChange; //data do ultimo periodo de faturacao
 
     public enum Modo{
         ON, OFF;
     }
 
     public SmartDevice() {
-        this.simulador = null;
         this.id = "N/A";
         this.modo = Modo.OFF;
         this.modoToChange = null;
         this.custoInstalacao = 0;
         this.consumoDiario = -1;
-        this.lastChange = LocalDate.now();
 
     }
 
-    public SmartDevice(Simulador simulador, double custoInstalacao) {
-        this.simulador = simulador;
-        this.id = simulador.getNextId();
+    public SmartDevice(double custoInstalacao) {
+        this.id = ""; //ainda nao foi definido o id
         this.custoInstalacao = custoInstalacao;
         this.consumoDiario = -1;
         this.modo = Modo.OFF;
         this.modoToChange = null;
-        this.lastChange = LocalDate.now();
-
-        simulador.addDispositivo(this);
     }
 
-    public SmartDevice(Simulador simulador, double custoInstalacao, Modo modo) {
-        this.simulador = simulador;
-        this.id = simulador.getNextId();
+    public SmartDevice(double custoInstalacao, Modo modo) {
+        this.id = "";
         this.custoInstalacao = custoInstalacao;
         this.consumoDiario = -1;
         this.modo = modo;
         this.modoToChange = null;
-        this.lastChange = LocalDate.now();
-
-        simulador.addDispositivo(this);
     }
 
-    public SmartDevice(SmartDevice s) {
-        this(s, s.simulador);
-    }
-
-    public SmartDevice(SmartDevice smartDevice, Simulador s) {
-        this.simulador = s;
+    public SmartDevice(SmartDevice smartDevice) {
         this.id = smartDevice.getID();
         this.custoInstalacao = smartDevice.custoInstalacao;
         this.consumoDiario = smartDevice.consumoDiario;
         this.modo = smartDevice.modo;
         this.modoToChange = smartDevice.modoToChange;
-        this.lastChange = smartDevice.lastChange;
-
-        //this.simulador.addDispositivo(this);
     }
 
-    public double consumoAte(LocalDate date) {
+    public double consumoAte(LocalDate inicio, LocalDate fim) {
         if (modo == Modo.ON) {
-            int diasPassados = this.lastChange.until(date).getDays();
+            int diasPassados = inicio.until(fim).getDays();
             return diasPassados * this.consumoDiario;
         } else return 0;
     }
 
-    public double custoAte(Comercializador comercializador, LocalDate date) {
+    public double custoAte(Comercializador comercializador, LocalDate inicio, LocalDate fim) {
         if (this.modo == Modo.ON) {
-            int diasPassados = this.lastChange.until(date).getDays();
+            int diasPassados = inicio.until(fim).getDays();
             return comercializador.precoDiaPorDispositivo(this) * diasPassados;
         } else return 0;
     }
 
     public void turnOn() {
         this.modoToChange = Modo.ON; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
-        this.lastChange = this.simulador.getData();
     }
 
     public void turnOff() {
         this.modoToChange = Modo.OFF; //coloca a mudanca de maneira a ser executada no fim do periodo de simulacao
-        this.lastChange = this.simulador.getData();
     }
 
     public void setOn(boolean b) {
@@ -127,14 +105,6 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         return this.modo == Modo.ON;
     }
 
-    public LocalDate getLastChange() {
-        return lastChange;
-    }
-
-    public void setLastChange(LocalDate lastChange) {
-        this.lastChange = lastChange;
-    }
-
     public void setConsumoDiario(double consumo) {
         this.consumoDiario = consumo;
     }
@@ -160,8 +130,7 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
         SmartDevice smartDevice = (SmartDevice) o;
         return this.id == smartDevice.getID() &&
                 this.custoInstalacao == smartDevice.getCustoInstalacao() &&
-                this.modo.equals(smartDevice.getModo()) &&
-                this.lastChange.equals(smartDevice.lastChange);
+                this.modo.equals(smartDevice.getModo());
     }
 
     public static SmartDevice escolherDispositivo(Map<String, SmartDevice> disp, Scanner scanner) {
@@ -180,17 +149,11 @@ public abstract class SmartDevice implements Serializable, PendingChanges{
 
     public abstract SmartDevice clone();
 
-    public abstract SmartDevice clone(Simulador simulador);
-
     @Override
     public void change() {
         if (this.modoToChange != null) {
             this.modo = this.modoToChange;
             this.modoToChange = null;
         }
-    }
-
-    public Simulador getSimulador() {
-        return this.simulador;
     }
 }

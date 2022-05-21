@@ -15,6 +15,7 @@ Divisao:Quarto 1
 SmartBulb:Neutral,10,0.15
 SmartCamera:(3840x2160),68,0.96
 SmartBulb:Neutral,12,0.14
+SmartCamera:(1920x1080),50,1.30
 Casa:Joao Paulo Machado Abreu,372713491,YIce
 Divisao:Casa de Banho
 SmartBulb:Warm,10,0.11
