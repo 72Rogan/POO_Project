@@ -1,0 +1,5 @@
+2022.07.10, 678095268, Quarto, setAllOff
+2022.07.10, 678095268, Quarto, setAllOn
+2022.07.12, MEO Energia, alteraValorCusto, 0.7
+2022.07.11, 615082530, Iberdrola
+2022.07.12, Iberdrola, alteraValorDesconto, 1.3
