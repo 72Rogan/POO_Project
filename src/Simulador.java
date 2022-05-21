@@ -91,7 +91,8 @@ public class Simulador implements Serializable{
         try {
             File ficheiro = new File(caminhoFicheiro);
             if (!ficheiro.exists()) {
-                System.out.println("Ficheiro nao existe");
+                System.out.println("\n+--------------------------------------------------+");
+                System.out.println("| -> Ficheiro não existe                           |");
                 return null;
             }
             FileInputStream fi = new FileInputStream(ficheiro);
@@ -149,15 +150,23 @@ public class Simulador implements Serializable{
 
     public void startInterface(Scanner scanner) {
         while (true) {
-            System.out.println();
-            System.out.println("Data atual: " + this.data.toString());
-            System.out.println("Escolhe uma opcao");
-            System.out.println("1. Avancar no tempo");
-            System.out.println("2. Gerir entidades");
-            System.out.println("3. Estatisticas");
-            System.out.println("4. Gravar estado atual em ficheiro");
-            System.out.println("5. Acabar Programa");
-
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Data atual: " + this.data.toString() +"                        |");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("|                                                  |");
+            System.out.println("| -> Escolhe uma opção                             |");
+            System.out.println("|                                                  |");
+            System.out.println("| 1. Avancar no tempo                              |");
+            System.out.println("|                                                  |");
+            System.out.println("| 2. Gerir entidades                               |");
+            System.out.println("|                                                  |");
+            System.out.println("| 3. Estatísticas                                  |");
+            System.out.println("|                                                  |");
+            System.out.println("| 4. Gravar estado atual em ficheiro               |");
+            System.out.println("|                                                  |");
+            System.out.println("| 5. Acabar Programa                               |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String escolha = scanner.nextLine();
             if (escolha.equals("1")) {
                 avancarTempo(scanner);
@@ -176,16 +185,29 @@ public class Simulador implements Serializable{
     }
 
     public void avancarTempo(Scanner scanner) {
-        System.out.println("1. Avancar X dias");
-        System.out.println("2. Avancar para a data X");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| 1. Avançar X dias                                |");
+        System.out.println("|                                                  |");
+        System.out.println("| 2. Avançar para a data X                         |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insere aqui a tua resposta: ");
         String escolha = scanner.nextLine();
         if (escolha.equals("1")) {
-            System.out.println("Quantos dias queres avancar?");
+            System.out.println("\n");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Quantos dias queres avançar?                  |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             int diasAvancados = Integer.parseInt(scanner.nextLine());
             this.saltarDias(diasAvancados);
         } else if (escolha.equals("2")) {
-            System.out.println("Data atual: " + data);
-            System.out.println("Escreve a nova data no formato AA-MM-DD (ano-mes-dia)");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Data atual: " + this.data.toString() +"                        |");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| Escreve a nova data no formato AA-MM-DD          |");
+            System.out.println("+--------------------------------------------------+\n");
+            System.out.println("Insere aqui a tua resposta: ");
             String dataStr = scanner.nextLine();
             String[] diaMesAno = dataStr.split("-", 3);
             int ano = Integer.valueOf(diaMesAno[0]);
