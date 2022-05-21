@@ -115,29 +115,7 @@ public class Simulador implements Serializable{
         return simulador; //se devolver null, deu problema em cima
     }
 
-    public void guardarEstadoAtual(String ficheiroObjeto) {
-        try {
-            File ficheiro = new File(ficheiroObjeto);
-
-            FileOutputStream fo = new FileOutputStream(ficheiro);
-            ObjectOutputStream oo = new ObjectOutputStream(fo);
-
-            Simulador simuladorToWrite = this.clone();
-            simuladorToWrite.reset(); //elimina as faturas e periodos mas deixa a informacao das entidades
-            oo.writeObject(simuladorToWrite);
-
-            fo.close();
-            oo.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Ficheiro nao encontrado");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Erro a inicializar a stream");
-            e.printStackTrace();
-        }
-    }
-
-        public void saltarDias(LocalDate date) {
+    public void saltarDias(LocalDate date) {
         int dias = data.until(date).getDays();
         saltarDias(dias);
     }
@@ -157,7 +135,7 @@ public class Simulador implements Serializable{
         for (Comercializador c: this.comercializadores.values()) c.change(); //aplicar mudancas pendentes
 
         Periodo periodo = new Periodo(antes, data);
-        this.addPeriodo(periodo);
+        this.insertPeriodo(periodo);
     }
 
     /*
@@ -171,21 +149,26 @@ public class Simulador implements Serializable{
 
     public void startInterface(Scanner scanner) {
         while (true) {
+            System.out.println();
             System.out.println("Data atual: " + this.data.toString());
             System.out.println("Escolhe uma opcao");
             System.out.println("1. Avancar no tempo");
             System.out.println("2. Gerir entidades");
             System.out.println("3. Estatisticas");
-            System.out.println("4. Acabar Programa");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            System.out.println("4. Gravar estado atual em ficheiro");
+            System.out.println("5. Acabar Programa");
+
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 avancarTempo(scanner);
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 gerirEntidades(scanner);
-            } else if (escolha == 3) {
+            } else if (escolha.equals("3")) {
                 Estatisticas estatisticas = new Estatisticas(this.casasInteligentes, this.comercializadores, this.periodos);
                 estatisticas.escolherEstatistica(scanner);
-            } else if (escolha == 4) {
+            } else if (escolha.equals("4")) {
+                Programa.guardarEstadoAtual(this, scanner);
+            } else if (escolha.equals("5")) {
                 //sair do programa
                 break;
             }
@@ -195,12 +178,12 @@ public class Simulador implements Serializable{
     public void avancarTempo(Scanner scanner) {
         System.out.println("1. Avancar X dias");
         System.out.println("2. Avancar para a data X");
-        int escolha = Integer.parseInt(scanner.nextLine());
-        if (escolha == 1) {
+        String escolha = scanner.nextLine();
+        if (escolha.equals("1")) {
             System.out.println("Quantos dias queres avancar?");
             int diasAvancados = Integer.parseInt(scanner.nextLine());
             this.saltarDias(diasAvancados);
-        } else if (escolha == 2) {
+        } else if (escolha.equals("2")) {
             System.out.println("Data atual: " + data);
             System.out.println("Escreve a nova data no formato AA-MM-DD (ano-mes-dia)");
             String dataStr = scanner.nextLine();
@@ -222,14 +205,14 @@ public class Simulador implements Serializable{
         System.out.println("2. Gerir Casas Inteligentes");
         System.out.println("3. Gerir Comercializadores");
         System.out.println("4. Sair");
-        int escolha = Integer.parseInt(scanner.nextLine());
-        if (escolha == 1) {
+        String escolha = scanner.nextLine();
+        if (escolha.equals("1")) {
             listarDispositivos();
-        } else if (escolha == 2) {
+        } else if (escolha.equals("2")) {
             gerirCasas(scanner);
-        } else if (escolha == 3) {
+        } else if (escolha.equals("3")) {
             gerirComercializadores(scanner);
-        } else {
+        } else if (escolha.equals("4")){
             return false;
         }
         return true;
@@ -239,19 +222,19 @@ public class Simulador implements Serializable{
         if (this.faseInicial) {
             System.out.println("1. Listar comercializadores");
             System.out.println("2. Criar comercializador");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 listarComercializadores();
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 criarComercializador(scanner);
             }
         } else {
             System.out.println("1. Listar comercializadores");
             System.out.println("2. Mudar valores de um comercializador");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 listarComercializadores();
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 mudarValoresDeComercializador(scanner);
             }
         }
@@ -309,11 +292,11 @@ public class Simulador implements Serializable{
         System.out.println("1. Criar SmartBulb");
         System.out.println("2. Criar SmartSpeaker");
         System.out.println("3. Criar SmartCamera");
-        int escolha = Integer.parseInt(scanner.nextLine());
+        String escolha = scanner.nextLine();
         SmartDevice smartDevice = null;
-        if (escolha == 1) smartDevice = criarSmartBulb(scanner);
-        if (escolha == 2) smartDevice = criarSmartSpeaker(scanner);
-        if (escolha == 3) smartDevice = criarSmartCamera(scanner);
+        if (escolha.equals("1")) smartDevice = criarSmartBulb(scanner);
+        if (escolha.equals("2")) smartDevice = criarSmartSpeaker(scanner);
+        if (escolha.equals("3")) smartDevice = criarSmartCamera(scanner);
         if (smartDevice == null) {
             System.out.println("Opcao invalida, saindo");
         }
@@ -343,14 +326,14 @@ public class Simulador implements Serializable{
             System.out.println("2. Adicionar dispositivo a casa");
             System.out.println("3. Adicionar divisao a casa");
             System.out.println("4. Sair");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 mudarComercializadorDeCasa(casa, scanner);
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 adicionarDispositivoACasa(casa, scanner);
-            } else if (escolha == 3) {
+            } else if (escolha.equals("3")) {
                 adicionarDivisaoACasa(casa, scanner);
-            } else if (escolha == 6){
+            } else if (escolha.equals("4")){
                 return false;
             }
             return true;
@@ -362,20 +345,20 @@ public class Simulador implements Serializable{
             System.out.println("4. Ligar todos os dispositivos de uma divisao");
             System.out.println("5. Desligar todos os dispositivos de uma divisao");
             System.out.println("6. Sair");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 casa.listarDispositivos();
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 mudarComercializadorDeCasa(casa, scanner);
-            } else if (escolha == 3) {
+            } else if (escolha.equals("3")) {
                 ligarDesligarDispositivoDeCasa(casa,scanner);
-            } else if (escolha == 4) {
+            } else if (escolha.equals("4")) {
                 String divisao = casa.escolherDivisao(scanner);
                 casa.setAllOn(divisao, true);
-            } else if (escolha == 5) {
+            } else if (escolha.equals("5")) {
                 String divisao = casa.escolherDivisao(scanner);
                 casa.setAllOn(divisao, false);
-            } else if (escolha == 6){
+            } else if (escolha.equals("6")){
                 return false;
             }
             return true;
@@ -389,22 +372,22 @@ public class Simulador implements Serializable{
             System.out.println("1. Listar casas");
             System.out.println("2. Criar casas");
             System.out.println("3. Gerir uma casa");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 listarCasas();
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 criarCasa(scanner);
-            } else if (escolha == 3) {
+            } else if (escolha.equals("3")) {
                 CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
                 if (casa != null) while(gerirCasa(casa, scanner));
             }
         } else {
             System.out.println("1. Listar casas");
             System.out.println("2. Gerir uma casa");
-            int escolha = Integer.parseInt(scanner.nextLine());
-            if (escolha == 1) {
+            String escolha = scanner.nextLine();
+            if (escolha.equals("1")) {
                 listarCasas();
-            } else if (escolha == 2) {
+            } else if (escolha.equals("2")) {
                 CasaInteligente casa = CasaInteligente.escolherCasa(this.casasInteligentes, scanner);
                 if (casa != null) while(gerirCasa(casa, scanner));
             }
@@ -504,10 +487,14 @@ public class Simulador implements Serializable{
         this.comercializadores.put(c.getNome(), c);
     }
 
-    public void addPeriodo(Periodo periodo) {
+    private void insertPeriodo(Periodo periodo) {
         if (!this.periodos.contains(periodo)) {
             this.periodos.add(periodo);
         }
+    }
+
+    public void addPeriodo(Periodo periodo) {
+        insertPeriodo(periodo.clone());
     }
 
     public void printFaturas() {
