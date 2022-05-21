@@ -57,7 +57,7 @@ public class Programa {
         System.out.println("Escreva o nome do ficheiro a guardar, senao escreva N/A");
         String ficheiroObjeto = scanner.nextLine();
         if (!ficheiroObjeto.equals("N/A")) {
-            guardarEstadoAtual(simulador, caminhoFicheirosObjeto + ficheiroObjeto);
+            simulador.guardarEstadoAtual(caminhoFicheirosObjeto + ficheiroObjeto);
         }
     }
 
@@ -73,27 +73,5 @@ public class Programa {
         System.out.println("Escreve o ficheiro que queres abrir");
         String ret = scanner.nextLine();
         return ret;
-    }
-
-    public static void guardarEstadoAtual(Simulador s, String ficheiroObjeto) {
-        try {
-            File ficheiro = new File(ficheiroObjeto);
-
-            FileOutputStream fo = new FileOutputStream(ficheiro);
-            ObjectOutputStream oo = new ObjectOutputStream(fo);
-
-            Simulador simuladorToWrite = s.clone();
-            simuladorToWrite.reset(); //elimina as faturas e periodos mas deixa a informacao das entidades
-            oo.writeObject(simuladorToWrite);
-
-            fo.close();
-            oo.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Ficheiro nao encontrado");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("Erro a inicializar a stream");
-            e.printStackTrace();
-        }
     }
 }

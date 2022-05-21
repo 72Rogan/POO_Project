@@ -12,12 +12,19 @@ import static src.SmartSpeaker.criarSmartSpeaker;
 
 
 public class Simulador implements Serializable{
+    //data da simulacao
     private LocalDate data;
+    //boleano indicando se o simulador esta na fase de criar entidades
     private boolean faseInicial;
+    //conjunto de dispositivos
     private Map<String, SmartDevice> dispositivos;
+    //conjunto de casas inteligentes
     private Map<Integer, CasaInteligente> casasInteligentes;
+    //conjunto de comercializadores
     private Map<String, Comercializador> comercializadores;
+    //conjunto de periodos
     private List<Periodo> periodos;
+    //id atual do atribuidor de ids
     private int currentId;
 
     public Simulador() {
@@ -104,7 +111,29 @@ public class Simulador implements Serializable{
         return simulador; //se devolver null, deu problema em cima
     }
 
-    public void saltarDias(LocalDate date) {
+    public void guardarEstadoAtual(String ficheiroObjeto) {
+        try {
+            File ficheiro = new File(ficheiroObjeto);
+
+            FileOutputStream fo = new FileOutputStream(ficheiro);
+            ObjectOutputStream oo = new ObjectOutputStream(fo);
+
+            Simulador simuladorToWrite = this.clone();
+            simuladorToWrite.reset(); //elimina as faturas e periodos mas deixa a informacao das entidades
+            oo.writeObject(simuladorToWrite);
+
+            fo.close();
+            oo.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Ficheiro nao encontrado");
+            e.printStackTrace();
+        } catch (IOException e) {
+            System.out.println("Erro a inicializar a stream");
+            e.printStackTrace();
+        }
+    }
+
+        public void saltarDias(LocalDate date) {
         int dias = data.until(date).getDays();
         saltarDias(dias);
     }

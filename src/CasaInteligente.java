@@ -68,16 +68,8 @@ public class CasaInteligente implements Serializable, PendingChanges{
         this.nif = casaInteligente.nif;
         this.devices = casaInteligente.devices.entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue().clone(s)));
-        System.out.println("ids dispositivos");
-        for(SmartDevice sd: this.devices.values()) {
-            System.out.println("id - " + sd.getID());
-        }
         this.locations = casaInteligente.locations.entrySet().stream()
                 .collect(Collectors.toMap(e -> e.getKey(), e -> new ArrayList<>(e.getValue())));
-        System.out.println("Divisoes, ids disp");
-        for (Map.Entry<String, List<String>> e: this.locations.entrySet()) {
-            System.out.println(e.getKey() + e.getValue());
-        }
         this.comercializador = casaInteligente.comercializador.clone(s);
         if (casaInteligente.comercializadorToChange != null) {
             this.comercializadorToChange = casaInteligente.comercializadorToChange.clone(s);
