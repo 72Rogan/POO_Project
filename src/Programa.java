@@ -14,17 +14,34 @@ public class Programa {
         Scanner scanner = new Scanner(System.in);
         Simulador simulador = null;
         // ----- FASE INICIAL -----
-        System.out.println("Escolha uma opcao");
-        System.out.println("1. Carregar Informacao de ficheiro de objeto");
-        System.out.println("2. Carregar Informacao de ficheiro de texto");
-        System.out.println("3. Criar informacao");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("|                                                  |");
+        System.out.println("|                    Bem vindo!                    |");
+        System.out.println("|                                                  |");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("|                                                  |");
+        System.out.println("| -> Escolha uma opção:                            |");
+        System.out.println("|                                                  |");
+        System.out.println("| 1. Carregar Informacao de ficheiro de objeto     |");
+        System.out.println("|                                                  |");
+        System.out.println("| 2. Carregar Informacao de ficheiro de texto      |");
+        System.out.println("|                                                  |");
+        System.out.println("| 3. Criar informação                              |");
+        System.out.println("|                                                  |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insira aqui a sua resposta: ");
         String escolha = scanner.nextLine();
         if (escolha.equals("1")) {
-            System.out.println("Escolha ficheiro a ser carregado");
+            System.out.println("\n+--------------------------------------------------+");
+            System.out.println("| -> Escolha ficheiro a ser carregado:             |");
+            System.out.println("+--------------------------------------------------+");
+
             String ficheiro = escolherFicheiro(caminhoFicheirosObjeto, scanner);
             simulador = construirSimulador(caminhoFicheirosObjeto + ficheiro); //recebe o caminho para um ficheiro onde esta escrito uma entidade da classe Simulador
         } else if (escolha.equals("2")) {
-            System.out.println("Escolha ficheiro a ser carregado");
+            System.out.println("\n+--------------------------------------------------+");
+            System.out.println("| -> Escolha ficheiro a ser carregado:             |");
+            System.out.println("+--------------------------------------------------+");
             String ficheiro = escolherFicheiro(caminhoFicheirosTexto, scanner);
             Parser parser = new Parser(caminhoFicheirosTexto + ficheiro);
             simulador = parser.parse();
@@ -32,23 +49,39 @@ public class Programa {
             simulador = new Simulador();
             simulador.faseInicial(scanner);
         } else {
-            System.out.println("Nao escolheu uma opcao valida");
+            System.out.println("\n+--------------------------------------------------+");
+            System.out.println("| -> Não escolheu uma opção válida!                |");
+            System.out.println("+--------------------------------------------------+");
             return;
         }
         if (simulador == null) {
-            System.out.println("Terminando o programa");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("|              Terminando o programa!              |");
+            System.out.println("+--------------------------------------------------+");
+
             return;
         }
 
         // ----- FASE DE SIMULACAO -----
-        System.out.println();
-        System.out.println("Simular o programa");
-        System.out.println("Escolha uma opcao");
-        System.out.println("1. Automatizar a simulacao");
-        System.out.println("2. Simular manualmente");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("| -> Simular o programa                            |");
+        System.out.println("+--------------------------------------------------+");
+        System.out.println("|                                                  |");
+        System.out.println("| -> Escolha uma opção:                            |");
+        System.out.println("|                                                  |");
+        System.out.println("| 1. Automatizar a simulação                       |");
+        System.out.println("|                                                  |");
+        System.out.println("| 2. Simular manualmente                           |");
+        System.out.println("|                                                  |");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Insira aqui a sua resposta: ");
         escolha = scanner.nextLine();
+        System.out.println("\n");
         if (escolha.equals("1")) {
-            System.out.println("Escolha o ficheiro com os eventos automaticos");
+            System.out.println("+--------------------------------------------------+");
+            System.out.println("| -> Escolha o ficheiro com os eventos automaticos |");
+            System.out.println("+--------------------------------------------------+");
             String ficheiro = escolherFicheiro(caminhoEventosAutomaticos, scanner);
             Parser parser = new Parser(caminhoEventosAutomaticos + ficheiro);
             parser.simular(simulador);
@@ -56,7 +89,10 @@ public class Programa {
             simulador.startInterface(scanner);
         }
         simulador.createStatusFile("output/estado_final.txt");
-        System.out.println("Foi colocado no ficheiro 'output/estado_final.txt' o estado final da simulacao");
+        System.out.println("\n");
+        System.out.println("+--------------------------------------------------------------------------------------+");
+        System.out.println("| -> Foi colocado no ficheiro 'output/estado_final.txt' o estado final da simulação    |");
+        System.out.println("+--------------------------------------------------------------------------------------+\n");
     }
 
     public static void guardarEstadoAtual(Simulador s, Scanner scanner) {
@@ -88,14 +124,14 @@ public class Programa {
     public static String escolherFicheiro(String path, Scanner scanner){
         File diretoria = new File(path);
         String[] conteudo = diretoria.list();
-        System.out.println();
-        System.out.println("Ficheiros disponiveis:");
+        System.out.println(" -> Ficheiros disponiveis:                        ");
         for (int i=0; i<conteudo.length; i++) {
             if (!conteudo[i].equals("README.md")) {
-                System.out.println(conteudo[i]);
+                System.out.println("    -> "+conteudo[i]);
             }
         }
-        System.out.println("Escreve o ficheiro que queres abrir");
+        System.out.println("+--------------------------------------------------+\n");
+        System.out.println("Escreve o ficheiro que queres abrir: ");
         String ret = scanner.nextLine();
         return ret;
     }
